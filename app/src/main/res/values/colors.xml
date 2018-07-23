@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#fafafa</color>
+    <color name="white">#eee</color>
+    <color name="colorPrimary">#0099cc</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="text_account_layout">#111</color>
+    <color name="btn_login">#990099ff</color>
+    <color name="text_login">#0099cc</color>
+    <color name="btn_login1">#aa0099cc</color>
+    <color name="black">#000</color>
+    <color name="deep_gray">#333</color>
+    <color name="layout_device_info_id">#111</color>
+    <color name="layout_device_info_location">#666</color>
+    <color name="line">#cccccc</color>
+    <color name="refresh_back_color">#990099cc</color>
+    <color name="margin_gray">#efefef</color>
+</resources>

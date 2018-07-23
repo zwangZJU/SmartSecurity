@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">智慧安防</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="phone">手机号</string>
+    <string name="password">密码</string>
+    <string name="login">登   录</string>
+    <string name="code">验证码</string>
+    <string name="send_code">获取验证码</string>
+    <string name="login_by_code">用短信验证码登录</string>
+    <string name="login_by_password">用密码登录</string>
+    <string name="forget_password">忘记密码？</string>
+    <string name="sing_in">新用户注册</string>
+    <string name="phone_number_can_not_be_empty">手机号不能为空</string>
+    <string name="password_can_not_be_empty">密码不能为空</string>
+    <string name="code_can_not_be_empty">验证码不能为空</string>
+    <string name="fail_to_get_code">获取验证码失败</string>
+    <string name="success_to_send_code">验证码已发送</string>
+    <string name="fail_to_login">登录失败</string>
+
+    <!-- Strings related to register -->
+    <string name="password_twice">确认密码</string>
+    <string name="new_user_register">新用户注册</string>
+    <string name="register">注册</string>
+    <string name="fail_to_connect_the_server">未能连接到服务器</string>
+    <string name="setting_password">设置密码</string>
+    <string name="recover_password">找回密码</string>
+    <string name="reset_password_successfully">重设密码成功</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="device">设备</string>
+    <string name="device_num">设备编号</string>
+    <string name="defensive_state">防御状态</string>
+    <string name="principal">负责人</string>
+</resources>
