@@ -22,6 +22,9 @@
                 android:id="@+id/rv_device_overview"/>
         </com.tuesda.walker.circlerefresh.CircleRefreshLayout>
 
+
     </com.wzlab.smartsecurity.widget.LoadingLayout>
+
+
 
 </FrameLayout>

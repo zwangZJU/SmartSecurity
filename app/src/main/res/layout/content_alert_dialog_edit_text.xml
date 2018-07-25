@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <com.wzlab.smartsecurity.widget.FloatLabeledEditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.wzlab.smartsecurity.widget.ClearableEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="门牌号：如 一幢2单元304号"
+            android:id="@+id/et_house_num_dialog"/>
+
+    </com.wzlab.smartsecurity.widget.FloatLabeledEditText>
+
+</RelativeLayout>

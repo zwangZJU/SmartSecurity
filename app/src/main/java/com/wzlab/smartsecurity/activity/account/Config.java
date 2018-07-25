@@ -11,9 +11,11 @@ import android.preference.PreferenceManager;
  */
 
 public class Config {
-    public static final String IP = "10.180.34.181";
+    //liu 31.41
+   // 云118.126.95.215
+    public static final String IP = "118.126.95.215";
     public static final String SERVER_URL = "http://"+IP+":9090/cdz/api/do.jhtml?router=appApiService.";
-    public static final String TYPE_ROLE = "3";
+    public static final String TYPE_ROLE = "1";//普通用户
 
     public static final String ACTION_REGISTER = "userRegister";
     public static final String ACTION_LOGIN="userLogin";
@@ -44,7 +46,7 @@ public class Config {
     public static final String LOGIN_BY_SMS_CODE = "1";
 
     public static final String CHARSET = "utf-8";
-    public static final String APP_ID = "com.wzlab.smartcity";
+    public static final String APP_ID = "com.wzlab.smartsecurity";
 
 
 

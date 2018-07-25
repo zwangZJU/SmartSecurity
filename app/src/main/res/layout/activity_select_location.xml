@@ -44,24 +44,22 @@
                 android:background="@color/white"
                  >
             </com.baidu.mapapi.map.MapView>
+
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_location"/>
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_my_location"/>
         </FrameLayout>
 
-        <ListView
-            android:id="@+id/rv_result"
-            android:background="#ffffff"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_poi_list"
             android:layout_marginTop="1dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:cacheColorHint="#00000000"
-            android:descendantFocusability="beforeDescendants"
-            android:fastScrollEnabled="true"
-            android:scrollbars="none"/>
+             />
     </LinearLayout>
 
     <LinearLayout

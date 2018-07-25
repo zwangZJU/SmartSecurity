@@ -1,6 +1,7 @@
 package com.wzlab.smartsecurity.activity.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothClass;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.skateboard.zxinglib.CaptureActivity;
 import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.start.StartActivity;
 import com.wzlab.smartsecurity.adapter.DeviceOverviewAdapter;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
@@ -66,6 +69,17 @@ public class DeviceOverviewFragment extends Fragment {
             super.handleMessage(msg);
             if(msg.what == KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
+                //空白页的添加按钮
+                loadingLayout.setOnEmptyButtonClickListener(new LoadingLayout.OnEmptyButtonClickListener() {
+                    @Override
+                    public void onClick() {
+                      //  Toast.makeText(getContext(),"ddd",Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(getContext(), CaptureActivity.class);
+                        //跳转到扫描二维码页面
+                        startActivityForResult(intent,1001);
+
+                    }
+                });
             }else if(msg.what == KEY_LOADING_ERROR){
                 loadingLayout.showError();
             }else if(msg.what == KEY_LOADING_SUCCESS){
@@ -156,6 +170,21 @@ public class DeviceOverviewFragment extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1001 && resultCode== Activity.RESULT_OK)
+        {
+            String phone = Config.getCachedPhone(getContext());
+            String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
+            Intent intent = new Intent(getContext(),SelectLocationActivity.class);
+            intent.putExtra("deivceInfo", deviceInfo);
+            startActivity(intent);
+            getActivity().finish();
+
+        }
     }
 
     private void initData(boolean isPulling) {

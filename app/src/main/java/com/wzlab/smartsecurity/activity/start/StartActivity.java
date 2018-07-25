@@ -10,78 +10,119 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
+import com.wzlab.smartsecurity.net.account.Login;
 
 public class StartActivity extends AppCompatActivity {
 
-        private AlphaAnimation alp;
-        private RelativeLayout cl;
+    private AlphaAnimation alp;
+    private RelativeLayout cl;
+    private String message = "2";
+    private static final String TAG = "StartActivity";
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            Window window = getWindow();
-            //透明状态栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            // window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = getWindow();
+        //透明状态栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //透明导航栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            setContentView(R.layout.activity_start);
-            cl = findViewById(R.id.rl_start);
-            //渐变动画
-            alp = new AlphaAnimation(1, 1);
-            alp.setDuration(2000);
-            alp.setRepeatCount(100);
-            cl.setAnimation(alp);
-            alp.setAnimationListener(new Animation.AnimationListener() {
+        setContentView(R.layout.activity_start);
+        cl = findViewById(R.id.rl_start);
+        //渐变动画
+        alp = new AlphaAnimation(1, 1);
+        alp.setDuration(2000);
+        alp.setRepeatCount(100);
+        cl.setAnimation(alp);
+        alp.setAnimationListener(new Animation.AnimationListener() {
 
-                @Override
-                public void onAnimationStart(Animation arg0) {
-                    // TODO Auto-generated method stub
-
-                    if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(StartActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                    }
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation arg0) {
-
-                    if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
-                        alp.cancel();
-                    }
-                }
-
-                @Override
-                public void onAnimationEnd(Animation arg0) {
-                    // TODO Auto-generated method stub
-                    if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
-                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
-                        String token = sp.getString(Config.KEY_TOKEN, "");
-                        if(TextUtils.isEmpty(token)){
-                            startActivity(new Intent(StartActivity.this, MainActivity.class));
-                        }else{
-                            startActivity(new Intent(StartActivity.this, AccountActivity.class));
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                // 动画开始时就登录
+                String token = Config.getCachedToken(getApplicationContext());
+                if(!TextUtils.isEmpty(token)){
+                    String phone = Config.getCachedPhone(getApplicationContext());
+                    String password = Config.getCachedPassword(getApplicationContext());
+                    new Login(phone, password, "",Config.LOGIN_BY_PASSWORD, new Login.SuccessCallback() {
+                        @Override
+                        public void onSuccess(String token, String msg) {
+                            message = "1";
+                            //  Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                            //   startActivity(new Intent(StartActivity.this, MainActivity.class));
+                            //  finish();
                         }
+                    }, new Login.FailCallback() {
+                        @Override
+                        public void onFail(String msg) {
+                            message = "0";
+                            //   Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
 
-                        finish();
+                        }
+                    });
+                }else{
+                    message = "0";
+                }
+
+
+                if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED
+                        || ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        || ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        || ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(StartActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.READ_PHONE_STATE}, 1);
+                }
+
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+
+                if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+
+                    alp.cancel();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // TODO Auto-generated method stub
+                if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+//                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
+//                    String token = sp.getString(Config.KEY_TOKEN, "");
+//                    Log.d(TAG, "onAnimationEnd: "+ token);
+//                    String phone = sp.getString(Config.KEY_PHONE,"");
+
+                    if(message.equals("1")){
+                        startActivity(new Intent(StartActivity.this, MainActivity.class));
+                    }else{
+                        startActivity(new Intent(StartActivity.this, AccountActivity.class));
                     }
 
+
                 }
-            });
-        }
+                finish();
+
+            }
+        });
+    }
 
 }

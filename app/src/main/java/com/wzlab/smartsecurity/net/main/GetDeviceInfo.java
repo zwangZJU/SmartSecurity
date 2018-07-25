@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -96,6 +98,44 @@ public class GetDeviceInfo {
                 }
             }
         },Config.KEY_PHONE, phone);
+    }
+
+    public static void deviceBinding(String phone, String role, String deviceInfo, String addrInfo, final SuccessCallback successCallback, final FailCallback failCallback){
+        String url = Config.SERVER_URL + "deviceBinding";
+        new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    switch (jsonObject.getString(Config.KEY_STATUS)){
+                        case Config.RESULT_STATUS_SUCCESS:
+                            if(successCallback!=null){
+
+                                successCallback.onSuccess(null,jsonObject.getString(Config.RESULT_MESSAGE));
+                            }
+                            break;
+                        default:
+                            if(failCallback!=null){
+                                failCallback.onFail(jsonObject.getString(Config.RESULT_MESSAGE));
+                            }
+                            break;
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    if(failCallback!=null){
+                        failCallback.onFail("网络异常");
+                    }
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                 if(failCallback != null){
+                     failCallback.onFail("请重试");
+                 }
+            }
+        },Config.KEY_PHONE, phone, Config.KEY_ROLE, role, "deviceInfo", deviceInfo, "address", addrInfo);
     }
 
 

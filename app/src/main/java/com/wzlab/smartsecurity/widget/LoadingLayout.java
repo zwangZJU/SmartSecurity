@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -21,8 +22,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.activity.main.ScannerActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +91,14 @@ public class LoadingLayout extends FrameLayout {
 
     Map<Integer, View> mLayouts = new HashMap<>();
 
+    public interface OnEmptyButtonClickListener{
+        public void onClick();
+    }
+
+    private OnEmptyButtonClickListener onEmptyButtonClickListener;
+    public void setOnEmptyButtonClickListener(OnEmptyButtonClickListener onEmptyButtonClickListener){
+        this.onEmptyButtonClickListener = onEmptyButtonClickListener;
+    }
 
     public LoadingLayout(Context context) {
         this(context, null, R.attr.styleLoadingLayout);
@@ -263,7 +275,7 @@ public class LoadingLayout extends FrameLayout {
         if (mLayouts.containsKey(layoutId)) {
             return mLayouts.get(layoutId);
         }
-        View layout = mInflater.inflate(layoutId, this, false);
+        final View layout = mInflater.inflate(layoutId, this, false);
         layout.setVisibility(GONE);
         addView(layout);
         mLayouts.put(layoutId, layout);
@@ -282,6 +294,23 @@ public class LoadingLayout extends FrameLayout {
             if (mOnEmptyInflateListener != null) {
                 mOnEmptyInflateListener.onInflate(layout);
             }
+
+            //添加设备按钮的点击事件
+            FloatingActionButton fabAddDevice = layout.findViewById(R.id.fab_add_empty);
+            fabAddDevice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+//                    Intent intent=new Intent(getContext(), CaptureActivity.class);
+//                    layout.getContext().startActivity(intent);
+                    if(onEmptyButtonClickListener != null){
+                        onEmptyButtonClickListener.onClick();
+                    }
+
+
+                }
+            });
+
         } else if (layoutId == mErrorResId) {
             ImageView img = (ImageView) layout.findViewById(R.id.error_image);
             if (img != null) {
