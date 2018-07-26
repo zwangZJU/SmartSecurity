@@ -26,13 +26,20 @@
     </android.support.design.widget.AppBarLayout>
 
 
-
+<com.wzlab.smartsecurity.widget.LoadingLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/app_bar_layout"
+    android:id="@+id/loading_layout_device_details">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <View
         android:id="@+id/margin"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/item_margin"
-        android:layout_below="@id/app_bar_layout"
+
         android:background="@color/margin_gray" />
 
     <TextView
@@ -68,7 +75,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_device_num"
+        android:id="@+id/tv_detail_device_id"
         android:layout_marginRight="@dimen/label_left_margin"
         android:layout_alignTop="@+id/tv_device_num_label"
         android:layout_below="@+id/v_1"
@@ -92,7 +99,7 @@
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/switch_device_status"
+        android:id="@+id/switch_detail_device_status"
         android:showText="true"
         android:switchTextAppearance="@style/SwitchTheme"
         android:textOff="OFF"
@@ -107,27 +114,48 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_device_location"
+        android:id="@+id/tv_detail_is_alarming"
+        android:layout_marginLeft="@dimen/label_left_margin"
+        android:layout_below="@+id/tv_device_status"
+        android:textColor="@color/black"
+        android:textSize="@dimen/label_size"
+        android:layout_marginTop="@dimen/label_top_margin"
+        android:text="@string/is_alarming"/>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/iv_detail_is_alarming"
+        android:layout_alignTop="@+id/tv_detail_is_alarming"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_bottom_nav_bar_alarm"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_detail_device_location"
         android:layout_alignStart="@+id/tv_device_status"
         android:layout_marginRight="@dimen/label_left_margin"
         android:textColor="@color/black"
         android:textSize="@dimen/label_size"
-        android:layout_below="@+id/tv_device_status"
         android:layout_marginTop="@dimen/label_top_margin"
+        android:layout_below="@+id/tv_detail_is_alarming"
+
          />
 
     <View
         android:id="@+id/margin_2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_margin"
-        android:layout_below="@id/tv_device_location"
+        android:layout_below="@id/tv_detail_device_location"
         android:layout_marginTop="@dimen/label_top_margin"
         android:background="@color/margin_gray" />
 
 
     <!--负责人模块 -->
     <TextView
-        android:id="@+id/tv_subtitle_principal"
+        android:id="@+id/tv_detail_subtitle_principal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/margin_2"
@@ -142,13 +170,13 @@
         android:id="@+id/v_2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/line_height"
-        android:layout_below="@id/tv_subtitle_principal"
+        android:layout_below="@id/tv_detail_subtitle_principal"
         android:background="@color/line" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_principal_name"
+        android:id="@+id/tv_detail_principal_name"
         android:layout_marginLeft="@dimen/label_left_margin"
         android:layout_below="@+id/v_2"
         android:textColor="@color/black"
@@ -159,24 +187,163 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_principal_phone"
-        android:layout_alignStart="@+id/tv_principal_name"
+        android:id="@+id/tv_detail_principal_phone"
+        android:layout_alignStart="@+id/tv_detail_principal_name"
         android:textColor="@color/black"
         android:textSize="@dimen/label_size"
-        android:layout_below="@+id/tv_principal_name"
+        android:layout_below="@+id/tv_detail_principal_name"
         android:layout_marginTop="@dimen/label_top_margin"
          />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_principal_police"
-        android:layout_alignStart="@+id/tv_principal_phone"
+        android:id="@+id/tv_detail_principal_police"
+        android:layout_alignStart="@+id/tv_detail_principal_phone"
         android:layout_marginRight="@dimen/label_left_margin"
         android:textColor="@color/black"
         android:textSize="@dimen/label_size"
-        android:layout_below="@+id/tv_principal_phone"
+        android:layout_below="@+id/tv_detail_principal_phone"
         android:layout_marginTop="@dimen/label_top_margin"
+        android:layout_marginBottom="@dimen/label_top_margin"
          />
 
+    <View
+        android:id="@+id/margin3"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/item_margin"
+        android:layout_below="@id/tv_detail_principal_police"
+        android:background="@color/margin_gray" />
+
+    <TextView
+        android:id="@+id/tv_subtitle_base_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/margin3"
+        android:layout_marginLeft="@dimen/subtitle_left_margin"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:padding="@dimen/subtitle_padding"
+        android:text="基础信息"
+        android:textSize="@dimen/subtitle_size" />
+
+    <View
+        android:id="@+id/v_3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:layout_below="@id/tv_subtitle_base_info"
+        android:background="@color/line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_base_info"
+        android:layout_below="@+id/v_3"
+        android:paddingRight="@dimen/label_left_margin"
+        android:paddingLeft="@dimen/label_left_margin"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_device_type"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_production_date"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_install_date"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_guarantee_time"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+            
+             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_manufacturer"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+            android:layout_marginBottom="@dimen/label_top_margin"
+             />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/margin4"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/item_margin"
+        android:layout_below="@id/ll_base_info"
+        android:background="@color/margin_gray" />
+
+    <TextView
+        android:id="@+id/tv_subtitle_repair_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/margin4"
+        android:layout_marginLeft="@dimen/subtitle_left_margin"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:padding="@dimen/subtitle_padding"
+        android:text="报修信息"
+        android:textSize="@dimen/subtitle_size"
+         />
+
+    <View
+        android:id="@+id/v_4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_height"
+        android:layout_below="@id/tv_subtitle_repair_info"
+        android:background="@color/line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="@dimen/label_left_margin"
+        android:paddingLeft="@dimen/label_left_margin"
+        android:layout_below="@+id/v_4">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_repair_progress"
+
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_detail_repair_record"
+            android:textColor="@color/black"
+            android:textSize="@dimen/label_size"
+            android:layout_marginTop="@dimen/label_top_margin"
+            android:layout_marginBottom="@dimen/label_top_margin"
+             />
+
+    </LinearLayout>
+    </RelativeLayout>
+</com.wzlab.smartsecurity.widget.LoadingLayout>
 </RelativeLayout>

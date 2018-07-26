@@ -27,8 +27,10 @@ import android.widget.Toast;
 
 import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
+import com.wzlab.smartsecurity.net.account.Logout;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
@@ -170,9 +172,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
+        }  else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
@@ -180,6 +180,25 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.nav_logout){
+            String token = Config.getCachedToken(getApplicationContext());
+            new Logout(token, new Logout.SuccessCallback() {
+                @Override
+                public void onSuccess(String msg) {
+                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                }
+            }, new Logout.FailCallback() {
+                @Override
+                public void onFail(String msg) {
+                   // Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                }
+            });
+            // 清除缓存
+            Config.clearCache(getApplicationContext());
+            startActivity(new Intent(MainActivity.this, AccountActivity.class));
+
+        } else if (id == R.id.nav_shut_down) {
+            finish();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

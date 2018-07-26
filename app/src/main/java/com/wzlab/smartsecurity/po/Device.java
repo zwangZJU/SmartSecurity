@@ -1,26 +1,25 @@
 package com.wzlab.smartsecurity.po;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-import java.util.Date;
+
+
+
 /**
- * Created by wzlab on 2018/7/10.
+ * <b>device[device]数据持久化对象</b>
+ * <p>
+ * 注意:此文件由AOS平台自动生成-禁止手工修改。
+ * </p>
+ *
+ * @author Administrator
+ * @date 2018-07-26 16:31:08
  */
-
 public class Device {
 
-        public Device(String user_id, String user_name, String user_address, String status){
-                this.user_id = user_id;
-                this.user_name = user_name;
-                this.user_address = user_address;
-                this.status = status;
-        }
+
 
         /**
-         * 序号
+         * 设备编号
          */
-        private String id;
+        private String device_id;
 
         /**
          * 状态
@@ -31,6 +30,11 @@ public class Device {
          * 布撤防
          */
         private String arrange_withdraw;
+
+        /**
+         * 序号
+         */
+        private String id_;
 
         /**
          * 用户编号
@@ -63,19 +67,9 @@ public class Device {
         private String user_type;
 
         /**
-         * 用户类型2
+         * 报警状态
          */
-        private String user_type2;
-
-        /**
-         * 电话
-         */
-        private String phone;
-
-        /**
-         * 传真
-         */
-        private String fax;
+        private String is_alarming;
 
         /**
          * 主机类型
@@ -105,12 +99,12 @@ public class Device {
         /**
          * 缴费截止日期
          */
-        private Date pay_date;
+        private String pay_date;
 
         /**
          * 保修截止日期
          */
-        private Date guarantee_time;
+        private String guarantee_time;
 
         /**
          * 核查状态
@@ -160,7 +154,7 @@ public class Device {
         /**
          * 安装日期
          */
-        private Date insatll_date;
+        private String install_date;
 
         /**
          * 42代码
@@ -170,17 +164,17 @@ public class Device {
         /**
          * 撤防时间
          */
-        private Date withdraw_date;
+        private String withdraw_date;
 
         /**
          * 布防时间
          */
-        private Date arrange_date;
+        private String arrange_date;
 
         /**
          * 最后来信号时间
          */
-        private Date last_date;
+        private String last_date;
 
         /**
          * 施工人员
@@ -193,19 +187,19 @@ public class Device {
         private String police_unit;
 
         /**
-         * 主机电话
+         * 电话
          */
-        private String host_phone;
+        private String phone;
 
         /**
-         * 预定撤防时间
+         * 报修记录
          */
-        private Date prewithdraw_date;
+        private String repair_record;
 
         /**
-         * 预定布防时间
+         * 报修进度
          */
-        private Date prearrange_date;
+        private String repair_progress;
 
         /**
          * 组
@@ -223,14 +217,9 @@ public class Device {
         private String inspection_staff;
 
         /**
-         * 短信号码
-         */
-        private String sms_code;
-
-        /**
          * 停机时间
          */
-        private Date downtime;
+        private String downtime;
 
         /**
          * 电话1
@@ -238,14 +227,14 @@ public class Device {
         private String phone1;
 
         /**
-         * 电话2
+         * 产品型号
          */
-        private String phone2;
+        private String product_type;
 
         /**
-         * 电话3
+         * 出厂日期
          */
-        private String phone3;
+        private String production_date;
 
         /**
          * 负责人电话2
@@ -255,7 +244,7 @@ public class Device {
         /**
          * 入网日期
          */
-        private Date net_date;
+        private String net_date;
 
         /**
          * 通讯线路
@@ -263,28 +252,123 @@ public class Device {
         private String communication_line;
 
         /**
-         * 电源位置
+         * 编号
          */
-        private String power_address;
+        private String users_id;
 
         /**
-         * 电话位置
+         * 姓名
          */
-        private String phone_address;
+        private String users_name;
 
         /**
-         * 键盘位置
+         * 身份
          */
-        private String keyboard_address;
+        private String users_identity;
+
+        /**
+         * 备注
+         */
+        private String remarks;
+
+        /**
+         * 预定布撤防时间
+         */
+        private String arrangeandwithdraw_time;
+
+        /**
+         * 分站
+         */
+        private String network_setting_substation;
+
+        /**
+         * 名称
+         */
+        private String network_setting_name;
+
+        /**
+         * 类型
+         */
+        private String network_setting_type;
+
+        /**
+         * 模板文件
+         */
+        private String network_setting_template;
+
+        /**
+         * 备注
+         */
+        private String network_setting_remarks;
+
+        /**
+         * 接收号码
+         */
+        private String network_setting_number;
+
+        /**
+         * 防区使用者
+         */
+        private String network_setting_users;
+
+        /**
+         * 报警类型
+         */
+        private String alarm_type;
+
+        /**
+         * 通信格式
+         */
+        private String communication_format;
+
+        /**
+         * 报警声音方案
+         */
+        private String alarm_sound;
+
+        /**
+         * 主机报警短信号码
+         */
+        private String host_alarm_sms;
+
+        /**
+         * 分局号
+         */
+        private String substation_number;
+
+        /**
+         * 停机时间
+         */
+        private String shutdown_time;
+
+        /**
+         * 暂停
+         */
+        private String pause;
+
+        /**
+         * 故障
+         */
+        private String breakdown;
+
+        /**
+         * 审查确认
+         */
+        private String review_confirm;
+
+        /**
+         * 备注
+         */
+        private String management_remarks;
 
 
         /**
-         * 序号
+         * 设备编号
          *
-         * @return id_
+         * @return device_id
          */
-        public String getId_() {
-            return id;
+        public String getDevice_id() {
+                return device_id;
         }
 
         /**
@@ -293,7 +377,7 @@ public class Device {
          * @return status
          */
         public String getStatus() {
-            return status;
+                return status;
         }
 
         /**
@@ -302,16 +386,25 @@ public class Device {
          * @return arrange_withdraw
          */
         public String getArrange_withdraw() {
-            return arrange_withdraw;
+                return arrange_withdraw;
+        }
+
+        /**
+         * 序号
+         *
+         * @return id_
+         */
+        public String getId_() {
+                return id_;
         }
 
         /**
          * 用户编号
          *
-         * @return userid_
+         * @return user_id
          */
-        public String getUserId_() {
-            return user_id;
+        public String getUser_id() {
+                return user_id;
         }
 
         /**
@@ -320,7 +413,7 @@ public class Device {
          * @return user_name
          */
         public String getUser_name() {
-            return user_name;
+                return user_name;
         }
 
         /**
@@ -329,7 +422,7 @@ public class Device {
          * @return user_address
          */
         public String getUser_address() {
-            return user_address;
+                return user_address;
         }
 
         /**
@@ -338,7 +431,7 @@ public class Device {
          * @return sub_center
          */
         public String getSub_center() {
-            return sub_center;
+                return sub_center;
         }
 
         /**
@@ -347,7 +440,7 @@ public class Device {
          * @return cross_road
          */
         public String getCross_road() {
-            return cross_road;
+                return cross_road;
         }
 
         /**
@@ -356,34 +449,16 @@ public class Device {
          * @return user_type
          */
         public String getUser_type() {
-            return user_type;
+                return user_type;
         }
 
         /**
-         * 用户类型2
+         * 报警状态
          *
-         * @return user_type2
+         * @return is_alarming
          */
-        public String getUser_type2() {
-            return user_type2;
-        }
-
-        /**
-         * 电话
-         *
-         * @return phone
-         */
-        public String getPhone() {
-            return phone;
-        }
-
-        /**
-         * 传真
-         *
-         * @return fax
-         */
-        public String getFax() {
-            return fax;
+        public String getIs_alarming() {
+                return is_alarming;
         }
 
         /**
@@ -392,7 +467,7 @@ public class Device {
          * @return host_type
          */
         public String getHost_type() {
-            return host_type;
+                return host_type;
         }
 
         /**
@@ -401,7 +476,7 @@ public class Device {
          * @return video_linkage
          */
         public String getVideo_linkage() {
-            return video_linkage;
+                return video_linkage;
         }
 
         /**
@@ -410,7 +485,7 @@ public class Device {
          * @return head
          */
         public String getHead() {
-            return head;
+                return head;
         }
 
         /**
@@ -419,7 +494,7 @@ public class Device {
          * @return head_phone
          */
         public String getHead_phone() {
-            return head_phone;
+                return head_phone;
         }
 
         /**
@@ -428,7 +503,7 @@ public class Device {
          * @return test_period
          */
         public String getTest_period() {
-            return test_period;
+                return test_period;
         }
 
         /**
@@ -436,8 +511,8 @@ public class Device {
          *
          * @return pay_date
          */
-        public Date getPay_date() {
-            return pay_date;
+        public String getPay_date() {
+                return pay_date;
         }
 
         /**
@@ -445,8 +520,8 @@ public class Device {
          *
          * @return guarantee_time
          */
-        public Date getGuarantee_time() {
-            return guarantee_time;
+        public String getGuarantee_time() {
+                return guarantee_time;
         }
 
         /**
@@ -455,7 +530,7 @@ public class Device {
          * @return check_status
          */
         public String getCheck_status() {
-            return check_status;
+                return check_status;
         }
 
         /**
@@ -464,7 +539,7 @@ public class Device {
          * @return arrearage
          */
         public String getArrearage() {
-            return arrearage;
+                return arrearage;
         }
 
         /**
@@ -473,7 +548,7 @@ public class Device {
          * @return shut_down
          */
         public String getShut_down() {
-            return shut_down;
+                return shut_down;
         }
 
         /**
@@ -482,7 +557,7 @@ public class Device {
          * @return town
          */
         public String getTown() {
-            return town;
+                return town;
         }
 
         /**
@@ -491,7 +566,7 @@ public class Device {
          * @return town_phone
          */
         public String getTown_phone() {
-            return town_phone;
+                return town_phone;
         }
 
         /**
@@ -500,7 +575,7 @@ public class Device {
          * @return police_station
          */
         public String getPolice_station() {
-            return police_station;
+                return police_station;
         }
 
         /**
@@ -509,7 +584,7 @@ public class Device {
          * @return network
          */
         public String getNetwork() {
-            return network;
+                return network;
         }
 
         /**
@@ -518,7 +593,7 @@ public class Device {
          * @return police_phone
          */
         public String getPolice_phone() {
-            return police_phone;
+                return police_phone;
         }
 
         /**
@@ -527,16 +602,16 @@ public class Device {
          * @return host_address
          */
         public String getHost_address() {
-            return host_address;
+                return host_address;
         }
 
         /**
          * 安装日期
          *
-         * @return insatll_date
+         * @return install_date
          */
-        public Date getInsatll_date() {
-            return insatll_date;
+        public String getInstall_date() {
+                return install_date;
         }
 
         /**
@@ -545,7 +620,7 @@ public class Device {
          * @return code42
          */
         public String getCode42() {
-            return code42;
+                return code42;
         }
 
         /**
@@ -553,8 +628,8 @@ public class Device {
          *
          * @return withdraw_date
          */
-        public Date getWithdraw_date() {
-            return withdraw_date;
+        public String getWithdraw_date() {
+                return withdraw_date;
         }
 
         /**
@@ -562,8 +637,8 @@ public class Device {
          *
          * @return arrange_date
          */
-        public Date getArrange_date() {
-            return arrange_date;
+        public String getArrange_date() {
+                return arrange_date;
         }
 
         /**
@@ -571,8 +646,8 @@ public class Device {
          *
          * @return last_date
          */
-        public Date getLast_date() {
-            return last_date;
+        public String getLast_date() {
+                return last_date;
         }
 
         /**
@@ -581,7 +656,7 @@ public class Device {
          * @return builders
          */
         public String getBuilders() {
-            return builders;
+                return builders;
         }
 
         /**
@@ -590,34 +665,34 @@ public class Device {
          * @return police_unit
          */
         public String getPolice_unit() {
-            return police_unit;
+                return police_unit;
         }
 
         /**
-         * 主机电话
+         * 电话
          *
-         * @return host_phone
+         * @return phone
          */
-        public String getHost_phone() {
-            return host_phone;
+        public String getPhone() {
+                return phone;
         }
 
         /**
-         * 预定撤防时间
+         * 报修记录
          *
-         * @return prewithdraw_date
+         * @return repair_record
          */
-        public Date getPrewithdraw_date() {
-            return prewithdraw_date;
+        public String getRepair_record() {
+                return repair_record;
         }
 
         /**
-         * 预定布防时间
+         * 报修进度
          *
-         * @return prearrange_date
+         * @return repair_progress
          */
-        public Date getPrearrange_date() {
-            return prearrange_date;
+        public String getRepair_progress() {
+                return repair_progress;
         }
 
         /**
@@ -626,7 +701,7 @@ public class Device {
          * @return group_
          */
         public String getGroup_() {
-            return group_;
+                return group_;
         }
 
         /**
@@ -635,7 +710,7 @@ public class Device {
          * @return entry_clerk
          */
         public String getEntry_clerk() {
-            return entry_clerk;
+                return entry_clerk;
         }
 
         /**
@@ -644,16 +719,7 @@ public class Device {
          * @return inspection_staff
          */
         public String getInspection_staff() {
-            return inspection_staff;
-        }
-
-        /**
-         * 短信号码
-         *
-         * @return sms_code
-         */
-        public String getSms_code() {
-            return sms_code;
+                return inspection_staff;
         }
 
         /**
@@ -661,8 +727,8 @@ public class Device {
          *
          * @return downtime
          */
-        public Date getDowntime() {
-            return downtime;
+        public String getDowntime() {
+                return downtime;
         }
 
         /**
@@ -671,25 +737,25 @@ public class Device {
          * @return phone1
          */
         public String getPhone1() {
-            return phone1;
+                return phone1;
         }
 
         /**
-         * 电话2
+         * 产品型号
          *
-         * @return phone2
+         * @return product_type
          */
-        public String getPhone2() {
-            return phone2;
+        public String getProduct_type() {
+                return product_type;
         }
 
         /**
-         * 电话3
+         * 出厂日期
          *
-         * @return phone3
+         * @return production_date
          */
-        public String getPhone3() {
-            return phone3;
+        public String getProduction_date() {
+                return production_date;
         }
 
         /**
@@ -698,7 +764,7 @@ public class Device {
          * @return head_phone2
          */
         public String getHead_phone2() {
-            return head_phone2;
+                return head_phone2;
         }
 
         /**
@@ -706,8 +772,8 @@ public class Device {
          *
          * @return net_date
          */
-        public Date getNet_date() {
-            return net_date;
+        public String getNet_date() {
+                return net_date;
         }
 
         /**
@@ -716,44 +782,215 @@ public class Device {
          * @return communication_line
          */
         public String getCommunication_line() {
-            return communication_line;
+                return communication_line;
         }
 
         /**
-         * 电源位置
+         * 编号
          *
-         * @return power_address
+         * @return users_id
          */
-        public String getPower_address() {
-            return power_address;
+        public String getUsers_id() {
+                return users_id;
         }
 
         /**
-         * 电话位置
+         * 姓名
          *
-         * @return phone_address
+         * @return users_name
          */
-        public String getPhone_address() {
-            return phone_address;
+        public String getUsers_name() {
+                return users_name;
         }
 
         /**
-         * 键盘位置
+         * 身份
          *
-         * @return keyboard_address
+         * @return users_identity
          */
-        public String getKeyboard_address() {
-            return keyboard_address;
+        public String getUsers_identity() {
+                return users_identity;
+        }
+
+        /**
+         * 备注
+         *
+         * @return remarks
+         */
+        public String getRemarks() {
+                return remarks;
+        }
+
+        /**
+         * 预定布撤防时间
+         *
+         * @return arrangeandwithdraw_time
+         */
+        public String getArrangeandwithdraw_time() {
+                return arrangeandwithdraw_time;
+        }
+
+        /**
+         * 分站
+         *
+         * @return network_setting_substation
+         */
+        public String getNetwork_setting_substation() {
+                return network_setting_substation;
+        }
+
+        /**
+         * 名称
+         *
+         * @return network_setting_name
+         */
+        public String getNetwork_setting_name() {
+                return network_setting_name;
+        }
+
+        /**
+         * 类型
+         *
+         * @return network_setting_type
+         */
+        public String getNetwork_setting_type() {
+                return network_setting_type;
+        }
+
+        /**
+         * 模板文件
+         *
+         * @return network_setting_template
+         */
+        public String getNetwork_setting_template() {
+                return network_setting_template;
+        }
+
+        /**
+         * 备注
+         *
+         * @return network_setting_remarks
+         */
+        public String getNetwork_setting_remarks() {
+                return network_setting_remarks;
+        }
+
+        /**
+         * 接收号码
+         *
+         * @return network_setting_number
+         */
+        public String getNetwork_setting_number() {
+                return network_setting_number;
+        }
+
+        /**
+         * 防区使用者
+         *
+         * @return network_setting_users
+         */
+        public String getNetwork_setting_users() {
+                return network_setting_users;
+        }
+
+        /**
+         * 报警类型
+         *
+         * @return alarm_type
+         */
+        public String getAlarm_type() {
+                return alarm_type;
+        }
+
+        /**
+         * 通信格式
+         *
+         * @return communication_format
+         */
+        public String getCommunication_format() {
+                return communication_format;
+        }
+
+        /**
+         * 报警声音方案
+         *
+         * @return alarm_sound
+         */
+        public String getAlarm_sound() {
+                return alarm_sound;
+        }
+
+        /**
+         * 主机报警短信号码
+         *
+         * @return host_alarm_sms
+         */
+        public String getHost_alarm_sms() {
+                return host_alarm_sms;
+        }
+
+        /**
+         * 分局号
+         *
+         * @return substation_number
+         */
+        public String getSubstation_number() {
+                return substation_number;
+        }
+
+        /**
+         * 停机时间
+         *
+         * @return shutdown_time
+         */
+        public String getShutdown_time() {
+                return shutdown_time;
+        }
+
+        /**
+         * 暂停
+         *
+         * @return pause
+         */
+        public String getPause() {
+                return pause;
+        }
+
+        /**
+         * 故障
+         *
+         * @return breakdown
+         */
+        public String getBreakdown() {
+                return breakdown;
+        }
+
+        /**
+         * 审查确认
+         *
+         * @return review_confirm
+         */
+        public String getReview_confirm() {
+                return review_confirm;
+        }
+
+        /**
+         * 备注
+         *
+         * @return management_remarks
+         */
+        public String getManagement_remarks() {
+                return management_remarks;
         }
 
 
         /**
-         * 序号
+         * 设备编号
          *
-         * @param id
+         * @param device_id
          */
-        public void setId_(String id) {
-            this.id = id;
+        public void setDevice_id(String device_id) {
+                this.device_id = device_id;
         }
 
         /**
@@ -762,7 +999,7 @@ public class Device {
          * @param status
          */
         public void setStatus(String status) {
-            this.status = status;
+                this.status = status;
         }
 
         /**
@@ -771,16 +1008,25 @@ public class Device {
          * @param arrange_withdraw
          */
         public void setArrange_withdraw(String arrange_withdraw) {
-            this.arrange_withdraw = arrange_withdraw;
+                this.arrange_withdraw = arrange_withdraw;
+        }
+
+        /**
+         * 序号
+         *
+         * @param id_
+         */
+        public void setId_(String id_) {
+                this.id_ = id_;
         }
 
         /**
          * 用户编号
          *
-         * @param userId
+         * @param user_id
          */
-        public void setUserid_(String userId) {
-            this.user_id = userId;
+        public void setUser_id(String user_id) {
+                this.user_id = user_id;
         }
 
         /**
@@ -789,7 +1035,7 @@ public class Device {
          * @param user_name
          */
         public void setUser_name(String user_name) {
-            this.user_name = user_name;
+                this.user_name = user_name;
         }
 
         /**
@@ -798,7 +1044,7 @@ public class Device {
          * @param user_address
          */
         public void setUser_address(String user_address) {
-            this.user_address = user_address;
+                this.user_address = user_address;
         }
 
         /**
@@ -807,7 +1053,7 @@ public class Device {
          * @param sub_center
          */
         public void setSub_center(String sub_center) {
-            this.sub_center = sub_center;
+                this.sub_center = sub_center;
         }
 
         /**
@@ -816,7 +1062,7 @@ public class Device {
          * @param cross_road
          */
         public void setCross_road(String cross_road) {
-            this.cross_road = cross_road;
+                this.cross_road = cross_road;
         }
 
         /**
@@ -825,34 +1071,16 @@ public class Device {
          * @param user_type
          */
         public void setUser_type(String user_type) {
-            this.user_type = user_type;
+                this.user_type = user_type;
         }
 
         /**
-         * 用户类型2
+         * 报警状态
          *
-         * @param user_type2
+         * @param is_alarming
          */
-        public void setUser_type2(String user_type2) {
-            this.user_type2 = user_type2;
-        }
-
-        /**
-         * 电话
-         *
-         * @param phone
-         */
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-
-        /**
-         * 传真
-         *
-         * @param fax
-         */
-        public void setFax(String fax) {
-            this.fax = fax;
+        public void setIs_alarming(String is_alarming) {
+                this.is_alarming = is_alarming;
         }
 
         /**
@@ -861,7 +1089,7 @@ public class Device {
          * @param host_type
          */
         public void setHost_type(String host_type) {
-            this.host_type = host_type;
+                this.host_type = host_type;
         }
 
         /**
@@ -870,7 +1098,7 @@ public class Device {
          * @param video_linkage
          */
         public void setVideo_linkage(String video_linkage) {
-            this.video_linkage = video_linkage;
+                this.video_linkage = video_linkage;
         }
 
         /**
@@ -879,7 +1107,7 @@ public class Device {
          * @param head
          */
         public void setHead(String head) {
-            this.head = head;
+                this.head = head;
         }
 
         /**
@@ -888,7 +1116,7 @@ public class Device {
          * @param head_phone
          */
         public void setHead_phone(String head_phone) {
-            this.head_phone = head_phone;
+                this.head_phone = head_phone;
         }
 
         /**
@@ -897,7 +1125,7 @@ public class Device {
          * @param test_period
          */
         public void setTest_period(String test_period) {
-            this.test_period = test_period;
+                this.test_period = test_period;
         }
 
         /**
@@ -905,8 +1133,8 @@ public class Device {
          *
          * @param pay_date
          */
-        public void setPay_date(Date pay_date) {
-            this.pay_date = pay_date;
+        public void setPay_date(String pay_date) {
+                this.pay_date = pay_date;
         }
 
         /**
@@ -914,8 +1142,8 @@ public class Device {
          *
          * @param guarantee_time
          */
-        public void setGuarantee_time(Date guarantee_time) {
-            this.guarantee_time = guarantee_time;
+        public void setGuarantee_time(String guarantee_time) {
+                this.guarantee_time = guarantee_time;
         }
 
         /**
@@ -924,7 +1152,7 @@ public class Device {
          * @param check_status
          */
         public void setCheck_status(String check_status) {
-            this.check_status = check_status;
+                this.check_status = check_status;
         }
 
         /**
@@ -933,7 +1161,7 @@ public class Device {
          * @param arrearage
          */
         public void setArrearage(String arrearage) {
-            this.arrearage = arrearage;
+                this.arrearage = arrearage;
         }
 
         /**
@@ -942,7 +1170,7 @@ public class Device {
          * @param shut_down
          */
         public void setShut_down(String shut_down) {
-            this.shut_down = shut_down;
+                this.shut_down = shut_down;
         }
 
         /**
@@ -951,7 +1179,7 @@ public class Device {
          * @param town
          */
         public void setTown(String town) {
-            this.town = town;
+                this.town = town;
         }
 
         /**
@@ -960,7 +1188,7 @@ public class Device {
          * @param town_phone
          */
         public void setTown_phone(String town_phone) {
-            this.town_phone = town_phone;
+                this.town_phone = town_phone;
         }
 
         /**
@@ -969,7 +1197,7 @@ public class Device {
          * @param police_station
          */
         public void setPolice_station(String police_station) {
-            this.police_station = police_station;
+                this.police_station = police_station;
         }
 
         /**
@@ -978,7 +1206,7 @@ public class Device {
          * @param network
          */
         public void setNetwork(String network) {
-            this.network = network;
+                this.network = network;
         }
 
         /**
@@ -987,7 +1215,7 @@ public class Device {
          * @param police_phone
          */
         public void setPolice_phone(String police_phone) {
-            this.police_phone = police_phone;
+                this.police_phone = police_phone;
         }
 
         /**
@@ -996,16 +1224,16 @@ public class Device {
          * @param host_address
          */
         public void setHost_address(String host_address) {
-            this.host_address = host_address;
+                this.host_address = host_address;
         }
 
         /**
          * 安装日期
          *
-         * @param insatll_date
+         * @param install_date
          */
-        public void setInsatll_date(Date insatll_date) {
-            this.insatll_date = insatll_date;
+        public void setInstall_date(String install_date) {
+                this.install_date = install_date;
         }
 
         /**
@@ -1014,7 +1242,7 @@ public class Device {
          * @param code42
          */
         public void setCode42(String code42) {
-            this.code42 = code42;
+                this.code42 = code42;
         }
 
         /**
@@ -1022,8 +1250,8 @@ public class Device {
          *
          * @param withdraw_date
          */
-        public void setWithdraw_date(Date withdraw_date) {
-            this.withdraw_date = withdraw_date;
+        public void setWithdraw_date(String withdraw_date) {
+                this.withdraw_date = withdraw_date;
         }
 
         /**
@@ -1031,8 +1259,8 @@ public class Device {
          *
          * @param arrange_date
          */
-        public void setArrange_date(Date arrange_date) {
-            this.arrange_date = arrange_date;
+        public void setArrange_date(String arrange_date) {
+                this.arrange_date = arrange_date;
         }
 
         /**
@@ -1040,8 +1268,8 @@ public class Device {
          *
          * @param last_date
          */
-        public void setLast_date(Date last_date) {
-            this.last_date = last_date;
+        public void setLast_date(String last_date) {
+                this.last_date = last_date;
         }
 
         /**
@@ -1050,7 +1278,7 @@ public class Device {
          * @param builders
          */
         public void setBuilders(String builders) {
-            this.builders = builders;
+                this.builders = builders;
         }
 
         /**
@@ -1059,34 +1287,34 @@ public class Device {
          * @param police_unit
          */
         public void setPolice_unit(String police_unit) {
-            this.police_unit = police_unit;
+                this.police_unit = police_unit;
         }
 
         /**
-         * 主机电话
+         * 电话
          *
-         * @param host_phone
+         * @param phone
          */
-        public void setHost_phone(String host_phone) {
-            this.host_phone = host_phone;
+        public void setPhone(String phone) {
+                this.phone = phone;
         }
 
         /**
-         * 预定撤防时间
+         * 报修记录
          *
-         * @param prewithdraw_date
+         * @param repair_record
          */
-        public void setPrewithdraw_date(Date prewithdraw_date) {
-            this.prewithdraw_date = prewithdraw_date;
+        public void setRepair_record(String repair_record) {
+                this.repair_record = repair_record;
         }
 
         /**
-         * 预定布防时间
+         * 报修进度
          *
-         * @param prearrange_date
+         * @param repair_progress
          */
-        public void setPrearrange_date(Date prearrange_date) {
-            this.prearrange_date = prearrange_date;
+        public void setRepair_progress(String repair_progress) {
+                this.repair_progress = repair_progress;
         }
 
         /**
@@ -1095,7 +1323,7 @@ public class Device {
          * @param group_
          */
         public void setGroup_(String group_) {
-            this.group_ = group_;
+                this.group_ = group_;
         }
 
         /**
@@ -1104,7 +1332,7 @@ public class Device {
          * @param entry_clerk
          */
         public void setEntry_clerk(String entry_clerk) {
-            this.entry_clerk = entry_clerk;
+                this.entry_clerk = entry_clerk;
         }
 
         /**
@@ -1113,16 +1341,7 @@ public class Device {
          * @param inspection_staff
          */
         public void setInspection_staff(String inspection_staff) {
-            this.inspection_staff = inspection_staff;
-        }
-
-        /**
-         * 短信号码
-         *
-         * @param sms_code
-         */
-        public void setSms_code(String sms_code) {
-            this.sms_code = sms_code;
+                this.inspection_staff = inspection_staff;
         }
 
         /**
@@ -1130,8 +1349,8 @@ public class Device {
          *
          * @param downtime
          */
-        public void setDowntime(Date downtime) {
-            this.downtime = downtime;
+        public void setDowntime(String downtime) {
+                this.downtime = downtime;
         }
 
         /**
@@ -1140,25 +1359,25 @@ public class Device {
          * @param phone1
          */
         public void setPhone1(String phone1) {
-            this.phone1 = phone1;
+                this.phone1 = phone1;
         }
 
         /**
-         * 电话2
+         * 产品型号
          *
-         * @param phone2
+         * @param product_type
          */
-        public void setPhone2(String phone2) {
-            this.phone2 = phone2;
+        public void setProduct_type(String product_type) {
+                this.product_type = product_type;
         }
 
         /**
-         * 电话3
+         * 出厂日期
          *
-         * @param phone3
+         * @param production_date
          */
-        public void setPhone3(String phone3) {
-            this.phone3 = phone3;
+        public void setProduction_date(String production_date) {
+                this.production_date = production_date;
         }
 
         /**
@@ -1167,7 +1386,7 @@ public class Device {
          * @param head_phone2
          */
         public void setHead_phone2(String head_phone2) {
-            this.head_phone2 = head_phone2;
+                this.head_phone2 = head_phone2;
         }
 
         /**
@@ -1175,8 +1394,8 @@ public class Device {
          *
          * @param net_date
          */
-        public void setNet_date(Date net_date) {
-            this.net_date = net_date;
+        public void setNet_date(String net_date) {
+                this.net_date = net_date;
         }
 
         /**
@@ -1185,36 +1404,206 @@ public class Device {
          * @param communication_line
          */
         public void setCommunication_line(String communication_line) {
-            this.communication_line = communication_line;
+                this.communication_line = communication_line;
         }
 
         /**
-         * 电源位置
+         * 编号
          *
-         * @param power_address
+         * @param users_id
          */
-        public void setPower_address(String power_address) {
-            this.power_address = power_address;
+        public void setUsers_id(String users_id) {
+                this.users_id = users_id;
         }
 
         /**
-         * 电话位置
+         * 姓名
          *
-         * @param phone_address
+         * @param users_name
          */
-        public void setPhone_address(String phone_address) {
-            this.phone_address = phone_address;
+        public void setUsers_name(String users_name) {
+                this.users_name = users_name;
         }
 
         /**
-         * 键盘位置
+         * 身份
          *
-         * @param keyboard_address
+         * @param users_identity
          */
-        public void setKeyboard_address(String keyboard_address) {
-            this.keyboard_address = keyboard_address;
+        public void setUsers_identity(String users_identity) {
+                this.users_identity = users_identity;
         }
 
+        /**
+         * 备注
+         *
+         * @param remarks
+         */
+        public void setRemarks(String remarks) {
+                this.remarks = remarks;
+        }
+
+        /**
+         * 预定布撤防时间
+         *
+         * @param arrangeandwithdraw_time
+         */
+        public void setArrangeandwithdraw_time(String arrangeandwithdraw_time) {
+                this.arrangeandwithdraw_time = arrangeandwithdraw_time;
+        }
+
+        /**
+         * 分站
+         *
+         * @param network_setting_substation
+         */
+        public void setNetwork_setting_substation(String network_setting_substation) {
+                this.network_setting_substation = network_setting_substation;
+        }
+
+        /**
+         * 名称
+         *
+         * @param network_setting_name
+         */
+        public void setNetwork_setting_name(String network_setting_name) {
+                this.network_setting_name = network_setting_name;
+        }
+
+        /**
+         * 类型
+         *
+         * @param network_setting_type
+         */
+        public void setNetwork_setting_type(String network_setting_type) {
+                this.network_setting_type = network_setting_type;
+        }
+
+        /**
+         * 模板文件
+         *
+         * @param network_setting_template
+         */
+        public void setNetwork_setting_template(String network_setting_template) {
+                this.network_setting_template = network_setting_template;
+        }
+
+        /**
+         * 备注
+         *
+         * @param network_setting_remarks
+         */
+        public void setNetwork_setting_remarks(String network_setting_remarks) {
+                this.network_setting_remarks = network_setting_remarks;
+        }
+
+        /**
+         * 接收号码
+         *
+         * @param network_setting_number
+         */
+        public void setNetwork_setting_number(String network_setting_number) {
+                this.network_setting_number = network_setting_number;
+        }
+
+        /**
+         * 防区使用者
+         *
+         * @param network_setting_users
+         */
+        public void setNetwork_setting_users(String network_setting_users) {
+                this.network_setting_users = network_setting_users;
+        }
+
+        /**
+         * 报警类型
+         *
+         * @param alarm_type
+         */
+        public void setAlarm_type(String alarm_type) {
+                this.alarm_type = alarm_type;
+        }
+
+        /**
+         * 通信格式
+         *
+         * @param communication_format
+         */
+        public void setCommunication_format(String communication_format) {
+                this.communication_format = communication_format;
+        }
+
+        /**
+         * 报警声音方案
+         *
+         * @param alarm_sound
+         */
+        public void setAlarm_sound(String alarm_sound) {
+                this.alarm_sound = alarm_sound;
+        }
+
+        /**
+         * 主机报警短信号码
+         *
+         * @param host_alarm_sms
+         */
+        public void setHost_alarm_sms(String host_alarm_sms) {
+                this.host_alarm_sms = host_alarm_sms;
+        }
+
+        /**
+         * 分局号
+         *
+         * @param substation_number
+         */
+        public void setSubstation_number(String substation_number) {
+                this.substation_number = substation_number;
+        }
+
+        /**
+         * 停机时间
+         *
+         * @param shutdown_time
+         */
+        public void setShutdown_time(String shutdown_time) {
+                this.shutdown_time = shutdown_time;
+        }
+
+        /**
+         * 暂停
+         *
+         * @param pause
+         */
+        public void setPause(String pause) {
+                this.pause = pause;
+        }
+
+        /**
+         * 故障
+         *
+         * @param breakdown
+         */
+        public void setBreakdown(String breakdown) {
+                this.breakdown = breakdown;
+        }
+
+        /**
+         * 审查确认
+         *
+         * @param review_confirm
+         */
+        public void setReview_confirm(String review_confirm) {
+                this.review_confirm = review_confirm;
+        }
+
+        /**
+         * 备注
+         *
+         * @param management_remarks
+         */
+        public void setManagement_remarks(String management_remarks) {
+                this.management_remarks = management_remarks;
+        }
 
 
 }

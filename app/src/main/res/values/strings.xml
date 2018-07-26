@@ -36,8 +36,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="device">设备</string>
+    <string name="device">设备状态</string>
     <string name="device_num">设备编号</string>
     <string name="defensive_state">防御状态</string>
-    <string name="principal">负责人</string>
+    <string name="principal">区域负责人信息</string>
+    <string name="is_alarming">报警状态</string>
 </resources>

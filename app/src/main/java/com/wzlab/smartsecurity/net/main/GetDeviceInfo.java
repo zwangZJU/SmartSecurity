@@ -110,8 +110,13 @@ public class GetDeviceInfo {
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
                             if(successCallback!=null){
-
-                                successCallback.onSuccess(null,jsonObject.getString(Config.RESULT_MESSAGE));
+                                ArrayList<Device> deviceList = new ArrayList<Device>();
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Gson gson = new Gson();
+                                for(int i=0;i<jsonArray.length();i++){
+                                    deviceList.add(gson.fromJson(jsonArray.get(i).toString(),Device.class));
+                                }
+                                successCallback.onSuccess(deviceList,jsonObject.getString(Config.RESULT_MESSAGE));
                             }
                             break;
                         default:
@@ -141,10 +146,10 @@ public class GetDeviceInfo {
 
     // 获得设备详细数据
     @SuppressLint("StaticFieldLeak")
-    public static void getDeviceDetail(String deviceId, final SuccessCallback successCallback, final FailCallback failCallback){
+    public static void getDeviceDetails(String deviceId, final SuccessCallback successCallback, final FailCallback failCallback){
         ArrayList list = new ArrayList();
-        String url = Config.SERVER_URL + "getDeviceDetail";
-        new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
+
+        new NetConnection(Config.SERVER_URL+Config.ACTION_GET_DEVICE_DETAILS, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
                 try {
@@ -153,6 +158,12 @@ public class GetDeviceInfo {
                         case Config.RESULT_STATUS_SUCCESS:
                             if(successCallback!=null){
                                 ArrayList<Device> deviceList = new ArrayList<>();
+
+                                JSONObject jsonArray = jsonObject.getJSONObject("data");
+                                Gson gson = new Gson();
+
+                                deviceList.add(gson.fromJson(jsonArray.toString(),Device.class));
+
                                 successCallback.onSuccess(deviceList,jsonObject.getString(Config.RESULT_MESSAGE));
                             }
                             break;
@@ -166,7 +177,7 @@ public class GetDeviceInfo {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     if(failCallback!=null){
-                        failCallback.onFail("登录异常");
+                        failCallback.onFail("数据解析异常");
                     }
                 }
             }
@@ -177,7 +188,7 @@ public class GetDeviceInfo {
                     failCallback.onFail("未能连接到服务器");
                 }
             }
-        });
+        },"device_id",deviceId);
 
     }
 }

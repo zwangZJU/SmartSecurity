@@ -92,13 +92,8 @@ public class DeviceOverviewFragment extends Fragment {
                             Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
                             Device deviec = deviceList.get(position);
                             Bundle bundle = new Bundle();
-                            bundle.putString("user_id",deviec.getUserId_());
-                            bundle.putString("user_name",deviec.getUser_name());
-                            bundle.putString("user_address",deviec.getUser_address());
-                            bundle.putString("device_status",deviec.getStatus());
-                            bundle.putString("head",deviec.getHead());
-                            bundle.putString("head_phone",deviec.getHead_phone());
-                            bundle.putString("police_station",deviec.getPolice_station());
+                            bundle.putString("device_id",deviec.getDevice_id());
+
 
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -179,6 +174,7 @@ public class DeviceOverviewFragment extends Fragment {
 
     }
 
+    // 扫完二维码返回到这里
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

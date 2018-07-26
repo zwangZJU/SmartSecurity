@@ -13,7 +13,7 @@ import android.preference.PreferenceManager;
 public class Config {
     //liu 31.41
    // 云118.126.95.215
-    //31.7
+    //192.168.31.7
     //
     public static final String IP = "118.126.95.215";
     public static final String SERVER_URL = "http://"+IP+":9090/cdz/api/do.jhtml?router=appApiService.";
@@ -23,6 +23,8 @@ public class Config {
     public static final String ACTION_LOGIN="userLogin";
     public static final String ACTION_FORGET_PASSWORD="forgetPwd";
     public static final String ACTION_GET_SMS_CODE="getSmsCode";
+    public static final String ACTION_LOGOUT = "userLogout";
+    public static final String ACTION_GET_DEVICE_DETAILS = "getDeviceDetails";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";
@@ -52,6 +54,11 @@ public class Config {
 
 
 
+   public static void clearCache(Context context){
+       SharedPreferences.Editor editor = context.getSharedPreferences(APP_ID, Context.MODE_PRIVATE).edit();
+       editor.clear();
+       editor.apply();
+   }
 
     public static String getCachedToken(Context context){
         return context.getSharedPreferences(APP_ID,Context.MODE_PRIVATE).getString(KEY_TOKEN,null);
