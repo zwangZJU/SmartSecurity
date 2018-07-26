@@ -52,7 +52,7 @@ public class GetDeviceInfo {
         void onFail(String msg);
     }
 
-    public static void getDeviceList(String phone, final SuccessCallback successCallback, final FailCallback failCallback){
+    public static void getDeviceList(String phone, String role, final SuccessCallback successCallback, final FailCallback failCallback){
         String url = Config.SERVER_URL + "getDeviceList";
         new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
@@ -97,7 +97,7 @@ public class GetDeviceInfo {
                     failCallback.onFail("未能连接到服务器");
                 }
             }
-        },Config.KEY_PHONE, phone);
+        },Config.KEY_PHONE, phone, Config.KEY_ROLE, role);
     }
 
     public static void deviceBinding(String phone, String role, String deviceInfo, String addrInfo, final SuccessCallback successCallback, final FailCallback failCallback){

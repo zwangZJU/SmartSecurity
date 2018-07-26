@@ -11,6 +11,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,20 +88,26 @@ public class DeviceOverviewFragment extends Fragment {
                 deviceOverviewAdapter.setOnItemClickListener(new DeviceOverviewAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        if(position<deviceList.size()){
+                            Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
+                            Device deviec = deviceList.get(position);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("user_id",deviec.getUserId_());
+                            bundle.putString("user_name",deviec.getUser_name());
+                            bundle.putString("user_address",deviec.getUser_address());
+                            bundle.putString("device_status",deviec.getStatus());
+                            bundle.putString("head",deviec.getHead());
+                            bundle.putString("head_phone",deviec.getHead_phone());
+                            bundle.putString("police_station",deviec.getPolice_station());
 
-                        Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
-                        Device deviec = deviceList.get(position);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("user_id",deviec.getUserId_());
-                        bundle.putString("user_name",deviec.getUser_name());
-                        bundle.putString("user_address",deviec.getUser_address());
-                        bundle.putString("device_status",deviec.getStatus());
-                        bundle.putString("head",deviec.getHead());
-                        bundle.putString("head_phone",deviec.getHead_phone());
-                        bundle.putString("police_station",deviec.getPolice_station());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else{
+                            Intent intent=new Intent(getContext(), CaptureActivity.class);
+                            //跳转到扫描二维码页面
+                            startActivityForResult(intent,1001);
+                        }
 
-                        intent.putExtras(bundle);
-                        startActivity(intent);
 
                         // getFragmentManager().beginTransaction().addToBackStack(null).add(deviceDetailFragment,)
                     }
@@ -128,7 +135,7 @@ public class DeviceOverviewFragment extends Fragment {
         super.onViewCreated(rootView, savedInstanceState);
 
         mRvDeviceOverview = rootView.findViewById(R.id.rv_device_overview);
-        mRvDeviceOverview.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRvDeviceOverview.setLayoutManager(new GridLayoutManager(getContext(),2));
 
 
 
@@ -180,7 +187,7 @@ public class DeviceOverviewFragment extends Fragment {
             String phone = Config.getCachedPhone(getContext());
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(getContext(),SelectLocationActivity.class);
-            intent.putExtra("deivceInfo", deviceInfo);
+            intent.putExtra("deviceInfo", deviceInfo);
             startActivity(intent);
             getActivity().finish();
 
@@ -196,10 +203,10 @@ public class DeviceOverviewFragment extends Fragment {
             loadingLayout.showLoading();
         }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String phone = sp.getString(Config.KEY_PHONE,"");
 
-        GetDeviceInfo.getDeviceList(phone, new GetDeviceInfo.SuccessCallback() {
+        String phone = Config.getCachedPhone(getContext());
+
+        GetDeviceInfo.getDeviceList(phone, Config.TYPE_ROLE, new GetDeviceInfo.SuccessCallback() {
             @Override
             public void onSuccess(ArrayList list, String msg) {
                 Message handlerMsg = new Message();

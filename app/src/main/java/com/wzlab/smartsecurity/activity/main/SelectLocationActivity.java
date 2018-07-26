@@ -79,6 +79,7 @@ public class SelectLocationActivity extends AppCompatActivity {
     private GeoCoder mSearch;
     private RecyclerView mRvPoiList;
     private ArrayList<PoiInfo> mPoiList;
+    private String deviceInfo;
 
 
     @Override
@@ -99,6 +100,9 @@ public class SelectLocationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Intent intent = getIntent();
+        deviceInfo = intent.getStringExtra("deviceInfo");
 
         // 地图显示
         mMapView = findViewById(R.id.mapView);
@@ -220,8 +224,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                                         if(TextUtils.isEmpty(phone)){
                                             startActivity(new Intent(SelectLocationActivity.this, AccountActivity.class));
                                         }else{
-                                            Intent intent = getIntent();
-                                            String deviceInfo = intent.getStringExtra("deviceInfo");
+
                                             GetDeviceInfo.deviceBinding(phone, Config.TYPE_ROLE, deviceInfo, info, new GetDeviceInfo.SuccessCallback() {
                                                 @Override
                                                 public void onSuccess(ArrayList list, String msg) {

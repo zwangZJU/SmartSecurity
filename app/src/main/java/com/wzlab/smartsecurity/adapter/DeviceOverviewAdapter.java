@@ -1,10 +1,14 @@
 package com.wzlab.smartsecurity.adapter;
 
 import android.content.Context;
+import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.wzlab.smartsecurity.R;
@@ -20,6 +24,9 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
 
     Context context;
     ArrayList<Device> deviceList;
+    private int ITEM_VIEW_TYPE_DATA = 0;
+    private int ITEM_VIEW_TYPE_ADD = 1;
+
     public DeviceOverviewAdapter(Context context, ArrayList<Device> deviceList){
         this.context = context;
         this.deviceList = deviceList;
@@ -36,37 +43,64 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
 
     @Override
     public DeviceOverviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        DeviceOverviewViewHolder deviceOverviewViewHolder = new DeviceOverviewViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_device_info,parent,false));
-        return deviceOverviewViewHolder;
+
+        if(viewType == ITEM_VIEW_TYPE_DATA){
+            return new DeviceOverviewViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_device_info,parent,false));
+        }else {
+            return new DeviceOverviewViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_device_add,parent,false));
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-
         DeviceOverviewViewHolder holder = (DeviceOverviewViewHolder) viewHolder;
         holder.itemView.setTag(position);
-        Device device = deviceList.get(position);
-        holder.mTvDeviceId.setText(device.getUser_name() + "  " + device.getUserId_());
-        holder.mTvDeviceLocation.setText(device.getUser_address());
-        holder.mTvDeviceStatus.setText(device.getStatus());
+        if(position<deviceList.size()){
+
+
+            Device device = deviceList.get(position);
+            holder.mTvDeviceId.setText("ID:"+ device.getId_());
+
+
+            if(device.getStatus().equals("1")){
+                holder.mSwitchDefensiveState.setChecked(true);
+            }else {
+                holder.mSwitchDefensiveState.setChecked(false);
+            }
+            holder.mSwitchDefensiveState.setEnabled(false);
+            holder.mIvAlarmState.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bottom_nav_bar_alarm));
+
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return deviceList.size();
+        return deviceList.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position != deviceList.size()){
+            return ITEM_VIEW_TYPE_DATA;
+        }else {
+            return ITEM_VIEW_TYPE_ADD;
+        }
     }
 
     class DeviceOverviewViewHolder extends RecyclerView.ViewHolder{
 
         TextView mTvDeviceId;
-        TextView mTvDeviceLocation;
-        TextView mTvDeviceStatus;
+        Switch mSwitchDefensiveState;
+        ImageView mIvAlarmState;
+        FloatingActionButton fabAddDevice;
         public DeviceOverviewViewHolder(final View itemView) {
             super(itemView);
-            mTvDeviceId = itemView.findViewById(R.id.tv_device_id);
-            mTvDeviceLocation = itemView.findViewById(R.id.tv_device_location);
-            mTvDeviceStatus = itemView.findViewById(R.id.tv_device_status);
+            mTvDeviceId = itemView.findViewById(R.id.tv_device_item_device_id);
+            mSwitchDefensiveState = itemView.findViewById(R.id.switch_device_item_defensive_state);
+            mIvAlarmState = itemView.findViewById(R.id.iv_device_item_alarm_state);
+            fabAddDevice = itemView.findViewById(R.id.fab_add_device);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
 

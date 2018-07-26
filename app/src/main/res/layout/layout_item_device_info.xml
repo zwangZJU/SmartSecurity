@@ -1,55 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:background="#009c">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:text="用户名"
-        android:textSize="17sp"
-        android:textColor="@color/layout_device_info_id"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/tv_device_id"/>
-
-    <ImageView
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_below="@+id/tv_device_id"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/iv_location"
-        android:src="@drawable/ic_location"
-
-        android:layout_marginTop="3dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_device_location"
-        android:text="定位"
-        android:textSize="15sp"
-        android:textColor="@color/layout_device_info_location"
-        android:layout_alignTop="@+id/iv_location"
-        android:layout_toRightOf="@+id/iv_location"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_device_status"
-        android:textSize="20sp"
-        android:text="撤防"
-        android:layout_marginRight="30dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"/>
-
-    <View
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_below="@+id/tv_device_location"
-        android:background="#ddd" />
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="8dp"
+        app:contentPadding="5dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_device_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_device_raw"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentEnd="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="3dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_device_item_title"
+                    android:textStyle="bold"
+                    android:text="报警终端"
+                    android:layout_margin="3dp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#222"
+                    android:textSize="17sp"
+
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_device_item_device_id"
+                    android:maxLines="1"
+                    android:layout_margin="3dp"/>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/tv_device_item_defensive_state"
+
+                        android:text="防御状态:"
+                        android:maxLines="1"/>
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="5dp"
+                        android:layout_marginRight="11dp"
+                        android:layout_gravity="center_horizontal"
+                        android:id="@+id/switch_device_item_defensive_state"
+                        android:showText="true"
+                        android:switchTextAppearance="@style/SwitchTheme"
+                        android:textOff="OFF"
+                        android:textOn="ON"
+                        android:thumb="@drawable/switch_rectangle_thumb_selector"
+                        android:track="@drawable/switch_rectangle_track"
+
+
+
+                        />
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_device_item_alarm_state"
+                        android:layout_weight="1"
+                        android:text="报警状态:"/>
+
+                    <ImageView
+                        android:id="@+id/iv_device_item_alarm_state"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_bottom_nav_bar_alarm"
+                        />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

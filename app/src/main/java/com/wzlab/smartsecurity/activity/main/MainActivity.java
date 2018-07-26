@@ -1,6 +1,8 @@
 package com.wzlab.smartsecurity.activity.main;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +25,9 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
@@ -55,14 +59,7 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -141,9 +138,28 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == R.id.action_add_device){
+            Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
+            //跳转到扫描二维码页面
+            startActivityForResult(intent,1001);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1001 && resultCode== Activity.RESULT_OK)
+        {
+            String phone = Config.getCachedPhone(getApplicationContext());
+            String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
+            Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
+            intent.putExtra("deviceInfo", deviceInfo);
+            startActivity(intent);
+            finish();
+
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
