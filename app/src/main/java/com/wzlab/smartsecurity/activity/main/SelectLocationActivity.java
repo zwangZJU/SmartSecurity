@@ -236,6 +236,8 @@ public class SelectLocationActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onFail(String msg) {
                                                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(SelectLocationActivity.this, MainActivity.class));
+                                                    finish();
                                                 }
                                             });
                                         }

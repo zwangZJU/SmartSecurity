@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.wzlab.smartsecurity.R;
-
+import com.igexin.sdk.PushManager;
 public class AccountActivity extends AppCompatActivity {
 
     private boolean isExit = false; //按两次退出
@@ -32,6 +32,8 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushManager.getInstance().initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Make the status bar transparent
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

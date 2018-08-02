@@ -90,9 +90,9 @@ public class DeviceOverviewFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         if(position<deviceList.size()){
                             Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
-                            Device deviec = deviceList.get(position);
+                            Device device = deviceList.get(position);
                             Bundle bundle = new Bundle();
-                            bundle.putString("device_id",deviec.getDevice_id());
+                            bundle.putString("device_id",device.getDevice_id());
 
 
                             intent.putExtras(bundle);

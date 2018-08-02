@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.igexin.sdk.PushManager;
 import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
@@ -42,10 +44,17 @@ public class MainActivity extends AppCompatActivity
 
     private NoScrollViewPager mVpMainContainer;
     private Toolbar toolbar;
+    private String phone;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PushManager pushManager = PushManager.getInstance();
+        pushManager.initialize(getApplicationContext(),com.wzlab.smartsecurity.service.PushService.class);
+        phone = Config.getCachedPhone(getApplicationContext());
+        boolean i = pushManager.bindAlias(getApplicationContext(),phone,phone);
+        Log.e(TAG, "onCreate: "+ i );
         Window window = getWindow();
         //透明状态栏
        // window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -154,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==1001 && resultCode== Activity.RESULT_OK)
         {
-            String phone = Config.getCachedPhone(getApplicationContext());
+
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
             intent.putExtra("deviceInfo", deviceInfo);

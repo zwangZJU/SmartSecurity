@@ -59,7 +59,7 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
 
 
             Device device = deviceList.get(position);
-            holder.mTvDeviceId.setText("ID:"+ device.getId_());
+            holder.mTvDeviceId.setText("ID:"+ device.getDevice_id());
 
 
             if(device.getStatus().equals("1")){

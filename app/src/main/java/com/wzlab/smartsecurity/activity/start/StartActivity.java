@@ -18,11 +18,13 @@ import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.igexin.sdk.PushManager;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
 import com.wzlab.smartsecurity.net.account.Login;
+import com.wzlab.smartsecurity.service.IntentService;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -34,6 +36,14 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 初始化个推的推送服务
+        PushManager pushManager = PushManager.getInstance();
+        pushManager.initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
+        // 注册消息接收服务
+        pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
+        String CID =  pushManager.getClientid(getApplicationContext());
+
+        Log.i(TAG, "onCreate: "+ CID);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
         //透明状态栏

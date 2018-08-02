@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
-import com.wzlab.smartsecurity.activity.main.ScannerActivity;
 import com.wzlab.smartsecurity.net.account.GetSmsCode;
 
 import com.wzlab.smartsecurity.net.account.Login;
@@ -233,8 +232,7 @@ public class LoginFragment extends Fragment {
 
                     }
                 });
-                //TODO 以后要删除
-               // startActivity(new Intent(LoginFragment.this, ScannerActivity.class));
+
             }
             // Login by smssmsCode
         }else if(loginMethod == Config.LOGIN_BY_SMS_CODE){
