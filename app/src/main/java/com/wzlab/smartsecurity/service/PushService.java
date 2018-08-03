@@ -21,6 +21,7 @@ public class PushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        flags = START_STICKY;
         return GTServiceManager.getInstance().onStartCommand(this, intent, flags, startId);
     }
 

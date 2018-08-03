@@ -33,6 +33,8 @@ import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.account.Logout;
+import com.wzlab.smartsecurity.service.IntentService;
+import com.wzlab.smartsecurity.utils.SystemSettingsUtil;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
@@ -147,12 +149,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_setting_app_permission) {
+            SystemSettingsUtil.settingAppPermission(getApplicationContext());
             return true;
         }else if(id == R.id.action_add_device){
             Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
             //跳转到扫描二维码页面
             startActivityForResult(intent,1001);
+            return true;
+        }else if(id == R.id.action_setting_app_details){
+            SystemSettingsUtil.AppDetailsSetting(getApplicationContext());
+        }else if(id == R.id.action_setting_notification){
+            SystemSettingsUtil.settingNotification(this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -213,5 +221,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PushManager pushManager = PushManager.getInstance();
+        pushManager.stopService(getApplicationContext());
+        pushManager.initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
+        // 注册消息接收服务
+        pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
     }
 }

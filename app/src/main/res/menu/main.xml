@@ -2,10 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_setting_app_permission"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setting_notification"
+        android:orderInCategory="100"
+        android:title="提示框"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setting_app_details"
+        android:orderInCategory="100"
+        android:title="打开应用设置"
+        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/action_add_device"

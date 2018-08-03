@@ -129,7 +129,7 @@ public class GetDeviceInfo {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     if(failCallback!=null){
-                        failCallback.onFail("网络异常");
+                        failCallback.onFail("解析异常");
                     }
                 }
             }

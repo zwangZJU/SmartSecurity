@@ -99,7 +99,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String manufacturer = "浙江中创天成科技有限公司";
                     String installDate = getData(device.getInstall_date());
                     String guaranteeTime = getData(device.getGuarantee_time());
-                    String userAddr = getData(device.getUser_address());
+                    String userAddr = getData(device.getUser_address().split("#")[0]);
                     String repairRecord = getData(device.getRepair_record());
                     String repairProgress = getData(device.getRepair_progress());
                     String head = getData(device.getHead());
