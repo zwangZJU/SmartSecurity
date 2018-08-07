@@ -32,6 +32,7 @@ public class StartActivity extends AppCompatActivity {
     private RelativeLayout cl;
     private String message = "2";
     private static final String TAG = "StartActivity";
+    private boolean isAlarming;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class StartActivity extends AppCompatActivity {
         // 注册消息接收服务
         pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
         String CID =  pushManager.getClientid(getApplicationContext());
+
+        Intent intent = getIntent();
+        isAlarming = intent.getBooleanExtra("isAlarming",false);
 
         Log.i(TAG, "onCreate: "+ CID);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -122,7 +126,12 @@ public class StartActivity extends AppCompatActivity {
 //                    String phone = sp.getString(Config.KEY_PHONE,"");
 
                     if(message.equals("1")){
-                        startActivity(new Intent(StartActivity.this, MainActivity.class));
+                        Intent mainIntent = new Intent(StartActivity.this, MainActivity.class);
+                        mainIntent.putExtra("isAlarming",isAlarming);
+                        startActivity(mainIntent);
+
+
+
                     }else{
                         startActivity(new Intent(StartActivity.this, AccountActivity.class));
                     }

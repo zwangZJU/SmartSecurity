@@ -109,13 +109,7 @@ public class GetDeviceInfo {
                     JSONObject jsonObject = new JSONObject(result);
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
-//                            if(successCallback!=null){
-//                                ArrayList<Device> deviceList = new ArrayList<Device>();
-//                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-//                                Gson gson = new Gson();
-//                                for(int i=0;i<jsonArray.length();i++){
-//                                    deviceList.add(gson.fromJson(jsonArray.get(i).toString(),Device.class));
-//                                }
+ 
                                 successCallback.onSuccess(null,jsonObject.getString(Config.RESULT_MESSAGE));
 //                            }
                             break;

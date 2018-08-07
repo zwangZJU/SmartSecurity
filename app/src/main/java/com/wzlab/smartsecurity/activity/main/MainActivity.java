@@ -2,15 +2,10 @@ package com.wzlab.smartsecurity.activity.main;
 
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -31,10 +27,11 @@ import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.account.RegisterFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.account.Logout;
 import com.wzlab.smartsecurity.service.IntentService;
-import com.wzlab.smartsecurity.utils.SystemSettingsUtil;
+import com.wzlab.smartsecurity.utils.AppConfigUtil;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
@@ -48,6 +45,10 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private String phone;
     private static final String TAG = "MainActivity";
+    private BottomNavMenuBar mBottomNavMenuBar;
+    private FrameLayout mFlMainContainer;
+    //v4包下的FragmentManager
+    public static android.support.v4.app.FragmentManager sV4FragManager ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         int[] iconNormal = {R.drawable.ic_bottom_nav_bar_home,R.drawable.ic_bottom_nav_bar_alarm,R.drawable.ic_bottom_nav_bar_me};
         int[] iconFocus = {R.drawable.ic_bottom_nav_bar_home_focus,R.drawable.ic_bottom_nav_bar_alarm_focus,R.drawable.ic_bottom_nav_bar_me_focus};
         final String[] text = {"首页","报警","我的"};
-        BottomNavMenuBar mBottomNavMenuBar = findViewById(R.id.bottom_nav_menu_bar);
+        mBottomNavMenuBar = findViewById(R.id.bottom_nav_menu_bar);
         mBottomNavMenuBar.setIconRes(iconNormal)
                 .setIconResSelected(iconFocus)
                 .setTextRes(text)
@@ -122,6 +123,16 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        mFlMainContainer = findViewById(R.id.fl_main_container);
+
+//        // 当从消息推送进入时
+//        Intent intent = getIntent();
+//        boolean isAlarming = intent.getBooleanExtra("isAlarming",false);
+//        if(isAlarming){
+//            mVpMainContainer.setCurrentItem(2);
+//            toolbar.setTitle(text[2]);
+//        }
     }
 
     @Override
@@ -150,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_setting_app_permission) {
-            SystemSettingsUtil.settingAppPermission(getApplicationContext());
+            AppConfigUtil.settingAppPermission(getApplicationContext());
             return true;
         }else if(id == R.id.action_add_device){
             Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
@@ -158,9 +169,9 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(intent,1001);
             return true;
         }else if(id == R.id.action_setting_app_details){
-            SystemSettingsUtil.AppDetailsSetting(getApplicationContext());
+            AppConfigUtil.AppDetailsSetting(getApplicationContext());
         }else if(id == R.id.action_setting_notification){
-            SystemSettingsUtil.settingNotification(this);
+            AppConfigUtil.settingNotification(this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -186,12 +197,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+       // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_camera) {
             // Handle the camera action
         }  else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_repair) {
+            Fragment fragment = new DeviceFaultReportFragment();
+            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
+
 
         } else if (id == R.id.nav_share) {
 
@@ -221,6 +235,27 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 从推送消息点进来
+        boolean isAlarming = intent.getBooleanExtra("isAlarming",false);
+        boolean isForeground = intent.getBooleanExtra("isForeground",false);
+        if(isAlarming && isForeground){
+            mVpMainContainer.setCurrentItem(1);
+            toolbar.setTitle("报警");
+            mBottomNavMenuBar.setSelected(1);
+
+        }
+
     }
 
     @Override

@@ -73,6 +73,7 @@
         <service android:name="com.wzlab.smartsecurity.service.IntentService"/>
         <activity
             android:name=".activity.account.AccountActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.start.StartActivity">
             <intent-filter>
@@ -84,7 +85,7 @@
         <activity
             android:name=".activity.main.MainActivity"
             android:label="@string/title_activity_main"
-
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>

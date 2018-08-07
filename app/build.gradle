@@ -10,9 +10,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
-                GETUI_APP_ID : "feD8QIf2zT60AVmLLDruf4",
-                GETUI_APP_KEY : "XezI8cUkHn5oguIW9NSmT8",
-                GETUI_APP_SECRET : "Luwo4pl8Ww5wc3CTZiETd6"
+                GETUI_APP_ID    : "feD8QIf2zT60AVmLLDruf4",
+                GETUI_APP_KEY   : "XezI8cUkHn5oguIW9NSmT8",
+                GETUI_APP_SECRET: "Luwo4pl8Ww5wc3CTZiETd6"
         ]
         ndk {
             abiFilters "armeabi", "arm64-v8a"
