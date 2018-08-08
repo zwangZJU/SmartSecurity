@@ -1,4 +1,4 @@
-package com.wzlab.smartsecurity.activity.main;
+package com.wzlab.smartsecurity.activity.repair;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,14 @@ public class DeviceFaultReportFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_repair);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+
         mTabLayout = view.findViewById(R.id.tl_repair_info);
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -84,8 +93,9 @@ public class DeviceFaultReportFragment extends Fragment {
         Fragment newRepairOrderFragment = new NewRepairOrderFragment();
         Fragment repairProcessFragment = new RepairProcessFragment();
         Fragment repairRecordFragment = new RepairRecordFragment();
-        mFragmentList.add(newRepairOrderFragment);
+
         mFragmentList.add(repairProcessFragment);
+        mFragmentList.add(newRepairOrderFragment);
         mFragmentList.add(repairRecordFragment);
         FragmentManager fragmentManager = getChildFragmentManager();
         ViewPagerAdapter adapter = new ViewPagerAdapter(fragmentManager, mFragmentList);

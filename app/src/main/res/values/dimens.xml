@@ -24,7 +24,7 @@
     <dimen name="label_size">15sp</dimen>
     <dimen name="subtitle_left_margin">2dp</dimen>
     <dimen name="label_left_margin">10dp</dimen>
-    <dimen name="label_top_margin">10dp</dimen>
+    <dimen name="label_top_margin">16dp</dimen>
 
     <!--ColorfulProgressDialog-->
     <dimen name="default_stroke_width">7dp</dimen>

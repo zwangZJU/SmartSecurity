@@ -47,13 +47,56 @@ public class GetDeviceInfo {
     public static interface SuccessCallback{
         void onSuccess(ArrayList list, String msg);
     }
+    public static interface SuccessCallbackForDeploy{
+        void onSuccess(String cmd, String msg);
+    }
 
     public static interface FailCallback{
         void onFail(String msg);
     }
 
+
+    // 布防撤防
+    public static void deployDefense(String deviceId, String cmd, final SuccessCallbackForDeploy successCallback, final FailCallback failCallback){
+        String url = Config.SERVER_URL + Config.ACTION_DEPLOY_DEFENSE;
+        new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    switch (jsonObject.getString(Config.KEY_STATUS)){
+                        case Config.RESULT_STATUS_SUCCESS:
+                            if(successCallback!=null){
+                                successCallback.onSuccess(jsonObject.getString("deploy_status"),jsonObject.getString(Config.RESULT_MESSAGE));
+                            }
+                            break;
+                        default:
+                            if(failCallback!=null){
+                                failCallback.onFail(jsonObject.getString(Config.RESULT_MESSAGE));
+                            }
+                            break;
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    if(failCallback!=null){
+                        failCallback.onFail("数据解析异常");
+                    }
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                if(failCallback!=null){
+                    failCallback.onFail("未能连接到服务器");
+                }
+            }
+        },Config.KEY_DEVICE_ID, deviceId, Config.KEY_COMMAND, cmd);
+    }
+
+    // 获取设备列表
     public static void getDeviceList(String phone, String role, final SuccessCallback successCallback, final FailCallback failCallback){
-        String url = Config.SERVER_URL + "getDeviceList";
+        String url = Config.SERVER_URL + Config.ACTION_GET_DEVICE_LIST;
         new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
@@ -100,6 +143,7 @@ public class GetDeviceInfo {
         },Config.KEY_PHONE, phone, Config.KEY_ROLE, role);
     }
 
+    // 设备绑定
     public static void deviceBinding(String phone, String role, String deviceInfo, String addrInfo, final SuccessCallback successCallback, final FailCallback failCallback){
         String url = Config.SERVER_URL + "deviceBinding";
         new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
@@ -109,7 +153,7 @@ public class GetDeviceInfo {
                     JSONObject jsonObject = new JSONObject(result);
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
- 
+
                                 successCallback.onSuccess(null,jsonObject.getString(Config.RESULT_MESSAGE));
 //                            }
                             break;

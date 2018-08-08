@@ -11,12 +11,12 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -27,7 +27,7 @@ import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
-import com.wzlab.smartsecurity.activity.account.RegisterFragment;
+import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.account.Logout;
 import com.wzlab.smartsecurity.service.IntentService;
@@ -81,6 +81,13 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        initView();
+
+
+
+    }
+
+    private void initView() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -125,14 +132,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         mFlMainContainer = findViewById(R.id.fl_main_container);
-
-//        // 当从消息推送进入时
-//        Intent intent = getIntent();
-//        boolean isAlarming = intent.getBooleanExtra("isAlarming",false);
-//        if(isAlarming){
-//            mVpMainContainer.setCurrentItem(2);
-//            toolbar.setTitle(text[2]);
-//        }
     }
 
     @Override
@@ -250,6 +249,13 @@ public class MainActivity extends AppCompatActivity
         boolean isAlarming = intent.getBooleanExtra("isAlarming",false);
         boolean isForeground = intent.getBooleanExtra("isForeground",false);
         if(isAlarming && isForeground){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            builder.setTitle("报警通知")
+                    .setMessage("你慌的一批")
+                    .setNegativeButton("知道了",null)
+                    .show();
+
             mVpMainContainer.setCurrentItem(1);
             toolbar.setTitle("报警");
             mBottomNavMenuBar.setSelected(1);

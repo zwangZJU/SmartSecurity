@@ -2,12 +2,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="#909c"
+
     tools:context="com.wzlab.smartsecurity.activity.repair.RepairProcessFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.wzlab.smartsecurity.widget.LoadingLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="0" />
+        android:id="@+id/loading_layout_repair_process">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.baoyachi.stepview.HorizontalStepView
+                    android:id="@+id/step_view_repair_process"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:baselineAlignedChildIndex="11"
+                    android:scrollbarSize="16dp"/>
+
+                <com.baoyachi.stepview.VerticalStepView
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/step_view_state_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </ScrollView>
+    </com.wzlab.smartsecurity.widget.LoadingLayout>
 </FrameLayout>

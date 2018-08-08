@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
 import com.wzlab.smartsecurity.widget.ColorfulProgressBar;
@@ -68,6 +69,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView mTvRepairProgress;
     private TextView mTvRepairRecord;
     private TextView mTvDeviceType;
+    private String deviceId;
+
 
 
     @Override
@@ -84,14 +87,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private void initData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String deviceId = bundle.getString("device_id","11");
+        deviceId = bundle.getString("device_id","11");
         GetDeviceInfo.getDeviceDetails(deviceId, new GetDeviceInfo.SuccessCallback() {
             @Override
             public void onSuccess(ArrayList list, String msg) {
                 Message handlerMsg = new Message();
                 if(list.size()>0){
                     Device device = (Device)list.get(0);
-                    String deviceId = getData(device.getDevice_id());
+                    deviceId = getData(device.getDevice_id());
                     String productType = getData(device.getProduct_type());
                     String status = getData(device.getStatus());
                     String isAlarming = getData(device.getIs_alarming());
@@ -108,12 +111,36 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String deviceType = getData(device.getProduct_type());
 
                     mTvDeviceId.setText(deviceId);
-                    if(status.equals("1")){
-                        mSwitchDeviceStatus.setChecked(true);
-                    }else {
-                        mSwitchDeviceStatus.setChecked(false);
-                    }
-                    mSwitchDeviceStatus.setEnabled(false);
+                   // TODO
+                    setSwitchChecked(status);
+                    mSwitchDeviceStatus.setEnabled(true);
+                    mSwitchDeviceStatus.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            String cmd = null;
+                            if(mSwitchDeviceStatus.isChecked()){
+                                cmd = "4";
+                            }else{
+                                cmd = "5";
+                            }
+
+
+
+                            GetDeviceInfo.deployDefense(deviceId, cmd, new GetDeviceInfo.SuccessCallbackForDeploy() {
+                                @Override
+                                public void onSuccess(String deployStatus, String msg) {
+                                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                    setSwitchChecked(deployStatus);
+                                }
+                            }, new GetDeviceInfo.FailCallback() {
+                                @Override
+                                public void onFail(String msg) {
+                                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
                     if(isAlarming.equals("1")){
                         mIvIsAlarming.setImageDrawable(getDrawable(R.drawable.ic_bottom_nav_bar_alarm_enable));
                     }else {
@@ -130,10 +157,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     mTvPrincipalName.setText("姓名："+head);
                     mTvPrincipalPhone.setText("联系电话："+headPhone);
                     mTvPrincipalPolice.setText("所属派出所："+policeStation);
-
-
-
-
 
 
                     handlerMsg.what = KEY_LOADING_SUCCESS;
@@ -190,6 +213,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void setSwitchChecked(String status){
+        if(status.equals("1")){
+            mSwitchDeviceStatus.setChecked(true);
+        }else {
+            mSwitchDeviceStatus.setChecked(false);
+        }
     }
 
     public String getData(String s){

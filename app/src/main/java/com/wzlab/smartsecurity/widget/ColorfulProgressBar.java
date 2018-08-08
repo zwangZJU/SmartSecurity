@@ -52,6 +52,8 @@ public class ColorfulProgressBar extends View {
     private Paint backgroundPaint;
     private Paint foregroundPaint;
 
+
+
     //region Constructor & Init Method
     public ColorfulProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);

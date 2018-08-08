@@ -25,6 +25,9 @@ public class Config {
     public static final String ACTION_GET_SMS_CODE="getSmsCode";
     public static final String ACTION_LOGOUT = "userLogout";
     public static final String ACTION_GET_DEVICE_DETAILS = "getDeviceDetails";
+    public static final String ACTION_GET_DEVICE_LIST = "getDeviceList";
+    public static final String ACTION_DEPLOY_DEFENSE = "deployDefense";
+    public static final String ACTION_GRT_REPAIR_PROGRESS = "getRepairProgress";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";
@@ -40,6 +43,8 @@ public class Config {
     public static final String KEY_SMS_SESSION_ID = "smsSessionId";
     public static final String KEY_STATUS = "status";
     public static final String KEY_ROLE = "role";
+    public static final String KEY_DEVICE_ID = "device_id";
+    public static final String KEY_COMMAND = "cmd";
 
 
     public static final String RESULT_STATUS_SUCCESS = "1";

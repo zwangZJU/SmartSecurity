@@ -59,6 +59,7 @@ public class IntentService extends GTIntentService {
     @Override
     public void onNotificationMessageClicked(Context context, GTNotificationMessage msg) {
         boolean isAppRunningBackground = AppConfigUtil.isAppRunningBackground(context);
+        // TODO
         if(isAppRunningBackground){
             Intent intent = new Intent(context, StartActivity.class);
             //保证能够跳转
