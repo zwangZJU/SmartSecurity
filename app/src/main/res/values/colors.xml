@@ -19,5 +19,8 @@
     <color name="margin_gray">#efefef</color>
     <color name="content_background">#909c</color>
     <color name="transparent">#0000</color>
+    <color name="black1">#141414</color>
+    <color name="black2">#3b3b3b</color>
+
 
 </resources>

@@ -17,6 +17,7 @@ public class AlarmLog {
 
 
 
+	private String user_address;
 	/**
 	 * 报警序号
 	 */
@@ -45,7 +46,7 @@ public class AlarmLog {
 	/**
 	 * 报警方式
 	 */
-	private String type_;
+	private String type;
 	
 	/**
 	 * 处理者
@@ -60,7 +61,7 @@ public class AlarmLog {
 	/**
 	 * 报警原因
 	 */
-	private String reason_;
+	private String reason;
 	
 	/**
 	 * 报警解除
@@ -86,7 +87,18 @@ public class AlarmLog {
 	 * 备用3
 	 */
 	private String beiyong3_;
-	
+
+
+	// wzlab
+	public String getUser_address() {
+		return user_address;
+	}
+
+	public void setUser_address(String user_address) {
+		this.user_address = user_address;
+	}
+
+
 
 	/**
 	 * 报警序号
@@ -136,10 +148,10 @@ public class AlarmLog {
 	/**
 	 * 报警方式
 	 * 
-	 * @return type_
+	 * @return type
 	 */
 	public String getType_() {
-		return type_;
+		return type;
 	}
 	
 	/**
@@ -163,10 +175,10 @@ public class AlarmLog {
 	/**
 	 * 报警原因
 	 * 
-	 * @return reason_
+	 * @return reason
 	 */
-	public String getReason_() {
-		return reason_;
+	public String getReason() {
+		return reason;
 	}
 	
 	/**
@@ -263,10 +275,10 @@ public class AlarmLog {
 	/**
 	 * 报警方式
 	 * 
-	 * @param type_
+	 * @param type
 	 */
-	public void setType_(String type_) {
-		this.type_ = type_;
+	public void setType_(String type) {
+		this.type = type;
 	}
 	
 	/**
@@ -290,10 +302,10 @@ public class AlarmLog {
 	/**
 	 * 报警原因
 	 * 
-	 * @param reason_
+	 * @param reason
 	 */
-	public void setReason_(String reason_) {
-		this.reason_ = reason_;
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	
 	/**

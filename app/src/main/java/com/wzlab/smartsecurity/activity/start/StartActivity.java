@@ -120,10 +120,7 @@ public class StartActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation arg0) {
                 // TODO Auto-generated method stub
                 if(ContextCompat.checkSelfPermission(StartActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
-//                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplication());
-//                    String token = sp.getString(Config.KEY_TOKEN, "");
-//                    Log.d(TAG, "onAnimationEnd: "+ token);
-//                    String phone = sp.getString(Config.KEY_PHONE,"");
+
 
                     if(message.equals("1")){
                         Intent mainIntent = new Intent(StartActivity.this, MainActivity.class);

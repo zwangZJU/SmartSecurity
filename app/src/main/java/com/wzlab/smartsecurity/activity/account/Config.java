@@ -28,6 +28,7 @@ public class Config {
     public static final String ACTION_GET_DEVICE_LIST = "getDeviceList";
     public static final String ACTION_DEPLOY_DEFENSE = "deployDefense";
     public static final String ACTION_GRT_REPAIR_PROGRESS = "getRepairProgress";
+    public static final String ACTION_GET_ALARM_LOG_LIST = "getAlarmLogList";
     public static final String ACTION_SOS = "sos";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
@@ -62,6 +63,7 @@ public class Config {
 
    public static void clearCache(Context context){
        SharedPreferences.Editor editor = context.getSharedPreferences(APP_ID, Context.MODE_PRIVATE).edit();
+
        editor.clear();
        editor.apply();
    }

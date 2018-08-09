@@ -41,4 +41,5 @@
     <string name="defensive_state">防御状态</string>
     <string name="principal">区域负责人信息</string>
     <string name="is_alarming">报警状态</string>
+    <string name="alarm_notification">报警通知</string>
 </resources>

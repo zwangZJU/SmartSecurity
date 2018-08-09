@@ -8,13 +8,19 @@
     tools:context="com.wzlab.smartsecurity.activity.main.AlarmFragment">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_alarm_log"
+    <com.wzlab.smartsecurity.widget.LoadingLayout
         android:layout_width="match_parent"
+        android:id="@+id/loading_layout_alarm_log"
         android:layout_height="0dp"
         android:layout_weight="4">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_alarm_log"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           >
 
-    </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
+    </com.wzlab.smartsecurity.widget.LoadingLayout>
 
     <ImageView
         android:id="@+id/iv_sos"

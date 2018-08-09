@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -96,7 +97,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     Device device = (Device)list.get(0);
                     deviceId = getData(device.getDevice_id());
                     String productType = getData(device.getProduct_type());
-                    String status = getData(device.getStatus());
+                    String status = getData(device.getArrange_withdraw());
                     String isAlarming = getData(device.getIs_alarming());
                     String productionDate = getData(device.getProduction_date());
                     String manufacturer = "浙江中创天成科技有限公司";
@@ -120,13 +121,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                             String cmd = null;
                             if(mSwitchDeviceStatus.isChecked()){
-                                cmd = "4";
-                            }else{
                                 cmd = "5";
+                            }else{
+                                cmd = "4";
                             }
 
 
-
+                            Log.e("ssss", "onClick: " + cmd);
                             GetDeviceInfo.deployDefense(deviceId, cmd, new GetDeviceInfo.SuccessCallbackForDeploy() {
                                 @Override
                                 public void onSuccess(String deployStatus, String msg) {
@@ -229,5 +230,5 @@ public class DeviceDetailActivity extends AppCompatActivity {
         }else {
             return s;
         }
-    };
+    }
 }

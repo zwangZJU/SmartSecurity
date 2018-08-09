@@ -2,6 +2,11 @@ package com.wzlab.smartsecurity.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +52,24 @@ public class AlarmLogAdapter extends RecyclerView.Adapter{
 
         AlarmLog alarmLog = alarmLogList.get(position);
 
-        holder.mTvDate.setText(alarmLog.getAlarm_time());
+
+        String addr = getData(alarmLog.getUser_address().split("#")[0]);
+        String deviceId = getData(alarmLog.getDevice_id());
+        String type = getData(alarmLog.getType_());
+        String alarmTime = getData(alarmLog.getAlarm_time());
+        String reason = getData(alarmLog.getReason());
+
+        String result = null;
+        if(type.equals("1")){
+            result = "&nbsp;&nbsp;&nbsp;&nbsp;您通过 " + "<font color='#141414'>" +"手机一键报警"+ " </font>功能发送了报警信号,有关人员会尽快联系您，<font color='#141414'>请保持手机畅通！</font>";
+        }else {
+            result = "&nbsp;&nbsp;&nbsp;&nbsp;您位于 " + "<font color='#141414'>" +addr + " </font>的编号为 <font color='#141414'>"+ deviceId + " </font>的设备发出了报警信号<br><br>" + "<font color='#141414'>"
+                    +"报警方式："+"设备报警"+"<br>报警原因："+reason + "</font>";
+        }
+
+        holder.mTvDate.setText(alarmTime);
+
+        holder.mTvAlarmContent.setText(Html.fromHtml(result));
     }
 
     @Override
@@ -59,11 +81,30 @@ public class AlarmLogAdapter extends RecyclerView.Adapter{
     class AlarmLogViewHolder extends RecyclerView.ViewHolder{
 
         TextView mTvDate;
+        TextView mTvAlarmContent;
         public AlarmLogViewHolder(View itemView) {
             super(itemView);
             mTvDate = itemView.findViewById(R.id.tv_alarm_time);
+            mTvAlarmContent = itemView.findViewById(R.id.tv_alarm_log_content);
             // TODO 这里写点击事件
         }
+    }
+
+    public String getData(String s){
+        if(s == null || s.equals("")){
+            return "暂无数据";
+        }else {
+            return s;
+        }
+    }
+
+    public ArrayList<AlarmLog> getStatusList() {
+        return alarmLogList;
+    }
+
+    public void setStatusList(ArrayList<AlarmLog> statusList) {
+        this.alarmLogList = statusList;
+        notifyDataSetChanged();
     }
 
 }

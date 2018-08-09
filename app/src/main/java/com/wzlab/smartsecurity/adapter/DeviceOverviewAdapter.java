@@ -62,14 +62,18 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
             holder.mTvDeviceId.setText("ID:"+ device.getDevice_id());
 
 
-            if(device.getStatus().equals("1")){
+            if(device.getArrange_withdraw().equals("1")){
                 holder.mSwitchDefensiveState.setChecked(true);
             }else {
                 holder.mSwitchDefensiveState.setChecked(false);
             }
             holder.mSwitchDefensiveState.setEnabled(false);
-            holder.mIvAlarmState.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bottom_nav_bar_alarm));
-
+            String isAlarming = device.getIs_alarming();
+            if(isAlarming.equals("1")){
+                holder.mIvAlarmState.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bottom_nav_bar_alarm_enable));
+            }else {
+                holder.mIvAlarmState.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bottom_nav_bar_alarm));
+            }
         }
 
     }

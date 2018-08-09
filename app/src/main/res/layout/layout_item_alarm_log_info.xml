@@ -10,8 +10,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="报警通知"
-
+        android:text="@string/alarm_notification"
+        android:textColor="#111"
         android:layout_marginTop="10dp"
         android:textSize="17sp"/>
 
@@ -20,12 +20,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv_alarm_time"
         android:text="2018年9月16日"
-        android:textColor="@color/deep_gray"/>
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="您位于\n浙江省宁波市鄞州区科技信息孵化园B座402\n 的编号为\n89757\n 的设备，在 \n 20：55 发出报警信号"/>
+        android:id="@+id/tv_alarm_log_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="15sp"
+        />
 
 
 

@@ -231,6 +231,7 @@ public class MainActivity extends AppCompatActivity
             // 清除缓存
             Config.clearCache(getApplicationContext());
             startActivity(new Intent(MainActivity.this, AccountActivity.class));
+            finish();
 
         } else if (id == R.id.nav_shut_down) {
             finish();

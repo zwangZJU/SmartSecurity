@@ -27,6 +27,16 @@ import java.util.Map;
  */
 
 public class LoadingLayout extends FrameLayout {
+    public boolean isEmptyFloatButtonVisible() {
+        return isEmptyFloatButtonVisible;
+    }
+
+    public void setEmptyFloatButtonVisible(boolean emptyFloatButtonVisible) {
+        isEmptyFloatButtonVisible = emptyFloatButtonVisible;
+    }
+
+    public boolean isEmptyFloatButtonVisible = true;
+
     public interface OnInflateListener {
         void onInflate(View inflated);
     }
@@ -289,6 +299,9 @@ public class LoadingLayout extends FrameLayout {
             // wzlab
             //添加设备按钮的点击事件
             FloatingActionButton fabAddDevice = layout.findViewById(R.id.fab_add_empty);
+            if(!isEmptyFloatButtonVisible()){
+                fabAddDevice.setVisibility(GONE);
+            }
             fabAddDevice.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
