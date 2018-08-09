@@ -47,4 +47,9 @@
         <item name="RetryText">加载失败，点击重试~~</item>
     </style>
 
+    <!--处理AlertDialog报错的问题-->
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="android:background">#FFFFFF</item>
+    </style>
+
 </resources>

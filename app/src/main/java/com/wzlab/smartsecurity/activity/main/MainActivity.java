@@ -69,6 +69,11 @@ public class MainActivity extends AppCompatActivity
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
 
         setContentView(R.layout.activity_main);
+
+
+
+
+
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
@@ -250,17 +255,19 @@ public class MainActivity extends AppCompatActivity
         boolean isForeground = intent.getBooleanExtra("isForeground",false);
         if(isAlarming && isForeground){
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            mVpMainContainer.setCurrentItem(1);
+            toolbar.setTitle("报警");
+            mBottomNavMenuBar.setSelected(1);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialogCustom);
             builder.setTitle("报警通知")
                     .setMessage("你慌的一批")
                     .setNegativeButton("知道了",null)
                     .show();
 
-            mVpMainContainer.setCurrentItem(1);
-            toolbar.setTitle("报警");
-            mBottomNavMenuBar.setSelected(1);
+
 
         }
+
 
     }
 
@@ -269,8 +276,8 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         PushManager pushManager = PushManager.getInstance();
         pushManager.stopService(getApplicationContext());
-        pushManager.initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
-        // 注册消息接收服务
-        pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
+//        pushManager.initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
+//        // 注册消息接收服务
+//        pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
     }
 }

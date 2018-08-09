@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="#909c"
+    android:background="@color/content_background"
 
     tools:context="com.wzlab.smartsecurity.activity.repair.RepairProcessFragment">
 
@@ -18,7 +18,9 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:layout_marginBottom="10dp">
 
                 <com.baoyachi.stepview.HorizontalStepView
                     android:id="@+id/step_view_repair_process"
@@ -35,7 +37,8 @@
                     android:layout_marginLeft="15dp"
                     android:id="@+id/step_view_state_info"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:paddingBottom="10dp"/>
             </LinearLayout>
         </ScrollView>
     </com.wzlab.smartsecurity.widget.LoadingLayout>

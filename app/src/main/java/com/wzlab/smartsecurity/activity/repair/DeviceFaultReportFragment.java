@@ -35,6 +35,7 @@ public class DeviceFaultReportFragment extends Fragment {
 
 
     private TabLayout mTabLayout;
+    private NoScrollViewPager mViewPager;
 
     public DeviceFaultReportFragment() {
         // Required empty public constructor
@@ -86,12 +87,12 @@ public class DeviceFaultReportFragment extends Fragment {
         });
 
         // 与ViewPager关联
-        final NoScrollViewPager mViewPager = view.findViewById(R.id.vp_repair_info);
+        mViewPager = view.findViewById(R.id.vp_repair_info);
         mTabLayout.setupWithViewPager(mViewPager);
 
         ArrayList<Fragment> mFragmentList = new ArrayList<>();
         Fragment newRepairOrderFragment = new NewRepairOrderFragment();
-        Fragment repairProcessFragment = new RepairProcessFragment();
+        Fragment repairProcessFragment = new RepairProcessFragment(mViewPager);
         Fragment repairRecordFragment = new RepairRecordFragment();
 
         mFragmentList.add(repairProcessFragment);

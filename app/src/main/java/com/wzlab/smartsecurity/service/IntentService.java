@@ -63,12 +63,13 @@ public class IntentService extends GTIntentService {
         if(isAppRunningBackground){
             Intent intent = new Intent(context, StartActivity.class);
             //保证能够跳转
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP );
             intent.putExtra("isAlarming", true);
             startActivity(intent);
         }else {
             Intent intent = new Intent(context, MainActivity.class);
             //保证能够跳转
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("isForeground",true);
             intent.putExtra("isAlarming", true);
             startActivity(intent);

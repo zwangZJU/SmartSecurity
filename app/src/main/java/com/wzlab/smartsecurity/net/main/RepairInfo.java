@@ -22,18 +22,18 @@ public class RepairInfo {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
 
-                    switch (jsonObject.getString(Config.KEY_STATUS)){
-                        case Config.RESULT_STATUS_SUCCESS:
-                            if(successCallback!=null){
+//                    switch (jsonObject.getString(Config.KEY_STATUS)){
+//                        case Config.RESULT_STATUS_SUCCESS:
+//                            if(successCallback!=null){
                                 successCallback.onSuccess(jsonObject.getString("processing_state"),jsonObject.getString("state_info"));
-                            }
-                            break;
-                        default:
-                            if(failCallback!=null){
-                                failCallback.onFail(jsonObject.getString(Config.RESULT_MESSAGE));
-                            }
-                            break;
-                    }
+//                            }
+//                            break;
+//                        default:
+//                            if(failCallback!=null){
+//                                failCallback.onFail(jsonObject.getString(Config.RESULT_MESSAGE));
+//                            }
+//                            break;
+//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     if(failCallback!=null){

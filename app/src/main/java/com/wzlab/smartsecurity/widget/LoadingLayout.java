@@ -286,6 +286,7 @@ public class LoadingLayout extends FrameLayout {
                 mOnEmptyInflateListener.onInflate(layout);
             }
 
+            // wzlab
             //添加设备按钮的点击事件
             FloatingActionButton fabAddDevice = layout.findViewById(R.id.fab_add_empty);
             fabAddDevice.setOnClickListener(new View.OnClickListener() {
