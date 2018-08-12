@@ -52,4 +52,9 @@
     <item name="android:background">#FFFFFF</item>
     </style>
 
+    <style name="SpinnerStyle">
+        <item name="android:colorButtonNormal">#000</item>
+
+    </style>
+
 </resources>

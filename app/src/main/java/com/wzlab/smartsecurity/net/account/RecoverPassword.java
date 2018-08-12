@@ -44,6 +44,7 @@ public class RecoverPassword {
                 if(failCallback!=null){
                     failCallback.onFail("未能连接到服务器");
                 }
+                //MD5加密
             }
         },Config.KEY_PHONE, phone,Config.KEY_NEWPASSWORD, pwd, Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId);
     }

@@ -42,4 +42,7 @@
     <string name="principal">区域负责人信息</string>
     <string name="is_alarming">报警状态</string>
     <string name="alarm_notification">报警通知</string>
+    <string name="repair_order">报修单</string>
+    <string name="please_scan_qr_code_on_device">请扫描设备上的二维码</string>
+    <string name="submit">提交</string>
 </resources>

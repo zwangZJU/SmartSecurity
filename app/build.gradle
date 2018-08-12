@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0-alpha3'
     compile files('libs/GetuiSDK2.12.4.0.jar')
     implementation 'com.github.baoyachi:StepView:1.9'
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 }

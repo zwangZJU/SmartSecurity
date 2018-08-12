@@ -29,6 +29,8 @@ public class Config {
     public static final String ACTION_DEPLOY_DEFENSE = "deployDefense";
     public static final String ACTION_GRT_REPAIR_PROGRESS = "getRepairProgress";
     public static final String ACTION_GET_ALARM_LOG_LIST = "getAlarmLogList";
+    public static final String ACTION_DEVICE_FAULT_REPORT = "deviceFaultReport";
+    public static final String ACTION_GET_REPAIR_LOG_LIST = "getRepairLogList";
     public static final String ACTION_SOS = "sos";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";

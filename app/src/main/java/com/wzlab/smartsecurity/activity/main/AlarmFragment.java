@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class AlarmFragment extends Fragment {
     private static final int KEY_LOADING_EMPTY = 0;
     private static final int KEY_LOADING_SUCCESS = 1;
     private static final int KEY_LOADING_LOADING = 2;
+    private static final int KEY_FINISH_REFRESH = 3;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -67,10 +69,14 @@ public class AlarmFragment extends Fragment {
             }else if(msg.what == KEY_LOADING_SUCCESS){
 
                 loadingLayout.showContent();
+            }else if(msg.what == KEY_FINISH_REFRESH){
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         }
     };
     private RecyclerView mRvAlarmLog;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public AlarmFragment() {
         // Required empty public constructor
@@ -91,6 +97,7 @@ public class AlarmFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_alarm, container, false);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,6 +106,30 @@ public class AlarmFragment extends Fragment {
         loadingLayout.setEmptyFloatButtonVisible(false);
         alarmLogList = new ArrayList<>();
         getAlarmLogList();
+
+        swipeRefreshLayout = view.findViewById(R.id.srl_refresh_alarm_log);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            getAlarmLogList();
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Message message = new Message();
+                        message.what = KEY_FINISH_REFRESH;
+                        handler.sendMessage(message);
+                    }
+                }.start();
+
+            }
+        });
 //        AlarmLog alarmLog = new AlarmLog();
 //        alarmLog.setAlarm_time("9月16日");
 //        alarmLog.setDevice_id("www");

@@ -13,13 +13,18 @@
         android:id="@+id/loading_layout_alarm_log"
         android:layout_height="0dp"
         android:layout_weight="4">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_alarm_log"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/srl_refresh_alarm_log"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           >
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_alarm_log"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               >
 
-        </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </com.wzlab.smartsecurity.widget.LoadingLayout>
 
     <ImageView

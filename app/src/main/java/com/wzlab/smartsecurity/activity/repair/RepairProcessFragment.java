@@ -150,9 +150,9 @@ public class RepairProcessFragment extends Fragment {
         // 水平
         stepHorList = new ArrayList<>();
         StepBean stepBean0 = new StepBean("提交",1);
-        StepBean stepBean1 = new StepBean("接单",1);
-        StepBean stepBean2 = new StepBean("维修",1);
-        StepBean stepBean3 = new StepBean("完成",1);
+        StepBean stepBean1 = new StepBean("接单",-1);
+        StepBean stepBean2 = new StepBean("维修",-1);
+        StepBean stepBean3 = new StepBean("完成",-1);
 
         stepHorList.add(stepBean0);
         stepHorList.add(stepBean1);

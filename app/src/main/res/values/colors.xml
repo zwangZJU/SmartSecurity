@@ -16,6 +16,7 @@
     <color name="line">#cccccc</color>
     <color name="refresh_back_color">#990099cc</color>
     <color name="background">#f6f6f6</color>
+    <color name="white_top">#fff</color>
     <color name="margin_gray">#efefef</color>
     <color name="content_background">#909c</color>
     <color name="transparent">#0000</color>

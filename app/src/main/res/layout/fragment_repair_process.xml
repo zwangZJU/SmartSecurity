@@ -31,13 +31,15 @@
                     android:scrollbarSize="16dp"/>
 
                 <com.baoyachi.stepview.VerticalStepView
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="40dp"
+
                     android:layout_marginBottom="30dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginLeft="15dp"
                     android:id="@+id/step_view_state_info"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingTop="15dp"
                     android:paddingBottom="10dp"/>
             </LinearLayout>
         </ScrollView>

@@ -48,6 +48,7 @@ public class Register {
                     failCallback.onFail("未能连接到服务器");
 
                 }
+                //TODO MD5加密后发送
             }
         },Config.KEY_PHONE, phone, Config.KEY_PASSWORD,password, Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId,Config.KEY_ROLE,Config.TYPE_ROLE);
 

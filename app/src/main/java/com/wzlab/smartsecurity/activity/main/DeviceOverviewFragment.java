@@ -11,6 +11,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,12 +41,12 @@ public class DeviceOverviewFragment extends Fragment {
     private static final int KEY_LOADING_EMPTY = 0;
     private static final int KEY_LOADING_SUCCESS = 1;
     private static final int KEY_LOADING_LOADING = 2;
-    private static final int FINISH_REFRESH = 3;
+    private static final int KEY_FINISH_REFRESH = 3;
     private RecyclerView mRvDeviceOverview;
     private ArrayList<Device> deviceList;
     private DeviceOverviewAdapter deviceOverviewAdapter;
     private LoadingLayout loadingLayout;
-    private CircleRefreshLayout circleRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public DeviceOverviewFragment() {
         // Required empty public constructor
@@ -108,12 +109,15 @@ public class DeviceOverviewFragment extends Fragment {
                     }
                 });
                 mRvDeviceOverview.setAdapter(deviceOverviewAdapter);
+
+
                 loadingLayout.showContent();
             }else if(msg.what == KEY_LOADING_LOADING){
                 loadingLayout.showLoading();
-            }else if(msg.what == FINISH_REFRESH){
-                initData(true);
-                circleRefreshLayout.finishRefreshing();
+            }else if(msg.what == KEY_FINISH_REFRESH){
+
+                swipeRefreshLayout.setRefreshing(false);
+
             }
         }
     };
@@ -144,30 +148,53 @@ public class DeviceOverviewFragment extends Fragment {
             }
         });
 
-        circleRefreshLayout = rootView.findViewById(R.id.refresh_layout);
-        circleRefreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
+        swipeRefreshLayout = rootView.findViewById(R.id.srl_refresh_device_list);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void completeRefresh() {
-
-            }
-
-            @Override
-            public void refreshing() {
+            public void onRefresh() {
                 new Thread(){
                     @Override
                     public void run() {
+                        initData(true);
                         try {
-                            Thread.sleep(1200);
-                            Message msg = new Message();
-                            msg.what = FINISH_REFRESH;
-                            handler.sendMessage(msg);
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        Message message = new Message();
+                        message.what = KEY_FINISH_REFRESH;
+                        handler.sendMessage(message);
                     }
                 }.start();
             }
         });
+//        swipeRefreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
+//            @Override
+//            public void completeRefresh() {
+//
+//
+//            }
+//
+//            @Override
+//            public void refreshing() {
+//                new Thread(){
+//                    @Override
+//                    public void run() {
+//
+//                        try {
+//                            Thread.sleep(1500);
+//
+//                            Message msg = new Message();
+//                            msg.what = FINISH_REFRESH;
+//                            handler.sendMessage(msg);//                            handler.sendMessage(msg);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }.start();
+//            }
+//        });
 
 
 
@@ -190,7 +217,7 @@ public class DeviceOverviewFragment extends Fragment {
         }
     }
 
-    private void initData(boolean isPulling) {
+    public void initData(boolean isPulling) {
 
         deviceList = new ArrayList<Device>();
 
