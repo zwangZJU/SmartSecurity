@@ -98,7 +98,7 @@ public class ForgetPasswordFragment extends Fragment {
                     @Override
                     public void onSuccess(String result) {
                         Toast.makeText(view.getContext(), R.string.reset_password_successfully,Toast.LENGTH_SHORT).show();
-
+                            mEtFpSmsCode.requestFocus();
                             getFragmentManager().popBackStack();
 
 

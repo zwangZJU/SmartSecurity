@@ -88,6 +88,8 @@ public class DeviceFaultReportFragment extends Fragment {
 
         // 与ViewPager关联
         mViewPager = view.findViewById(R.id.vp_repair_info);
+        mViewPager.setSmooth(true);
+        mViewPager.setScroll(true);
         mTabLayout.setupWithViewPager(mViewPager);
 
         ArrayList<Fragment> mFragmentList = new ArrayList<>();

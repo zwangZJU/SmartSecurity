@@ -17,7 +17,7 @@
                   android:screenOrientation="portrait"
                   android:clearTaskOnLaunch="true"
                   android:stateNotNeeded="true"
-                  android:theme="@style/AppTheme"
+                  android:theme="@style/AppTheme.NoActionBar"
                   android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="com.google.zxing.client.android.SCAN"/>

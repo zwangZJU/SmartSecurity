@@ -17,9 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
@@ -27,6 +29,7 @@ import com.skateboard.zxinglib.CaptureActivity;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.account.Logout;
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout mFlMainContainer;
     //v4包下的FragmentManager
     public static android.support.v4.app.FragmentManager sV4FragManager ;
+
+    private Menu mMenu;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +93,34 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         initView();
+        initNavView();
+
+
 
 
 
     }
 
-    private void initView() {
-        NavigationView navigationView = findViewById(R.id.nav_view);
+    private void initNavView() {
+        drawer = findViewById(R.id.drawer_layout);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        ImageView mIvNavAvatar = navigationView.getHeaderView(0).findViewById(R.id.iv_nav_avatar);
+        mIvNavAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new PersonalCenterFragment();
+                getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+    }
+
+
+    private void initView() {
+
 
         mVpMainContainer = findViewById(R.id.vp_main_container);
         ArrayList<Fragment> mFragmentList = new ArrayList<>();
@@ -125,6 +151,12 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(int position) {
                 mVpMainContainer.setCurrentItem(position);
                 toolbar.setTitle(text[position]);
+                if(position != 0){
+
+                    mMenu.findItem(R.id.action_add_device).setVisible(false);
+                }else{
+                    mMenu.findItem(R.id.action_add_device).setVisible(true);
+                }
 
             }
         });
@@ -141,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -149,12 +181,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.\
+
         getMenuInflater().inflate(R.menu.main, menu);
+        mMenu = menu;
+
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -245,12 +284,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        // 进来之后刷新所有页面
+     //   mVpMainContainer.notify();
 
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+     //  Log.e(TAG, "onStart: 进来了" );
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         // 从推送消息点进来
         boolean isAlarming = intent.getBooleanExtra("isAlarming",false);
         boolean isForeground = intent.getBooleanExtra("isForeground",false);

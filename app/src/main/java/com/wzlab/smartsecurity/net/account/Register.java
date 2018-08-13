@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
+import com.wzlab.smartsecurity.utils.Encrypt;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class Register {
                 }
                 //TODO MD5加密后发送
             }
-        },Config.KEY_PHONE, phone, Config.KEY_PASSWORD,password, Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId,Config.KEY_ROLE,Config.TYPE_ROLE);
+        },Config.KEY_PHONE, phone, Config.KEY_PASSWORD, Encrypt.md5(password), Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId,Config.KEY_ROLE,Config.TYPE_ROLE);
 
 
     }

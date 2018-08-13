@@ -15,6 +15,10 @@ public class NoScrollViewPager extends ViewPager {
 
     public boolean isScroll = false;
 
+
+
+    public boolean isSmooth = false;
+
     public NoScrollViewPager(Context context) {
         super(context);
     }
@@ -47,7 +51,7 @@ public class NoScrollViewPager extends ViewPager {
     //去除切换动画
     @Override
     public void setCurrentItem(int item) {
-        super.setCurrentItem(item,false);
+        super.setCurrentItem(item,isSmooth);
     }
 
 //    @Override
@@ -61,5 +65,13 @@ public class NoScrollViewPager extends ViewPager {
 
     public void setScroll(boolean scroll) {
         isScroll = scroll;
+    }
+
+    public boolean isSmooth() {
+        return isSmooth;
+    }
+
+    public void setSmooth(boolean smooth) {
+        isSmooth = smooth;
     }
 }

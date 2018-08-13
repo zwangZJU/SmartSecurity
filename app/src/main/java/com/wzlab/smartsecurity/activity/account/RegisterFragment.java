@@ -57,6 +57,7 @@ public class RegisterFragment extends Fragment {
                     new GetSmsCode(phone, Config.TYPE_SMS_CODE_REGISTER, new GetSmsCode.SuccessCallback() {
                         @Override
                         public void onSuccess(String smsSessionId,String msg) {
+                            mEtSmsCode.requestFocus();
                             mSmsSessionId = smsSessionId;
                             Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
                         }

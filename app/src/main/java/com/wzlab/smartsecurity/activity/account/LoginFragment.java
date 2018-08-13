@@ -94,6 +94,7 @@ public class LoginFragment extends Fragment {
                     new GetSmsCode(phone, Config.TYPE_SMS_CODE_LOGIN, new GetSmsCode.SuccessCallback() {
                         @Override
                         public void onSuccess(String smsSessionId, String msg) {
+                            mEtLoginSmsCode.requestFocus();
                             mSmsSessionId = smsSessionId;
                             Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
                         }

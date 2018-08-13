@@ -3,6 +3,7 @@ package com.wzlab.smartsecurity.net.account;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
+import com.wzlab.smartsecurity.utils.Encrypt;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +47,7 @@ public class RecoverPassword {
                 }
                 //MD5加密
             }
-        },Config.KEY_PHONE, phone,Config.KEY_NEWPASSWORD, pwd, Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId);
+        },Config.KEY_PHONE, phone,Config.KEY_NEWPASSWORD, Encrypt.md5(pwd), Config.KEY_SMS_CODE, smsCode,Config.KEY_SMS_SESSION_ID,smsSessionId);
     }
 
     public static interface SuccessCallback {
