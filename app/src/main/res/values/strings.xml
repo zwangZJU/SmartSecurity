@@ -45,4 +45,7 @@
     <string name="repair_order">报修单</string>
     <string name="please_scan_qr_code_on_device">请扫描设备上的二维码</string>
     <string name="submit">提交</string>
+    <string name="setting_avatar">设置个人头像</string>
+    <string name="change_avatar">更换头像</string>
+    <string name="save_avatar">保存头像</string>
 </resources>

@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.skateboard.zxinglib.CaptureActivity;
-import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
+
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.start.StartActivity;
@@ -127,7 +127,9 @@ public class DeviceOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_device_overview, container, false);
+        View view =inflater.inflate(R.layout.fragment_device_overview, container, false);
+
+        return view;
     }
 
     @Override

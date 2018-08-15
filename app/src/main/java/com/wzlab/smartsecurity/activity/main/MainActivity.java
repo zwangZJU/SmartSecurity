@@ -1,10 +1,15 @@
 package com.wzlab.smartsecurity.activity.main;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 
 import android.support.design.widget.NavigationView;
@@ -22,6 +27,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
@@ -32,12 +38,20 @@ import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
+import com.wzlab.smartsecurity.net.HttpMethod;
+import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.account.Logout;
 import com.wzlab.smartsecurity.service.IntentService;
 import com.wzlab.smartsecurity.utils.AppConfigUtil;
+import com.wzlab.smartsecurity.utils.DataParser;
+import com.wzlab.smartsecurity.utils.GraphProcess;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -56,6 +70,35 @@ public class MainActivity extends AppCompatActivity
     private Menu mMenu;
     private DrawerLayout drawer;
 
+    private String userInfoName = "";
+    private String userInfoAvatarURL = null;
+    private String userInfoIsCert = "";
+    private Bitmap bmAvatar;
+    private static int LOAD_USER_INFO_TEXT_SUCCESS = 5;
+    private static int LOAD_USER_INFO_ALL_SUCCESS = 6;
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == LOAD_USER_INFO_TEXT_SUCCESS){
+                mTvUserInfoName.setText(userInfoName);
+                mTvUserInfoIsCert.setText(userInfoIsCert);
+            }else if(msg.what == LOAD_USER_INFO_ALL_SUCCESS){
+                mTvUserInfoName.setText(userInfoName);
+                mTvUserInfoIsCert.setText(userInfoIsCert);
+                mIvNavAvatar.setImageBitmap(bmAvatar);
+            }
+
+        }
+    };
+    private ImageView mIvNavAvatar;
+    private TextView mTvUserInfoName;
+    private TextView mTvUserInfoIsCert;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,19 +108,12 @@ public class MainActivity extends AppCompatActivity
         boolean i = pushManager.bindAlias(getApplicationContext(),phone,phone);
         Log.e(TAG, "onCreate: "+ i );
         Window window = getWindow();
-        //透明状态栏
-       // window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //透明导航栏
-        //window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-       // window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-       // window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
 
         setContentView(R.layout.activity_main);
-
-
-
 
 
         toolbar = findViewById(R.id.toolbar);
@@ -102,16 +138,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initNavView() {
+
         drawer = findViewById(R.id.drawer_layout);
         final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        ImageView mIvNavAvatar = navigationView.getHeaderView(0).findViewById(R.id.iv_nav_avatar);
+        View navView = navigationView.getHeaderView(0);
+        mTvUserInfoName = navView.findViewById(R.id.tv_nav_user_name);
+        mTvUserInfoIsCert = navView.findViewById(R.id.tv_nav_user_is_cert);
+        mIvNavAvatar = navView.findViewById(R.id.iv_nav_avatar);
         mIvNavAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new PersonalCenterFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("avatarURL",userInfoAvatarURL);
+                fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
                 drawer.closeDrawer(GravityCompat.START);
             }
@@ -284,8 +326,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // 进来之后刷新所有页面
-     //   mVpMainContainer.notify();
+        // 头像加载放在这里，为了修改头像后能及时改变
+        getUserBasicInfo();
 
     }
 
@@ -329,5 +371,63 @@ public class MainActivity extends AppCompatActivity
 //        pushManager.initialize(this.getApplicationContext(), com.wzlab.smartsecurity.service.PushService.class);
 //        // 注册消息接收服务
 //        pushManager.registerPushIntentService(getApplicationContext(),IntentService.class);
+    }
+
+    // 获取用户基本信息
+    public void getUserBasicInfo(){
+        new NetConnection(Config.SERVER_URL + Config.ACTION_GET_USER_BASIC_INFO, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    switch (jsonObject.getString(Config.KEY_STATUS)){
+                        case Config.RESULT_STATUS_SUCCESS:
+                            userInfoAvatarURL = jsonObject.getString("avatar");
+                            userInfoName = DataParser.getData(jsonObject.getString("name"),"未实名");
+                            userInfoIsCert = DataParser.getData(jsonObject.getString("is_cert"),"未认证").equals("1")?"已认证":"未认证";
+                            // 下载头像
+                            String avatarPath = getExternalFilesDir(null).getPath()+"/avatar/"+phone+".png";
+                            File file = new File(avatarPath);
+                            // 预设图片
+
+                            if(file.exists()){//如果有缓存，直接显示
+                                bmAvatar = BitmapFactory.decodeFile(avatarPath);
+                                Message message = new Message();
+                                message.what = LOAD_USER_INFO_ALL_SUCCESS;
+                                handler.sendMessage(message);
+
+                            }else if(userInfoAvatarURL!=null && userInfoAvatarURL.length()>10 ){
+                                downLoadAvatar(userInfoAvatarURL);
+                                Message message = new Message();
+                                message.what = LOAD_USER_INFO_ALL_SUCCESS;
+                                handler.sendMessage(message);
+                            }else{
+                                Message message = new Message();
+                                message.what = LOAD_USER_INFO_TEXT_SUCCESS;
+                                handler.sendMessage(message);
+                            }
+
+
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"数据解析异常",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                Toast.makeText(getApplicationContext(),"未能链接服务器",Toast.LENGTH_SHORT).show();
+            }
+        },Config.KEY_PHONE, phone);
+    }
+
+    // 通过url下载头像并存储到本地
+    public void downLoadAvatar(String imageUrl){
+        bmAvatar = GraphProcess.downLoadImage(imageUrl);
+        GraphProcess.savaImage(bmAvatar,getExternalFilesDir(null).getPath()+"/avatar",phone);
     }
 }

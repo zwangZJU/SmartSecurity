@@ -2,14 +2,21 @@ package com.wzlab.smartsecurity.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+import android.util.Base64;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+
 
 /**
  * Created by wzlab on 2018/8/13.
@@ -18,12 +25,148 @@ import java.net.URL;
 public class GraphProcess {
 
 
+    /**
+     * 获取网络图片
+     * @param imageurl 图片网络地址
+     * @return Bitmap 返回位图
+     */
+    public static Bitmap downLoadImage(String imageurl){
+        URL url;
+        HttpURLConnection connection=null;
+        Bitmap bitmap=null;
+        try {
+            url = new URL(imageurl);
+            connection=(HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(6000); //超时设置
+            connection.setDoInput(true);
+            connection.setUseCaches(false); //设置不使用缓存
+            InputStream inputStream=connection.getInputStream();
+            bitmap= BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    /**
+     * 保存位图到本地
+     * @param bitmap
+     * @param path 本地路径
+     * @return void
+     */
+    public static void savaImage(Bitmap bitmap, String path, String fileName){
+        File file=new File(path);
+        FileOutputStream fileOutputStream=null;
+        //文件夹不存在，则创建它
+        if(!file.exists()){
+            file.mkdir();
+        }
+        try {
+            fileOutputStream=new FileOutputStream(path+"/"+fileName+".png");
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100,fileOutputStream);
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据路径读取图片
+     * @param path
+     * @return
+     */
+    public static Bitmap readImage(String path) {
+
+        Bitmap bitmap = null;
+
+        bitmap = BitmapFactory.decodeFile(path);
+        return bitmap;
+    }
+
+
+    public static String imageToBase64(String path){
+        if(TextUtils.isEmpty(path)){
+            return null;
+        }
+        InputStream is = null;
+        byte[] data = null;
+        String result = null;
+        try{
+            is = new FileInputStream(path);
+            //创建一个字符流大小的数组。
+            data = new byte[is.available()];
+            //写入数组
+            is.read(data);
+            //用默认的编码格式进行编码
+            result = "data:image/png;base64,"+Base64.encodeToString(data,Base64.CRLF);
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            if(null !=is){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        return result;
+    }
+
+
+    /**
+     * bitmap转为base64
+     * @param bitmap
+     * @return
+     */
+    public static String bitmapToBase64(Bitmap bitmap) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
 
 
-        /**
-         * 根据imagepath获取bitmap
-         */
+                byte[] bitmapBytes = baos.toByteArray();
+                result = "data:image/png;base64," + Base64.encodeToString(bitmapBytes, Base64.NO_WRAP);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 根据imagepath获取bitmap
+     */
         /**
          * 得到本地或者网络上的bitmap url - 网络或者本地图片的绝对路径,比如:
          * <p>
