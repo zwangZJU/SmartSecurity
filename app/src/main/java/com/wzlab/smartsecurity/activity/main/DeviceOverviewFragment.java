@@ -87,16 +87,46 @@ public class DeviceOverviewFragment extends Fragment {
                 loadingLayout.showError();
             }else if(msg.what == KEY_LOADING_SUCCESS){
                 deviceOverviewAdapter = new DeviceOverviewAdapter(getContext(),deviceList);
-                deviceOverviewAdapter.setOnItemClickListener(new DeviceOverviewAdapter.OnItemClickListener() {
+                // TODO 暂时取消item的点击事件
+//                deviceOverviewAdapter.setOnItemClickListener(new DeviceOverviewAdapter.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        if(position<deviceList.size()){
+//                            Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
+//                            Device device = deviceList.get(position);
+//                            Bundle bundle = new Bundle();
+//                            bundle.putString("device_id",device.getDevice_id());
+//
+//
+//                            intent.putExtras(bundle);
+//                            startActivity(intent);
+//                        }else{
+//                            Intent intent=new Intent(getContext(), CaptureActivity.class);
+//                            //跳转到扫描二维码页面
+//                            startActivityForResult(intent,1001);
+//                        }
+//
+//
+//                        // getFragmentManager().beginTransaction().addToBackStack(null).add(deviceDetailFragment,)
+//                    }
+//                });
+
+                // 设置switch的点击事件
+                deviceOverviewAdapter.setOnSwitchClickListener(new DeviceOverviewAdapter.OnSwitchClickListener() {
                     @Override
-                    public void onItemClick(View view, int position) {
+                    public void onSwitchClick(View view, int position) {
+                      //  Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                // 设置Icon的点击事件,跳转到设备详情页
+                deviceOverviewAdapter.setOnIconClickListener(new DeviceOverviewAdapter.OnIconClickListener() {
+                    @Override
+                    public void onIconClick(View view, int position) {
                         if(position<deviceList.size()){
                             Intent intent = new Intent(getContext(), DeviceDetailActivity.class);
                             Device device = deviceList.get(position);
                             Bundle bundle = new Bundle();
                             bundle.putString("device_id",device.getDevice_id());
-
-
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }else{
@@ -108,7 +138,16 @@ public class DeviceOverviewFragment extends Fragment {
 
                         // getFragmentManager().beginTransaction().addToBackStack(null).add(deviceDetailFragment,)
                     }
+
                 });
+
+                deviceOverviewAdapter.setOnLinearLayoutClickListener(new DeviceOverviewAdapter.OnLinearLayoutClickListener() {
+                    @Override
+                    public void onLinearLayoutClick(View view, int position) {
+                        Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 mRvDeviceOverview.setAdapter(deviceOverviewAdapter);
 
 
@@ -151,6 +190,9 @@ public class DeviceOverviewFragment extends Fragment {
             }
         });
 
+
+
+
         swipeRefreshLayout = rootView.findViewById(R.id.srl_refresh_device_list);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -172,32 +214,7 @@ public class DeviceOverviewFragment extends Fragment {
                 }.start();
             }
         });
-//        swipeRefreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
-//            @Override
-//            public void completeRefresh() {
-//
-//
-//            }
-//
-//            @Override
-//            public void refreshing() {
-//                new Thread(){
-//                    @Override
-//                    public void run() {
-//
-//                        try {
-//                            Thread.sleep(1500);
-//
-//                            Message msg = new Message();
-//                            msg.what = FINISH_REFRESH;
-//                            handler.sendMessage(msg);//                            handler.sendMessage(msg);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }.start();
-//            }
-//        });
+
 
 
 

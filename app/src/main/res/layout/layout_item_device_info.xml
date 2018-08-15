@@ -53,6 +53,29 @@
                     android:layout_margin="3dp"/>
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_device_item_alarm_state"
+                        android:layout_weight="1"
+                        android:text="报警状态:"/>
+
+                    <ImageView
+                        android:id="@+id/iv_device_item_alarm_state"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_bottom_nav_bar_alarm"
+                        />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,37 +104,45 @@
                         android:textOn="ON"
                         android:thumb="@drawable/switch_rectangle_thumb_selector"
                         android:track="@drawable/switch_rectangle_track"
-
-
-
                         />
+
+
 
                 </LinearLayout>
 
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="1dp"
+                   android:background="@color/margin_gray"
+                   android:layout_margin="3dp"/>
 
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="3dp"
-                    android:gravity="center_vertical"
+                    android:id="@+id/ll_add_camera"
+                    android:gravity="center"
+
                     android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_add_camera"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_add_blue"
+                        />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:id="@+id/tv_device_item_alarm_state"
+                        android:id="@+id/tv_add_camera"
                         android:layout_weight="1"
-                        android:text="报警状态:"/>
+                        android:textColor="@color/black1"
+                        android:text="添加摄像头"/>
 
-                    <ImageView
-                        android:id="@+id/iv_device_item_alarm_state"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_bottom_nav_bar_alarm"
-                        />
+
                 </LinearLayout>
 
 

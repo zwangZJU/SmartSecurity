@@ -2,8 +2,11 @@ package com.wzlab.smartsecurity.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,12 +21,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
+
+//import sun.misc.BASE64Encoder;
+
+
 /**
  * Created by wzlab on 2018/8/13.
  */
 
 public class GraphProcess {
-
+    private static final String TAG = "GraphProcess";
 
     /**
      * 获取网络图片
@@ -85,42 +92,14 @@ public class GraphProcess {
     }
 
 
-    public static String imageToBase64(String path){
-        if(TextUtils.isEmpty(path)){
-            return null;
-        }
-        InputStream is = null;
-        byte[] data = null;
-        String result = null;
-        try{
-            is = new FileInputStream(path);
-            //创建一个字符流大小的数组。
-            data = new byte[is.available()];
-            //写入数组
-            is.read(data);
-            //用默认的编码格式进行编码
-            result = "data:image/png;base64,"+Base64.encodeToString(data,Base64.CRLF);
-        }catch (IOException e){
-            e.printStackTrace();
-        }finally {
-            if(null !=is){
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        return result;
-    }
-
 
     /**
      * bitmap转为base64
      * @param bitmap
      * @return
      */
+
+
     public static String bitmapToBase64(Bitmap bitmap) {
 
         String result = null;
@@ -128,14 +107,16 @@ public class GraphProcess {
         try {
             if (bitmap != null) {
                 baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 40, baos);
 
-
+                baos.flush();
+                baos.close();
 
                 byte[] bitmapBytes = baos.toByteArray();
-                result = "data:image/png;base64," + Base64.encodeToString(bitmapBytes, Base64.NO_WRAP);
+                result = "data:image/png;base64,"+Base64.encodeToString(bitmapBytes, Base64.NO_WRAP).replaceAll("\\+","%2B");
+                Log.e(TAG, result );
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {

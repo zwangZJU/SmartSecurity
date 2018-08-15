@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +72,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView mTvRepairRecord;
     private TextView mTvDeviceType;
     private String deviceId;
-
+    private RelativeLayout mRvClickToLoadMore;
+    private RelativeLayout mRvShowMore;
+    private RelativeLayout mRvClickToClose;
 
 
     @Override
@@ -153,8 +156,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     mTvInstallDate.setText("安装日期："+installDate);
                     mTvGuaranteeTime.setText("保修截止日期："+guaranteeTime);
                     mTvAddr.setText("地址信息："+userAddr);
-                    mTvRepairProgress.setText("报修进度："+repairProgress);
-                    mTvRepairRecord.setText("报修记录："+repairRecord);
+//                    mTvRepairProgress.setText("报修进度："+repairProgress);
+//                    mTvRepairRecord.setText("报修记录："+repairRecord);
                     mTvPrincipalName.setText("姓名："+head);
                     mTvPrincipalPhone.setText("联系电话："+headPhone);
                     mTvPrincipalPolice.setText("所属派出所："+policeStation);
@@ -206,8 +209,28 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mTvInstallDate = findViewById(R.id.tv_detail_install_date);
         mTvGuaranteeTime = findViewById(R.id.tv_detail_guarantee_time);
         mTvManufacturer = findViewById(R.id.tv_detail_manufacturer);
-        mTvRepairProgress = findViewById(R.id.tv_detail_repair_progress);
-        mTvRepairRecord = findViewById(R.id.tv_detail_repair_record);
+//        mTvRepairProgress = findViewById(R.id.tv_detail_repair_progress);
+//        mTvRepairRecord = findViewById(R.id.tv_detail_repair_record);
+        mRvClickToLoadMore = findViewById(R.id.rl_load_more);
+        mRvShowMore = findViewById(R.id.rl_more);
+        mRvClickToClose = findViewById(R.id.rl_close);
+
+        mRvClickToLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRvClickToLoadMore.setVisibility(View.GONE);
+                mRvShowMore.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        mRvClickToClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRvClickToLoadMore.setVisibility(View.VISIBLE);
+                mRvShowMore.setVisibility(View.GONE);
+            }
+        });
 
 
 

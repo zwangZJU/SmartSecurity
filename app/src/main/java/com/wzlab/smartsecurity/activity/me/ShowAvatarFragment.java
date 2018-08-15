@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +61,8 @@ public class ShowAvatarFragment extends Fragment {
 
     private int KEY_IMAGE_UPLOAD_SUCCESS = 7;
     private int KEY_IMAGE_DOWNLOAD_SUCCESS = 8;
+
+    private String testPath = null;
 
 
     @SuppressLint("HandlerLeak")
@@ -159,6 +163,7 @@ public class ShowAvatarFragment extends Fragment {
 
 
     // PictureSelector的回调
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -167,6 +172,8 @@ public class ShowAvatarFragment extends Fragment {
             List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
             LocalMedia localMedia = selectList.get(0);
             String filePath = null;
+            testPath = localMedia.getPath();
+            Log.e(TAG, testPath);
             if(localMedia.isCut()){
                 filePath  = localMedia.getCutPath();
                 Log.e(TAG, filePath );
@@ -174,12 +181,15 @@ public class ShowAvatarFragment extends Fragment {
                 filePath = localMedia.getCompressPath();
             }else {
                 filePath = localMedia.getPath();
+
             }
             File file = new File(filePath);
             if(file.exists()){
                 final Bitmap bitmapForUpload = BitmapFactory.decodeFile(filePath);
-                // String avatarToBase64Str = GraphProcess.bitmapToBase64(bitmapForUpload);
-                String avatarToBase64Str = GraphProcess.imageToBase64(filePath);
+              String avatarToBase64Str = GraphProcess.bitmapToBase64(bitmapForUpload);
+             //  String avatarToBase64Str = GraphProcess.ImageToBase64ByLocal(filePath);
+               // String avatarToBase64Str = GraphProcess.imageToBase64(testPath);
+
                 Log.e(TAG, avatarToBase64Str);
                 ImageUpload.singleImageUpload(phone, avatarToBase64Str, new ImageUpload.SuccessCallback() {
                     @Override
@@ -229,7 +239,7 @@ public class ShowAvatarFragment extends Fragment {
                 .showCropGrid(false)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false    true or false
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
-                .minimumCompressSize(400)// 小于100kb的图片不压缩
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 .cropWH(400,400)// 裁剪宽高比，设置如果大于图片本身宽高则无效 int
                 .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
