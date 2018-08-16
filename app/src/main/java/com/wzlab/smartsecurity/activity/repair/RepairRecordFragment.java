@@ -47,8 +47,9 @@ public class RepairRecordFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == KEY_LOADING_EMPTY){
-                loadingLayout.showEmpty();
                 loadingLayout.setEmptyFloatButtonVisible(false);
+                loadingLayout.showEmpty();
+
 
 
             }else if(msg.what == KEY_LOADING_ERROR){
@@ -91,6 +92,7 @@ public class RepairRecordFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         phone = Config.getCachedPhone(getContext());
         loadingLayout = view.findViewById(R.id.loading_layout_repair_log);
+
         recyclerView = view.findViewById(R.id.rv_repair_log);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         getRepairLogList();

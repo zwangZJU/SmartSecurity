@@ -5,15 +5,49 @@
     android:padding="10dp">
 
     <com.wzlab.smartsecurity.widget.FloatLabeledEditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:id="@+id/flet_add_house_num_dialog">
 
         <com.wzlab.smartsecurity.widget.ClearableEditText
+            android:id="@+id/et_house_num_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="门牌号：如 一幢2单元304号"
-            android:id="@+id/et_house_num_dialog"/>
+            android:hint="门牌号：如 一幢2单元304号" />
 
     </com.wzlab.smartsecurity.widget.FloatLabeledEditText>
+
+    <TextView
+        android:id="@+id/tv_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_label"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="15sp"
+        android:textColor="@color/black1"
+        android:layout_below="@id/flet_add_house_num_dialog"/>
+
+    <com.donkingliang.labels.LabelsView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/labels"
+        android:layout_below="@id/tv_label"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:minHeight="25dp"
+        android:padding="5dp"
+        app:labelBackground="@drawable/label_bg_selector"
+        app:labelTextColor="@drawable/label_text_color_selector"
+        app:labelTextPaddingBottom="5dp"
+        app:labelTextPaddingLeft="15dp"
+        app:labelTextPaddingRight="15dp"
+        app:labelTextPaddingTop="5dp"
+        app:labelTextSize="14sp"
+        app:lineMargin="10dp"
+        app:maxSelect="1"
+        app:selectType="SINGLE"
+        app:wordMargin="10dp" />
 
 </RelativeLayout>

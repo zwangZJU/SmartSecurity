@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -48,6 +49,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.donkingliang.labels.LabelsView;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
@@ -80,6 +82,7 @@ public class SelectLocationActivity extends AppCompatActivity {
     private RecyclerView mRvPoiList;
     private ArrayList<PoiInfo> mPoiList;
     private String deviceInfo;
+    private String locLabel = null;
 
 
     @Override
@@ -190,10 +193,33 @@ public class SelectLocationActivity extends AppCompatActivity {
                                     .setCancelable(false);
                             final AlertDialog alertDialog = builder.create();
                             alertDialog.show();
+                            // TODO 获取不到组件
+                            // 设置标签
+                            LabelsView labelsView = alertDialog.findViewById(R.id.labels);
+                            final ArrayList<String> labels = new ArrayList<>();
+                            labels.add("住宅");
+                            labels.add("公司");
+                            labels.add("学校");
+                            labels.add("小区");
+                            labels.add("其他");
+                            labelsView.setLabels(labels);
+
+                            labelsView.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+                                @Override
+                                public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+
+                                    locLabel = (String)data;
+                                    Log.e(TAG, "onLabelSelectChange: "+ label );
+                                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                                }
+                            });
+
                             alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @SuppressLint("ClickableViewAccessibility")
                                 @Override
                                 public void onClick(View view) {
+
+
 
                                     EditText editText = alertDialog.findViewById(R.id.et_house_num_dialog);
 
@@ -211,12 +237,21 @@ public class SelectLocationActivity extends AppCompatActivity {
                                         @Override
                                         public void afterTextChanged(Editable editable) {
                                             alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+
                                         }
                                     });
+
+
+
+
                                     String houseNum = editText.getText().toString();
                                     if(TextUtils.isEmpty(houseNum)){
                                         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                                         Toast.makeText(SelectLocationActivity.this,"请填写门牌号信息",Toast.LENGTH_SHORT).show();
+                                    }else if(locLabel == null){
+                                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                                        Toast.makeText(SelectLocationActivity.this,"请选择标签",Toast.LENGTH_SHORT).show();
+
                                     }else{
                                         alertDialog.dismiss();
                                         String info = addrInfo + houseNum + "#" + latLngInfo;
@@ -225,7 +260,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                                             startActivity(new Intent(SelectLocationActivity.this, AccountActivity.class));
                                         }else{
 
-                                            GetDeviceInfo.deviceBinding(phone, Config.TYPE_ROLE, deviceInfo, info, new GetDeviceInfo.SuccessCallback() {
+                                            GetDeviceInfo.deviceBinding(phone, locLabel, Config.TYPE_ROLE, deviceInfo, info, new GetDeviceInfo.SuccessCallback() {
                                                 @Override
                                                 public void onSuccess(ArrayList list, String msg) {
                                                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mTvUserInfoIsCert;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initNavView() {
 
-        drawer = findViewById(R.id.drawer_layout);
+      //  drawer = findViewById(R.id.drawer_layout);
         final NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -158,6 +160,8 @@ public class MainActivity extends AppCompatActivity
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
+
+
     }
 
 
@@ -175,6 +179,8 @@ public class MainActivity extends AppCompatActivity
         mFragmentList.add(meFragment);
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
         mVpMainContainer.setAdapter(mViewPagerAdapter);
+
+
 
 
 
@@ -221,6 +227,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        // 开启侧边栏滑动
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
 
@@ -318,8 +326,10 @@ public class MainActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+       // drawer = findViewById(R.id.drawer_layout);
+         
         drawer.closeDrawer(GravityCompat.START);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         return true;
     }
 
@@ -327,15 +337,18 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         // 头像加载放在这里，为了修改头像后能及时改变
+
+        Log.e(TAG, "onResume: 进来了" );
         getUserBasicInfo();
 
     }
 
 
+
     @Override
     protected void onStart() {
         super.onStart();
-     //  Log.e(TAG, "onStart: 进来了" );
+
     }
 
     @Override
@@ -397,10 +410,8 @@ public class MainActivity extends AppCompatActivity
                                 handler.sendMessage(message);
 
                             }else if(userInfoAvatarURL!=null && userInfoAvatarURL.length()>10 ){
-                                downLoadAvatar(userInfoAvatarURL);
-                                Message message = new Message();
-                                message.what = LOAD_USER_INFO_ALL_SUCCESS;
-                                handler.sendMessage(message);
+                                new DownloadImageTask().execute(userInfoAvatarURL,getExternalFilesDir(null).getPath()+"/avatar",phone);
+//
                             }else{
                                 Message message = new Message();
                                 message.what = LOAD_USER_INFO_TEXT_SUCCESS;
@@ -425,9 +436,27 @@ public class MainActivity extends AppCompatActivity
         },Config.KEY_PHONE, phone);
     }
 
+
     // 通过url下载头像并存储到本地
-    public void downLoadAvatar(String imageUrl){
-        bmAvatar = GraphProcess.downLoadImage(imageUrl);
-        GraphProcess.savaImage(bmAvatar,getExternalFilesDir(null).getPath()+"/avatar",phone);
+    class DownloadImageTask extends AsyncTask<String, Integer, Void> {
+
+        protected Void doInBackground(String... params) {
+            bmAvatar = GraphProcess.downLoadImage((String)params[0]);
+            if(bmAvatar != null){
+                GraphProcess.savaImage(bmAvatar,(String)params[1],(String)params[2]);
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            Message message = new Message();
+            message.what = LOAD_USER_INFO_ALL_SUCCESS;
+            handler.sendMessage(message);
+        }
+
     }
+
 }

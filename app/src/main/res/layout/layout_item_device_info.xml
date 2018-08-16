@@ -61,7 +61,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_device_item_alarm_state"
                         android:layout_weight="1"
@@ -95,7 +95,7 @@
                     <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="5dp"
-                        android:layout_marginRight="11dp"
+                        android:layout_marginEnd="4dp"
                         android:layout_gravity="center_horizontal"
                         android:id="@+id/switch_device_item_defensive_state"
                         android:showText="true"
@@ -116,6 +116,9 @@
                    android:background="@color/margin_gray"
                    android:layout_margin="3dp"/>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -145,6 +148,19 @@
 
                 </LinearLayout>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_device_info_label"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="5dp"
+                        android:padding="2dp"
+                        android:maxLines="1"
+                        android:background="@drawable/bg_edit_text_black"
+
+                        android:textColor="@color/black"/>
+                </RelativeLayout>
 
             </LinearLayout>
 

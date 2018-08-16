@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
+import com.wzlab.smartsecurity.utils.DataParser;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,11 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
         public void onLinearLayoutClick(View view, int position);
     }
 
+    // 给添加设备的按钮的点击事件
+    public interface OnFloatingActionButtonClickListener{
+        public void onFloatingActionButtonClick(View view, int position);
+
+    }
     private OnItemClickListener onItemClickListener;
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
@@ -74,6 +80,11 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
     private OnLinearLayoutClickListener onLinearLayoutClickListener;
     public void setOnLinearLayoutClickListener(OnLinearLayoutClickListener onLinearLayoutClickListener){
         this.onLinearLayoutClickListener = onLinearLayoutClickListener;
+    }
+
+    private OnFloatingActionButtonClickListener onFloatingActionButtonClickListener;
+    public void setOnFloatingActionButtonClickListener(OnFloatingActionButtonClickListener onFloatingActionButtonClickListener){
+        this.onFloatingActionButtonClickListener = onFloatingActionButtonClickListener;
     }
 
     @Override
@@ -163,6 +174,18 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
                     }
                 }
             });
+
+            holder.mTvLocLabel.setText(DataParser.getData(device.getLoc_label(),"未知"));
+
+        }else{ // 最后一个item添加设备
+            holder.fabAddDevice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(onFloatingActionButtonClickListener != null){
+                        onFloatingActionButtonClickListener.onFloatingActionButtonClick(view, position);
+                    }
+                }
+            });
         }
 
     }
@@ -189,6 +212,7 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
         ImageView mIvAlarmState;
         FloatingActionButton fabAddDevice;
         LinearLayout mLlAddCamera;
+        TextView mTvLocLabel;
         public DeviceOverviewViewHolder(final View itemView) {
             super(itemView);
             mIvDeviceIcon = itemView.findViewById(R.id.iv_device_icon);
@@ -197,6 +221,8 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
             mIvAlarmState = itemView.findViewById(R.id.iv_device_item_alarm_state);
             fabAddDevice = itemView.findViewById(R.id.fab_add_device);
             mLlAddCamera = itemView.findViewById(R.id.ll_add_camera);
+            mTvLocLabel = itemView.findViewById(R.id.tv_device_info_label);
+
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +232,7 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
                     int position = (int) itemView.getTag();
                     if(onItemClickListener != null){
                         //暂时去掉item的点击事件
-                       // onItemClickListener.onItemClick(view,position);
+                       //onItemClickListener.onItemClick(view,position);
                     }
                 }
             });

@@ -16,6 +16,9 @@ public class Device {
 
 
 
+        private String loc_label;
+
+
         /**
          * 设备编号
          */
@@ -360,6 +363,16 @@ public class Device {
          * 备注
          */
         private String management_remarks;
+
+
+
+        public String getLoc_label() {
+                return loc_label;
+        }
+
+        public void setLoc_label(String loc_label) {
+                this.loc_label = loc_label;
+        }
 
 
         /**

@@ -144,9 +144,21 @@ public class DeviceOverviewFragment extends Fragment {
                 deviceOverviewAdapter.setOnLinearLayoutClickListener(new DeviceOverviewAdapter.OnLinearLayoutClickListener() {
                     @Override
                     public void onLinearLayoutClick(View view, int position) {
+                        // TODO 添加摄像头
                         Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                // 添加设备的点击事件
+                deviceOverviewAdapter.setOnFloatingActionButtonClickListener(new DeviceOverviewAdapter.OnFloatingActionButtonClickListener() {
+                    @Override
+                    public void onFloatingActionButtonClick(View view, int position) {
+                        Intent intent=new Intent(getContext(), CaptureActivity.class);
+//                            //跳转到扫描二维码页面
+                            startActivityForResult(intent,1001);
+                    }
+                });
+
 
                 mRvDeviceOverview.setAdapter(deviceOverviewAdapter);
 

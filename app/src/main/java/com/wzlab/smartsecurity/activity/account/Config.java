@@ -51,6 +51,7 @@ public class Config {
     public static final String KEY_ROLE = "role";
     public static final String KEY_DEVICE_ID = "device_id";
     public static final String KEY_COMMAND = "cmd";
+    public static final String KEY_LOCATION_LABEL = "loc_label";
 
 
     public static final String RESULT_STATUS_SUCCESS = "1";
