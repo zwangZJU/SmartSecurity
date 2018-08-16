@@ -29,10 +29,8 @@ import java.util.ArrayList;
 
 public class DeviceDetailActivity extends AppCompatActivity {
 
-    private static final int KEY_LOADING_ERROR = -1;
-    private static final int KEY_LOADING_EMPTY = 0;
-    private static final int KEY_LOADING_SUCCESS = 1;
-    private static final int KEY_LOADING_LOADING = 2;
+
+
 
     private LoadingLayout loadingLayout;
 
@@ -41,9 +39,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
        @Override
        public void handleMessage(Message msg) {
            super.handleMessage(msg);
-           if(msg.what == KEY_LOADING_EMPTY){
+           if(msg.what == Config.KEY_LOADING_EMPTY){
                loadingLayout.showEmpty();
-           }else if(msg.what == KEY_LOADING_ERROR){
+           }else if(msg.what == Config.KEY_LOADING_ERROR){
                loadingLayout.showError();
                loadingLayout.setRetryListener(new View.OnClickListener() {
                    @Override
@@ -52,7 +50,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                    }
                });
 
-           }else if(msg.what == KEY_LOADING_SUCCESS){
+           }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                loadingLayout.showContent();
            }
        }
@@ -163,7 +161,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     mTvPrincipalPolice.setText("所属派出所："+policeStation);
 
 
-                    handlerMsg.what = KEY_LOADING_SUCCESS;
+                    handlerMsg.what = Config.KEY_LOADING_SUCCESS;
                     handler.sendMessage(handlerMsg);
 
                 }
@@ -172,7 +170,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
             @Override
             public void onFail(String msg) {
                 Message handlerMsg = new Message();
-                handlerMsg.what =  KEY_LOADING_ERROR;
+                handlerMsg.what =  Config.KEY_LOADING_ERROR;
                 handler.sendMessage(handlerMsg);
                 loadingLayout.setErrorText(msg);
 

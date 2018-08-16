@@ -38,10 +38,7 @@ import java.util.ArrayList;
 public class DeviceOverviewFragment extends Fragment {
 
     private static final String TAG = "DeviceOverviewFragment";
-    private static final int KEY_LOADING_ERROR = -1;
-    private static final int KEY_LOADING_EMPTY = 0;
-    private static final int KEY_LOADING_SUCCESS = 1;
-    private static final int KEY_LOADING_LOADING = 2;
+
     private static final int KEY_FINISH_REFRESH = 3;
     private RecyclerView mRvDeviceOverview;
     private ArrayList<Device> deviceList;
@@ -70,7 +67,7 @@ public class DeviceOverviewFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == KEY_LOADING_EMPTY){
+            if(msg.what == Config.KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
                 //空白页的添加按钮
                 loadingLayout.setOnEmptyButtonClickListener(new LoadingLayout.OnEmptyButtonClickListener() {
@@ -83,9 +80,9 @@ public class DeviceOverviewFragment extends Fragment {
 
                     }
                 });
-            }else if(msg.what == KEY_LOADING_ERROR){
+            }else if(msg.what == Config.KEY_LOADING_ERROR){
                 loadingLayout.showError();
-            }else if(msg.what == KEY_LOADING_SUCCESS){
+            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                 deviceOverviewAdapter = new DeviceOverviewAdapter(getContext(),deviceList);
                 // TODO 暂时取消item的点击事件
 //                deviceOverviewAdapter.setOnItemClickListener(new DeviceOverviewAdapter.OnItemClickListener() {
@@ -164,7 +161,7 @@ public class DeviceOverviewFragment extends Fragment {
 
 
                 loadingLayout.showContent();
-            }else if(msg.what == KEY_LOADING_LOADING){
+            }else if(msg.what == Config.KEY_LOADING_LOADING){
                 loadingLayout.showLoading();
             }else if(msg.what == KEY_FINISH_REFRESH){
 
@@ -267,9 +264,9 @@ public class DeviceOverviewFragment extends Fragment {
                 Message handlerMsg = new Message();
                 if(list.size()>0){
                     deviceList = list;
-                    handlerMsg.what = KEY_LOADING_SUCCESS;
+                    handlerMsg.what = Config.KEY_LOADING_SUCCESS;
                 }else{//如果为空
-                    handlerMsg.what = KEY_LOADING_EMPTY;
+                    handlerMsg.what = Config.KEY_LOADING_EMPTY;
                 }
                 handler.sendMessage(handlerMsg);
             }
@@ -277,7 +274,7 @@ public class DeviceOverviewFragment extends Fragment {
             @Override
             public void onFail(String msg) {
                 Message handlerMsg = new Message();
-                handlerMsg.what = KEY_LOADING_ERROR;
+                handlerMsg.what = Config.KEY_LOADING_ERROR;
                 handler.sendMessage(handlerMsg);
                 loadingLayout.setErrorText(msg);
                 Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();

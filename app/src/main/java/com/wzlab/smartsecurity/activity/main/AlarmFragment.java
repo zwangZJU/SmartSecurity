@@ -42,10 +42,7 @@ public class AlarmFragment extends Fragment {
     private ArrayList<AlarmLog> alarmLogList;
     private LoadingLayout loadingLayout;
 
-    private static final int KEY_LOADING_ERROR = -1;
-    private static final int KEY_LOADING_EMPTY = 0;
-    private static final int KEY_LOADING_SUCCESS = 1;
-    private static final int KEY_LOADING_LOADING = 2;
+
     private static final int KEY_FINISH_REFRESH = 3;
 
     @SuppressLint("HandlerLeak")
@@ -53,10 +50,10 @@ public class AlarmFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == KEY_LOADING_EMPTY){
+            if(msg.what == Config.KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
 
-            }else if(msg.what == KEY_LOADING_ERROR){
+            }else if(msg.what == Config.KEY_LOADING_ERROR){
                 loadingLayout.showError();
                 loadingLayout.setBackgroundColor(getResources().getColor(R.color.background));
                 loadingLayout.setRetryListener(new View.OnClickListener() {
@@ -66,7 +63,7 @@ public class AlarmFragment extends Fragment {
                     }
                 });
 
-            }else if(msg.what == KEY_LOADING_SUCCESS){
+            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
 
                 loadingLayout.showContent();
             }else if(msg.what == KEY_FINISH_REFRESH){
@@ -189,7 +186,7 @@ public class AlarmFragment extends Fragment {
                     e.printStackTrace();
                     Toast.makeText(getContext(),"数据异常",Toast.LENGTH_SHORT).show();
                     Message message = new Message();
-                    message.what = KEY_LOADING_ERROR;
+                    message.what = Config.KEY_LOADING_ERROR;
                     handler.sendMessage(message);
                 }
 
@@ -199,7 +196,7 @@ public class AlarmFragment extends Fragment {
             public void onFail() {
                 Toast.makeText(getContext(),"未能链接服务器",Toast.LENGTH_SHORT).show();
                 Message message = new Message();
-                message.what = KEY_LOADING_ERROR;
+                message.what = Config.KEY_LOADING_ERROR;
                 handler.sendMessage(message);
             }
         },Config.KEY_PHONE, phone);
@@ -234,11 +231,11 @@ public class AlarmFragment extends Fragment {
                                 AlarmLogAdapter alarmLogAdapter = new AlarmLogAdapter(getContext(), alarmLogList);
                                 mRvAlarmLog.setAdapter(alarmLogAdapter);
                                 Message message = new Message();
-                                message.what = KEY_LOADING_SUCCESS;
+                                message.what = Config.KEY_LOADING_SUCCESS;
                                 handler.sendMessage(message);
                             }else{
                                 Message message = new Message();
-                                message.what = KEY_LOADING_EMPTY;
+                                message.what = Config.KEY_LOADING_EMPTY;
                                 handler.sendMessage(message);
                             }
 
@@ -246,7 +243,7 @@ public class AlarmFragment extends Fragment {
                             break;
                         default:
                             Message message = new Message();
-                            message.what = KEY_LOADING_EMPTY;
+                            message.what = Config.KEY_LOADING_EMPTY;
                             handler.sendMessage(message);
                            // loadingLayout.setErrorText("获取数据失败");
 
@@ -256,7 +253,7 @@ public class AlarmFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Message message = new Message();
-                    message.what = KEY_LOADING_ERROR;
+                    message.what = Config.KEY_LOADING_ERROR;
                     handler.sendMessage(message);
                     loadingLayout.setErrorText("数据解析异常");
                    // Toast.makeText(getContext(),"数据解析异常",Toast.LENGTH_SHORT).show();
@@ -266,7 +263,7 @@ public class AlarmFragment extends Fragment {
             @Override
             public void onFail() {
                 Message message = new Message();
-                message.what = KEY_LOADING_ERROR;
+                message.what = Config.KEY_LOADING_ERROR;
                 handler.sendMessage(message);
                 loadingLayout.setErrorText("未能链接到服务器");
 

@@ -54,6 +54,12 @@ public class Config {
     public static final String KEY_LOCATION_LABEL = "loc_label";
 
 
+    public static final int KEY_LOADING_ERROR = -1;
+    public static final int KEY_LOADING_EMPTY = 0;
+    public static final int KEY_LOADING_SUCCESS = 1;
+    public static final int KEY_LOADING_LOADING = 2;
+
+
     public static final String RESULT_STATUS_SUCCESS = "1";
     public static final String RESULT_STATUS_FAIL = "0";
     public static final String RESULT_STATUS_INVALID_TOKEN = "2";

@@ -27,6 +27,15 @@ public class RepairLogAdapter extends RecyclerView.Adapter{
         this.repairLogList = repairLogList;
     }
 
+    public interface OnItemClickListener{
+        public void onItemClick(View view, int position);
+    }
+
+    public OnItemClickListener onItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     public RepairLogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new RepairLogViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_item_repair_order,parent,false));
@@ -82,7 +91,7 @@ public class RepairLogAdapter extends RecyclerView.Adapter{
         TextView mTvHandlerPhone;
         ImageView mIvProgressingState;
 
-        public RepairLogViewHolder(View itemView) {
+        public RepairLogViewHolder(final View itemView) {
             super(itemView);
             mTvDeviceId = itemView.findViewById(R.id.tv_repair_device_id);
             mTvRepairTime = itemView.findViewById(R.id.tv_repair_time);
@@ -90,7 +99,17 @@ public class RepairLogAdapter extends RecyclerView.Adapter{
             mTvHandler = itemView.findViewById(R.id.tv_repair_handler);
             mTvHandlerPhone = itemView.findViewById(R.id.tv_repair_handler_phone);
             mIvProgressingState = itemView.findViewById(R.id.iv_repair_state);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(onItemClickListener != null){
+                        int position = (int) itemView.getTag();
+                        onItemClickListener.onItemClick(view, position);
+                    }
+                }
+            });
         }
+
     }
 
     public String getData(String s){

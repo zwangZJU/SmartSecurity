@@ -36,10 +36,7 @@ import java.util.List;
 
 public class RepairProcessFragment extends Fragment {
 
-    private static final int KEY_LOADING_ERROR = -1;
-    private static final int KEY_LOADING_EMPTY = 0;
-    private static final int KEY_LOADING_SUCCESS = 1;
-    private static final int KEY_LOADING_LOADING = 2;
+
 
     private HorizontalStepView stepViewHorizontal;
     private VerticalStepView stepViewVertical;
@@ -51,7 +48,7 @@ public class RepairProcessFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == KEY_LOADING_EMPTY){
+            if(msg.what == Config.KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
                 loadingLayout.setOnEmptyButtonClickListener(new LoadingLayout.OnEmptyButtonClickListener() {
                     @Override
@@ -62,7 +59,7 @@ public class RepairProcessFragment extends Fragment {
                 });
 
 
-            }else if(msg.what == KEY_LOADING_ERROR){
+            }else if(msg.what == Config.KEY_LOADING_ERROR){
                 loadingLayout.showError();
                 loadingLayout.setBackgroundColor(getResources().getColor(R.color.background));
                 loadingLayout.setRetryListener(new View.OnClickListener() {
@@ -72,7 +69,7 @@ public class RepairProcessFragment extends Fragment {
                     }
                 });
 
-            }else if(msg.what == KEY_LOADING_SUCCESS){
+            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                 stepViewHorizontal.setStepViewTexts(stepHorList);//总步骤
                 stepViewVertical.setStepsViewIndicatorComplectingPosition(stepVerList.size()-2)//设置完成的步数
                         .setStepViewTexts(stepVerList);
@@ -169,7 +166,7 @@ public class RepairProcessFragment extends Fragment {
             public void onSuccess(String processingState, String stateInfo) {
                 if(TextUtils.isEmpty(processingState) || TextUtils.isEmpty(stateInfo)){
                     Message message = new Message();
-                    message.what = KEY_LOADING_EMPTY;
+                    message.what = Config.KEY_LOADING_EMPTY;
                     handler.sendMessage(message);
                 }else{
 
@@ -177,12 +174,11 @@ public class RepairProcessFragment extends Fragment {
 
                     for(int i=0;i<3;i++){
                         // 设置水平显示的进度
-                        if(i == state){
+                        if(i == state-1){
                             stepHorList.get(i).setState(0);
-                        }else if(i > state){
+                        }else if(i >= state){
                             stepHorList.get(i).setState(-1);
                         }
-
 
                     }
 
@@ -190,13 +186,13 @@ public class RepairProcessFragment extends Fragment {
 
                     // 设置竖直显示的进度
                     String[] info = stateInfo.split("#");
-                    for(int i=0;i<=state;i++){
+                    for(int i=0;i<state;i++){
                         String[] detail = info[i].split("%");
                         stepVerList.add(detail[1]+"\n"+detail[0]);
                     }
                     stepVerList.add(" ");
                     Message message = new Message();
-                    message.what = KEY_LOADING_SUCCESS;
+                    message.what = Config.KEY_LOADING_SUCCESS;
                     handler.sendMessage(message);
 
 
@@ -206,7 +202,7 @@ public class RepairProcessFragment extends Fragment {
             @Override
             public void onFail(String msg) {
                 Message message = new Message();
-                message.what = KEY_LOADING_ERROR;
+                message.what = Config.KEY_LOADING_ERROR;
                 handler.sendMessage(message);
                 loadingLayout.setErrorText(msg);
                 Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
