@@ -5,7 +5,7 @@
 
     android:background="@color/content_background"
 
-    tools:context="com.wzlab.smartsecurity.activity.repair.RepairProcessFragment">
+    tools:context="com.wzlab.smartsecurity.activity.repair.RepairProgressFragment">
 
     <com.wzlab.smartsecurity.widget.LoadingLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
+
                 android:layout_marginBottom="10dp">
 
                 <com.baoyachi.stepview.HorizontalStepView
@@ -30,9 +30,19 @@
                     android:baselineAlignedChildIndex="11"
                     android:scrollbarSize="16dp"/>
 
-                <com.baoyachi.stepview.VerticalStepView
-                    android:layout_marginTop="40dp"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/white_top"
+                    android:textSize="16sp"
+                    android:id="@+id/tv_repair_progress_content"/>
 
+                <com.baoyachi.stepview.VerticalStepView
+                    android:layout_marginTop="20dp"
+                    android:background="@color/white_top"
                     android:layout_marginBottom="30dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginLeft="15dp"

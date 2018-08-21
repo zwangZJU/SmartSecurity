@@ -33,6 +33,7 @@ public class Config {
     public static final String ACTION_GET_REPAIR_LOG_LIST = "getRepairLogList";
     public static final String ACTION_GET_USER_BASIC_INFO = "getUserBasicInfo";
     public static final String ACTION_UPLOAD_USER_AVATAR = "uploadUserAvatar";
+    public static final String ACTION_BINDING_CAMERA = "bindingCamera";
     public static final String ACTION_SOS = "sos";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
@@ -66,7 +67,8 @@ public class Config {
     public static final String RESULT_MESSAGE = "msg";
     public static final String LOGIN_BY_PASSWORD = "0";
     public static final String LOGIN_BY_SMS_CODE = "1";
-
+    public static final int SCAN_QR_CODE_TO_ADD_DEVICE = 1001;
+    public static final int SCAN_QR_CODE_TO_ADD_CAMERA = 1002;
     public static final String CHARSET = "utf-8";
     public static final String APP_ID = "com.wzlab.smartsecurity";
 

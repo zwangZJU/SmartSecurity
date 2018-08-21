@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyachi.stepview.HorizontalStepView;
@@ -27,6 +28,7 @@ import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.main.RepairInfo;
 import com.wzlab.smartsecurity.po.RepairLog;
+import com.wzlab.smartsecurity.utils.DataParser;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
@@ -46,6 +48,7 @@ public class RepairRecordFragment extends Fragment {
     private String phone;
     private AlertDialog alertDialog = null;
 
+    private int clickedItemPosition;
     private HorizontalStepView stepViewHorizontal;
     private VerticalStepView stepViewVertical;
     private LoadingLayout loadingLayoutAlert;
@@ -80,7 +83,13 @@ public class RepairRecordFragment extends Fragment {
                 loadingLayout.showContent();
             }else if(msg.what == 100){
                 stepViewHorizontal.setStepViewTexts(stepHorList);//总步骤
-                stepViewVertical.setStepsViewIndicatorComplectingPosition(stepVerList.size()-2)//设置完成的步数
+                int step ;
+                if(stepVerList.size() == 5){
+                    step = 3;
+                }else {
+                    step = stepVerList.size()-1;
+                }
+                stepViewVertical.setStepsViewIndicatorComplectingPosition(step)//设置完成的步数
                         .setStepViewTexts(stepVerList);
                 loadingLayoutAlert.setBackgroundColor(getResources().getColor(R.color.content_background));
                 loadingLayoutAlert.showContent();
@@ -149,6 +158,7 @@ public class RepairRecordFragment extends Fragment {
                             adapter.setOnItemClickListener(new RepairLogAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
+                                    clickedItemPosition = position;
                                     showRepairLogDetails();
                                 }
                             });
@@ -186,12 +196,12 @@ public class RepairRecordFragment extends Fragment {
     }
 
     private void showRepairLogDetails() {
-        new RepairProcessFragment();
+        new RepairProgressFragment();
         alertDialog = new AlertDialog.Builder(getContext())
                 .setTitle("订单详情")
                 .setIcon(getResources().getDrawable(R.drawable.ic_repair_form))
                 .setPositiveButton("知道了", null)
-                .setView(R.layout.fragment_repair_process)
+                .setView(R.layout.fragment_repair_progress)
                 .setCancelable(false).create();
 
         alertDialog.show();
@@ -215,19 +225,19 @@ public class RepairRecordFragment extends Fragment {
                 .setStepViewUnComplectedTextColor(ContextCompat.getColor(getActivity(), R.color.uncompleted_text_color))//设置StepsView text未完成线的颜色
                 .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_check_circle))//设置StepsViewIndicator CompleteIcon
                 .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_radio_button_checked))//设置StepsViewIndicator DefaultIcon
-                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_check_circle_green));//设置StepsViewIndicator AttentionIcon
+                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_attention));//设置StepsViewIndicator AttentionIcon
 
         //竖直
         stepViewVertical = alertDialog.findViewById(R.id.step_view_state_info);
         stepViewVertical.reverseDraw(false)//default is true
                 .setLinePaddingProportion(0.85f)//设置indicator线与线间距的比例系数
-                .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(getActivity(), android.R.color.white))//设置StepsViewIndicator完成线的颜色
+                .setStepsViewIndicatorCompletedLineColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary))//设置StepsViewIndicator完成线的颜色
                 .setStepsViewIndicatorUnCompletedLineColor(ContextCompat.getColor(getActivity(), R.color.transparent))//设置StepsViewIndicator未完成线的颜色
-                .setStepViewComplectedTextColor(ContextCompat.getColor(getActivity(), android.R.color.white))//设置StepsView text完成线的颜色
+                .setStepViewComplectedTextColor(ContextCompat.getColor(getActivity(), R.color.bar_grey))//设置StepsView text完成线的颜色
                 .setStepViewUnComplectedTextColor(ContextCompat.getColor(getActivity(), R.color.transparent))//设置StepsView text未完成线的颜色
-                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_radio_button_checked))//设置StepsViewIndicator CompleteIcon
+                .setStepsViewIndicatorCompleteIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_check_circle_green))//设置StepsViewIndicator CompleteIcon
                 .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_radio_button_checked_blue))//设置StepsViewIndicator DefaultIcon
-                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_check_circle_green));//设置StepsViewIndicator AttentionIcon
+                .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_attention));//设置StepsViewIndicator AttentionIcon
 
         // 水平
         stepHorList = new ArrayList<>();
@@ -246,9 +256,12 @@ public class RepairRecordFragment extends Fragment {
         stepVerList = new ArrayList<>();
 
         String phone = Config.getCachedPhone(getContext());
-        RepairInfo.getRepairPreogressInfo(phone, new RepairInfo.SuccessCallback() {
+         String repairId= repairLogList.get(clickedItemPosition).getRepair_id();
+        RepairInfo.getRepairPreogressInfo(phone, repairId,new RepairInfo.SuccessCallback() {
             @Override
-            public void onSuccess(String processingState, String stateInfo) {
+            public void onSuccess(String content,String processingState, String stateInfo) {
+                TextView mTvRepairContent = alertDialog.findViewById(R.id.tv_repair_progress_content);
+                mTvRepairContent.setText("报修内容：\n   \t  \t"+DataParser.getData(content,"你竟然没有写耶"));
                 if(TextUtils.isEmpty(processingState) || TextUtils.isEmpty(stateInfo)){
                     Message message = new Message();
                     message.what = Config.KEY_LOADING_EMPTY;
@@ -257,12 +270,13 @@ public class RepairRecordFragment extends Fragment {
 
                     int state = Integer.parseInt(processingState);
 
-                    for(int i=0;i<3;i++){
+
+                    for(int i=0;i<4;i++){
                         // 设置水平显示的进度
-                        if(i == state-1){
+                        if(i <= state){
+                            stepHorList.get(i).setState(1);
+                        }else if(i < 3 && state+1 == i){
                             stepHorList.get(i).setState(0);
-                        }else if(i >= state){
-                            stepHorList.get(i).setState(-1);
                         }
 
                     }
@@ -271,7 +285,7 @@ public class RepairRecordFragment extends Fragment {
 
                     // 设置竖直显示的进度
                     String[] info = stateInfo.split("#");
-                    for(int i=0;i<state;i++){
+                    for(int i=0;i<=state;i++){
                         String[] detail = info[i].split("%");
                         stepVerList.add(detail[1]+"\n"+detail[0]);
                     }

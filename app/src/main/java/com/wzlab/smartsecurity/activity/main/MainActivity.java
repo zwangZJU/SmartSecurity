@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity
        // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            startActivity(new Intent(this,CameraActivity.class));
         }  else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_repair) {

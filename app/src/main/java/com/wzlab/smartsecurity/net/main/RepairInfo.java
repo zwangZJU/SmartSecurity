@@ -15,7 +15,7 @@ public class RepairInfo {
 
 
 
-    public static void getRepairPreogressInfo(String phone, final SuccessCallback successCallback, final FailCallback failCallback){
+    public static void getRepairPreogressInfo(String phone, String repairId, final SuccessCallback successCallback, final FailCallback failCallback){
         new NetConnection(Config.SERVER_URL + Config.ACTION_GRT_REPAIR_PROGRESS, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
@@ -25,7 +25,7 @@ public class RepairInfo {
 //                    switch (jsonObject.getString(Config.KEY_STATUS)){
 //                        case Config.RESULT_STATUS_SUCCESS:
 //                            if(successCallback!=null){
-                                successCallback.onSuccess(jsonObject.getString("processing_state"),jsonObject.getString("state_info"));
+                                successCallback.onSuccess(jsonObject.getString("repair_content"),jsonObject.getString("processing_state"),jsonObject.getString("state_info"));
 //                            }
 //                            break;
 //                        default:
@@ -46,13 +46,13 @@ public class RepairInfo {
             public void onFail() {
 
             }
-        },Config.KEY_PHONE, phone);
+        },Config.KEY_PHONE, phone, "repair_id", repairId);
 
     }
 
 
     public static interface SuccessCallback{
-        void onSuccess(String processingState, String StateInfo);
+        void onSuccess(String content,String processingState, String StateInfo);
     }
 
     public static interface FailCallback{

@@ -5,6 +5,8 @@ import android.os.Environment;
 
 import android.util.Log;
 
+import com.videogo.openapi.EZOpenSDK;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +22,16 @@ public class SmartSecurityApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 萤石云sdk初始化
+        /** * sdk日志开关，正式发布需要去掉 */
+        EZOpenSDK.showSDKLog(true);
+        /** * 设置是否支持P2P取流,详见api */
+        EZOpenSDK.enableP2P(false);
+        /** * APP_KEY请替换成自己申请的 */
+        EZOpenSDK.initLib(this, "7f139f95ccab4ad0be82630b443edb0b");
+
+
+
         // 捕获全局异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override

@@ -44,11 +44,16 @@
 
                 >
 
+                <SurfaceView
+                    android:layout_width="match_parent"
+                    android:layout_height="720px"
+                    android:id="@+id/sv_camera"/>
+
                 <View
                     android:id="@+id/margin"
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/item_margin"
-
+                    android:layout_below="@id/sv_camera"
                     android:background="@color/margin_gray" />
 
                 <TextView

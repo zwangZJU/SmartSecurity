@@ -1,34 +1,23 @@
 package com.wzlab.smartsecurity.activity.repair;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.wzlab.smartsecurity.R;
-import com.wzlab.smartsecurity.activity.account.LoginFragment;
-import com.wzlab.smartsecurity.activity.account.RegisterFragment;
-import com.wzlab.smartsecurity.activity.repair.NewRepairOrderFragment;
-import com.wzlab.smartsecurity.activity.repair.RepairProcessFragment;
-import com.wzlab.smartsecurity.activity.repair.RepairRecordFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class DeviceFaultReportFragment extends Fragment {
@@ -94,7 +83,7 @@ public class DeviceFaultReportFragment extends Fragment {
 
         ArrayList<Fragment> mFragmentList = new ArrayList<>();
         Fragment newRepairOrderFragment = new NewRepairOrderFragment();
-        Fragment repairProcessFragment = new RepairProcessFragment(mViewPager);
+        Fragment repairProcessFragment = new RepairProgressFragment(mViewPager);
         Fragment repairRecordFragment = new RepairRecordFragment();
 
         mFragmentList.add(repairProcessFragment);

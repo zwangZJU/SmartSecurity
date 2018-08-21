@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.videogo.errorlayer.ErrorInfo;
+import com.videogo.openapi.EZConstants;
+import com.videogo.openapi.EZOpenSDK;
+import com.videogo.openapi.EZPlayer;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
@@ -30,7 +36,7 @@ import java.util.ArrayList;
 public class DeviceDetailActivity extends AppCompatActivity {
 
 
-
+    private static final String TAG = "DeviceDetailActivity";
 
     private LoadingLayout loadingLayout;
 
@@ -52,6 +58,42 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                loadingLayout.showContent();
+           }else{
+               switch (msg.what) {
+                   case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS:
+//开启直播
+
+                       Log.e(TAG, "handleMessage: 播放成功" );
+                       break;
+                   case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_FAIL:
+                       //播放失败,得到失败信息
+                       ErrorInfo errorinfo = (ErrorInfo) msg.obj;
+                       //得到播放失败错误码
+                       int code = errorinfo.errorCode;
+                       //得到播放失败模块错误码
+                       String codeStr = errorinfo.moduleCode;
+                       //得到播放失败描述
+                       String description = errorinfo.description;
+                       //得到播放失败解决方方案
+                       String sulution = errorinfo.sulution;
+                       Log.e(TAG, "出现错误并提出解决方案 "+ errorinfo+code+ codeStr+description+sulution);
+                       break;
+                   case EZConstants.MSG_VIDEO_SIZE_CHANGED:
+                       //解析出视频画面分辨率回调
+                       try {
+                           String temp = (String) msg.obj;
+                           String[] strings = temp.split(":");
+                           int mVideoWidth = Integer.parseInt(strings[0]);
+                           int mVideoHeight = Integer.parseInt(strings[1]);
+                           Log.e(TAG, "handleMessage: "+mVideoWidth+mVideoHeight);
+                           //解析出视频分辨率
+                       } catch (Exception e) {
+                           e.printStackTrace();
+                       }
+                       break;
+                   default:
+                       break;
+               }
            }
        }
    };
@@ -73,6 +115,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private RelativeLayout mRvClickToLoadMore;
     private RelativeLayout mRvShowMore;
     private RelativeLayout mRvClickToClose;
+    private EZPlayer player;
+    private SurfaceHolder surfaceHolder;
 
 
     @Override
@@ -84,6 +128,50 @@ public class DeviceDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_device_detail);
         initView();
         initData();
+
+        initSurfaceView();
+    }
+
+    private void initSurfaceView() {
+
+        EZOpenSDK.getInstance().setAccessToken("at.dxs29glwcjzudt654wrw1i0j84rcolyu-2a2lvrwaw5-1l4j0un-tlhb9qf3a");
+        player = EZOpenSDK.getInstance().createPlayer("C26259491",1);
+        //设置播放器的显示Surface
+        SurfaceView surfaceView = findViewById(R.id.sv_camera);
+        surfaceHolder = surfaceView.getHolder();
+        //设置Handler, 该handler将被用于从播放器向handler传递消息
+        player.setHandler(handler);
+        player.setSurfaceHold(surfaceHolder);
+        /**
+         * 设备加密的需要传入密码
+         * 传入视频加密密码，用于加密视频的解码，该接口可以在收到ERROR_INNER_VERIFYCODE_NEED或ERROR_INNER_VERIFYCODE_ERROR错误回调时调用
+         * @param verifyCode 视频加密密码，默认为设备的6位验证码
+         */
+       // player.setPlayVerifyCode("VPAAAO");
+
+                player.startRealPlay();
+
+
+
+
+        //
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //停止直播
+        player.stopRealPlay();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+        //释放资源
+        player.release();
     }
 
     private void initData() {

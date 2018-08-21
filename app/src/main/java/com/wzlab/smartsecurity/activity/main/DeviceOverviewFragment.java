@@ -3,6 +3,7 @@ package com.wzlab.smartsecurity.activity.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothClass;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,10 +29,15 @@ import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.start.StartActivity;
 import com.wzlab.smartsecurity.adapter.DeviceOverviewAdapter;
+import com.wzlab.smartsecurity.net.HttpMethod;
+import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
 import com.wzlab.smartsecurity.utils.CheckNetworkStatus;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -45,6 +52,7 @@ public class DeviceOverviewFragment extends Fragment {
     private DeviceOverviewAdapter deviceOverviewAdapter;
     private LoadingLayout loadingLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String deviceIdForBindingCamera;
 
     public DeviceOverviewFragment() {
         // Required empty public constructor
@@ -76,7 +84,7 @@ public class DeviceOverviewFragment extends Fragment {
                       //  Toast.makeText(getContext(),"ddd",Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent(getContext(), CaptureActivity.class);
                         //跳转到扫描二维码页面
-                        startActivityForResult(intent,1001);
+                        startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
 
                     }
                 });
@@ -100,7 +108,7 @@ public class DeviceOverviewFragment extends Fragment {
 //                        }else{
 //                            Intent intent=new Intent(getContext(), CaptureActivity.class);
 //                            //跳转到扫描二维码页面
-//                            startActivityForResult(intent,1001);
+//                            startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
 //                        }
 //
 //
@@ -129,7 +137,7 @@ public class DeviceOverviewFragment extends Fragment {
                         }else{
                             Intent intent=new Intent(getContext(), CaptureActivity.class);
                             //跳转到扫描二维码页面
-                            startActivityForResult(intent,1001);
+                            startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
                         }
 
 
@@ -138,11 +146,25 @@ public class DeviceOverviewFragment extends Fragment {
 
                 });
 
+                // 添加摄像头的点击事件
                 deviceOverviewAdapter.setOnLinearLayoutClickListener(new DeviceOverviewAdapter.OnLinearLayoutClickListener() {
                     @Override
-                    public void onLinearLayoutClick(View view, int position) {
+                    public void onLinearLayoutClick(View view, final int position) {
                         // TODO 添加摄像头
-                        Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                .setTitle("提示")
+                                .setMessage("您将通过扫描摄像头上的二维码进行添加,点击“继续”开始扫描")
+                                .setPositiveButton("继续", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        deviceIdForBindingCamera = deviceList.get(position).getDevice_id();
+                                        Intent intent=new Intent(getContext(), CaptureActivity.class);
+                                        //跳转到扫描二维码页面
+                                        startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_CAMERA);
+                                    }
+                                })
+                                .setNegativeButton("算了",null).create();
+                        alertDialog.show();
                     }
                 });
 
@@ -152,7 +174,7 @@ public class DeviceOverviewFragment extends Fragment {
                     public void onFloatingActionButtonClick(View view, int position) {
                         Intent intent=new Intent(getContext(), CaptureActivity.class);
 //                            //跳转到扫描二维码页面
-                            startActivityForResult(intent,1001);
+                            startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
                     }
                 });
 
@@ -186,8 +208,6 @@ public class DeviceOverviewFragment extends Fragment {
 
         mRvDeviceOverview = rootView.findViewById(R.id.rv_device_overview);
         mRvDeviceOverview.setLayoutManager(new GridLayoutManager(getContext(),2));
-
-
 
         loadingLayout = rootView.findViewById(R.id.loading_layout_device_overview);
         initData(false);
@@ -234,7 +254,7 @@ public class DeviceOverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1001 && resultCode== Activity.RESULT_OK)
+        if(requestCode==Config.SCAN_QR_CODE_TO_ADD_DEVICE && resultCode== Activity.RESULT_OK)
         {
             String phone = Config.getCachedPhone(getContext());
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
@@ -243,7 +263,32 @@ public class DeviceOverviewFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
 
+        }else if(requestCode==Config.SCAN_QR_CODE_TO_ADD_CAMERA && resultCode== Activity.RESULT_OK){
+            String cameraInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
+            bindingCamera(deviceIdForBindingCamera, cameraInfo);
+            Log.e(TAG, "onActivityResult: "+cameraInfo);
+            Log.e(TAG, "onActivityResult: "+cameraInfo.length());
         }
+    }
+
+    private void bindingCamera(String deviceId, String CameraInfo) {
+        new NetConnection(Config.SERVER_URL + Config.ACTION_BINDING_CAMERA, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    Toast.makeText(getContext(),jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),"数据解析异常",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                Toast.makeText(getContext(),"未能连接服务器",Toast.LENGTH_SHORT).show();
+            }
+        },deviceId, CameraInfo);
     }
 
     public void initData(boolean isPulling) {
@@ -289,4 +334,6 @@ public class DeviceOverviewFragment extends Fragment {
         Log.e(TAG, "onStart: fragmet" );
         initData(false);
     }
+
+
 }
