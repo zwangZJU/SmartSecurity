@@ -19,6 +19,12 @@ import java.io.PrintWriter;
 public class SmartSecurityApplication extends Application {
 
     private static final String TAG = "SmartSecurityApplicatio";
+    //开发者需要填入自己申请的appkey
+    public static String AppKey = "7f139f95ccab4ad0be82630b443edb0b";
+
+    public static EZOpenSDK getOpenSDK() {
+        return EZOpenSDK.getInstance();
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -28,7 +34,8 @@ public class SmartSecurityApplication extends Application {
         /** * 设置是否支持P2P取流,详见api */
         EZOpenSDK.enableP2P(false);
         /** * APP_KEY请替换成自己申请的 */
-        EZOpenSDK.initLib(this, "7f139f95ccab4ad0be82630b443edb0b");
+        EZOpenSDK.initLib(this, AppKey);
+        EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
 
 
 

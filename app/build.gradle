@@ -52,4 +52,6 @@ dependencies {
     compile 'com.github.donkingliang:LabelsView:1.4.1'
     compile 'com.hikvision.ezviz:ezviz-sdk:4.8.4'
     compile 'com.hikvision.ezviz:ezuikit:2.0'
+
+
 }

@@ -293,13 +293,13 @@ public class MainActivity extends AppCompatActivity
        // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            startActivity(new Intent(this,CameraActivity.class));
+            startActivity(new Intent(this,EZCameraListActivity.class));
         }  else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
-
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         } else if (id == R.id.nav_share) {
 
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity
        // drawer = findViewById(R.id.drawer_layout);
          
         drawer.closeDrawer(GravityCompat.START);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         return true;
     }
 

@@ -134,7 +134,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
     private void initSurfaceView() {
 
-        EZOpenSDK.getInstance().setAccessToken("at.dxs29glwcjzudt654wrw1i0j84rcolyu-2a2lvrwaw5-1l4j0un-tlhb9qf3a");
+      //  EZOpenSDK.getInstance().setAccessToken("at.6ncya5w48c2gpl2l7dka3ywj5vv32cza-8dudz8w1nl-0rl6e48-21g6hs1in");
         player = EZOpenSDK.getInstance().createPlayer("C26259491",1);
         //设置播放器的显示Surface
         SurfaceView surfaceView = findViewById(R.id.sv_camera);

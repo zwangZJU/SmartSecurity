@@ -170,6 +170,13 @@
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".activity.main.EZCameraListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.EZRealPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
 
         <!-- 个推SDK配置结束 -->
 

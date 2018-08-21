@@ -29,4 +29,20 @@
     <!--ColorfulProgressDialog-->
     <dimen name="default_stroke_width">7dp</dimen>
     <dimen name="default_background_stroke_width">3dp</dimen>
+
+
+    <!-- realplay text size -->
+    <dimen name="realplay_text_size">12dp</dimen>
+    <dimen name="realplay_tip_text_size">16dp</dimen>
+    <dimen name="realplay_channel_text_size">9dp</dimen>
+    <dimen name="realplay_button_text_size">15dp</dimen>
+    <dimen name="realplay_ratio_text_size">24dp</dimen>
+    <dimen name="leavemessage_text_size">12dp</dimen>
+    <dimen name="remoteplayback_text_size">12dp</dimen>
+    <dimen name="remoteplayback_tip_text_size">16dp</dimen>
+    <dimen name="remoteplayback_channel_text_size">9dp</dimen>
+    <dimen name="remoteplayback_button_text_size">15dp</dimen>
+    <dimen name="remoteplayback_ratio_text_size">24dp</dimen>
+    <dimen name="source_detection_text_size">23dp</dimen>
+    <dimen name="title_text_size">18dp</dimen>
 </resources>
