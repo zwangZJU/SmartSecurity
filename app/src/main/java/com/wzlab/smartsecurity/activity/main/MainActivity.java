@@ -33,9 +33,11 @@ import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
 import com.skateboard.zxinglib.CaptureActivity;
+import com.videogo.openapi.EZOpenSDK;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity
         phone = Config.getCachedPhone(getApplicationContext());
         boolean i = pushManager.bindAlias(getApplicationContext(),phone,phone);
         Log.e(TAG, "onCreate: "+ i );
+        EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
+
         Window window = getWindow();
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -295,7 +299,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             startActivity(new Intent(this,EZCameraListActivity.class));
         }  else if (id == R.id.nav_slideshow) {
-
+           startActivity(new Intent(this,RealPlayActivity.class));
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
@@ -311,6 +315,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onSuccess(String msg) {
                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                    EZOpenSDK.getInstance().setAccessToken(null);
                 }
             }, new Logout.FailCallback() {
                 @Override

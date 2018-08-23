@@ -1,20 +1,21 @@
-/* 
+/*
  * @ProjectName VideoGoJar
  * @Copyright HangZhou Hikvision System Technology Co.,Ltd. All Right Reserved
- * 
+ *
  * @FileName CameraListActivity.java
  * @Description 这里对文件进行描述
- * 
+ *
  * @author xia xingsuo
  * @data 2015-11-5
- * 
+ *
  * @note 这里写本文件的详细功能描述和注释
  * @note 历史记录
- * 
+ *
  * @warning 这里写本文件的相关警告
  */
 package com.wzlab.smartsecurity.activity.main;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -121,6 +122,7 @@ public class EZCameraListActivity extends Activity implements OnClickListener, S
     private final static int LOAD_SHARE_DEVICE = 1;
     private int mLoadType = LOAD_MY_DEVICE;
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {

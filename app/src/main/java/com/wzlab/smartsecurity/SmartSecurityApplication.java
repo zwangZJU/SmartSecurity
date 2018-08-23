@@ -35,7 +35,7 @@ public class SmartSecurityApplication extends Application {
         EZOpenSDK.enableP2P(false);
         /** * APP_KEY请替换成自己申请的 */
         EZOpenSDK.initLib(this, AppKey);
-        EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
+
 
 
 

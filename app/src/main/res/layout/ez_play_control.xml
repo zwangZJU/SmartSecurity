@@ -3,7 +3,7 @@
     android:id="@+id/realplay_control_rl"
     android:layout_width="match_parent"
     android:layout_height="38dp"
-    android:background="#222222"
+    android:background="@color/operate_bar_bg"
     android:gravity="center"
     android:layout_below="@+id/realplay_sv"
     android:orientation="horizontal" >
@@ -12,35 +12,43 @@
 
     <ImageButton
         android:id="@+id/realplay_play_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/operate_play_button_size"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/play_play_selector"
+        android:background="@color/operate_bar_bg"
+        android:scaleType="centerInside"
+        android:src="@drawable/play_play_selector"
         android:onClick="onClick" />
 
     <View
         android:id="@+id/sound_line"
         android:layout_width="1dp"
         android:layout_height="18dp"
+        android:layout_margin="10dp"
         android:background="#404040" />
     
     <ImageButton
         android:id="@+id/realplay_sound_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/operate_play_button_size"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/ezopen_vertical_preview_sound_selector"
+        android:scaleType="centerInside"
+        android:clickable="true"
+
+        android:background="@color/operate_bar_bg"
+        android:src="@drawable/ezopen_vertical_preview_sound_selector"
         android:onClick="onClick" />
 	<View
         android:id="@+id/quality_line"
         android:layout_width="1dp"
         android:layout_height="18dp"
+        android:layout_margin="10dp"
         android:background="#404040" />
     
     <Button
         android:id="@+id/realplay_quality_btn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/operate_play_button_size"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@null"
         android:onClick="onClick"
@@ -52,15 +60,18 @@
         android:id="@+id/flow_line"
         android:layout_width="1dp"
         android:layout_height="18dp"
+        android:layout_margin="10dp"
         android:background="#404040" />
     <!-- 播放速度 -->
   
     <TextView
         android:id="@+id/realplay_flow_tv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/operate_play_button_size"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:textSize="@dimen/realplay_text_size"
         android:visibility="invisible" />
 
@@ -68,14 +79,19 @@
         android:id="@+id/mirror_line"
         android:layout_width="1dp"
         android:layout_height="18dp"
+        android:layout_margin="10dp"
         android:background="#404040" />
 
     <com.videogo.widget.CheckTextButton
         android:id="@+id/fullscreen_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@drawable/preview_enlarge_selector" />    
+        android:layout_width="@dimen/operate_play_button_size"
+        android:layout_height="match_parent"
+
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/preview_enlarge_selector" />
 <!--
     <Button
         android:id="@+id/play_btn"

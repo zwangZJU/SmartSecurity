@@ -39,6 +39,7 @@
     <color name="message_bg">#fff</color>
     <color name="message_button_text">#555</color>
     <color name="common_line">#c8c7cc</color>
+    <color name="operate_bar_bg">#222222</color>
 
 
 </resources>

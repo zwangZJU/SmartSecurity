@@ -44,16 +44,23 @@
 
                 >
 
+                <android.support.v7.widget.RecyclerView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_camera_list"/>
+
                 <SurfaceView
                     android:layout_width="match_parent"
                     android:layout_height="720px"
-                    android:id="@+id/sv_camera"/>
+                    android:id="@+id/sv_camera"
+                    android:visibility="gone"/>
 
                 <View
                     android:id="@+id/margin"
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/item_margin"
-                    android:layout_below="@id/sv_camera"
+                    android:layout_below="@id/rv_camera_list"
                     android:background="@color/margin_gray" />
 
                 <TextView

@@ -45,4 +45,5 @@
     <dimen name="remoteplayback_ratio_text_size">24dp</dimen>
     <dimen name="source_detection_text_size">23dp</dimen>
     <dimen name="title_text_size">18dp</dimen>
+    <dimen name="operate_play_button_size">18dp</dimen>
 </resources>

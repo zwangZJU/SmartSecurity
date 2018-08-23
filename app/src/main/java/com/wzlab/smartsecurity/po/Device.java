@@ -15,6 +15,7 @@ package com.wzlab.smartsecurity.po;
 public class Device {
 
 
+        private String camera_serial;
 
         private String loc_label;
 
@@ -364,7 +365,13 @@ public class Device {
          */
         private String management_remarks;
 
+        public String getCamera_serial() {
+                return camera_serial;
+        }
 
+        public void setCamera_serial(String camera_serial) {
+                this.camera_serial = camera_serial;
+        }
 
         public String getLoc_label() {
                 return loc_label;

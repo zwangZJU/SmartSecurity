@@ -1,4 +1,4 @@
-package com.wzlab.smartsecurity.activity.main;
+package com.wzlab.smartsecurity.activity.main.camera;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,6 +35,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -87,6 +88,8 @@ import com.videogo.widget.TitleBar;
 import com.wzlab.smartsecurity.R;
 
 import com.wzlab.smartsecurity.SmartSecurityApplication;
+import com.wzlab.smartsecurity.activity.main.EZRealPlayActivity;
+import com.wzlab.smartsecurity.activity.main.RealPlaySquareInfo;
 import com.wzlab.smartsecurity.utils.ActivityUtils;
 import com.wzlab.smartsecurity.utils.AudioPlayUtil;
 import com.wzlab.smartsecurity.utils.DataManager;
@@ -114,7 +117,7 @@ import java.util.TimerTask;
  * @author xiaxingsuo
  * @data 2015-11-11
  */
-public class EZRealPlayActivity extends Activity implements OnClickListener, SurfaceHolder.Callback,
+public class RealPlayActivity extends Activity implements OnClickListener, SurfaceHolder.Callback,
         Handler.Callback, OnTouchListener, VerifyCodeInput.VerifyCodeInputListener {
     private static final String TAG = "RealPlayerActivity";
     /**
@@ -333,7 +336,9 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         initData();
         initView();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -470,23 +475,23 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         mScreenOrientationHelper = null;
     }
 
-   private void  exit(){
-       closePtzPopupWindow();
-       closeTalkPopupWindow(true, false);
-       if (mStatus != RealPlayStatus.STATUS_STOP) {
-           stopRealPlay();
-           setRealPlayStopUI();
-       }
-       mHandler.removeMessages(MSG_AUTO_START_PLAY);
-       mHandler.removeMessages(MSG_HIDE_PTZ_DIRECTION);
-       mHandler.removeMessages(MSG_CLOSE_PTZ_PROMPT);
-       mHandler.removeMessages(MSG_HIDE_PAGE_ANIM);
-       if (mBroadcastReceiver != null) {
-           // 取消锁屏广播的注册
-           unregisterReceiver(mBroadcastReceiver);
-           mBroadcastReceiver = null;
-       }
-       finish();
+    private void  exit(){
+        closePtzPopupWindow();
+        closeTalkPopupWindow(true, false);
+        if (mStatus != RealPlayStatus.STATUS_STOP) {
+            stopRealPlay();
+            setRealPlayStopUI();
+        }
+        mHandler.removeMessages(MSG_AUTO_START_PLAY);
+        mHandler.removeMessages(MSG_HIDE_PTZ_DIRECTION);
+        mHandler.removeMessages(MSG_CLOSE_PTZ_PROMPT);
+        mHandler.removeMessages(MSG_HIDE_PAGE_ANIM);
+        if (mBroadcastReceiver != null) {
+            // 取消锁屏广播的注册
+            unregisterReceiver(mBroadcastReceiver);
+            mBroadcastReceiver = null;
+        }
+        finish();
     }
 
     @Override
@@ -497,7 +502,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             intent.putExtra(IntentConsts.EXTRA_CAMERA_NO,mCameraInfo.getCameraNo());
             intent.putExtra("video_level",mCameraInfo.getVideoLevel().getVideoLevel());
             // TODO 注释
-           // setResult(EZCameraListActivity.RESULT_CODE, intent);
+            // setResult(EZCameraListActivity.RESULT_CODE, intent);
         }
         super.finish();
     }
@@ -513,8 +518,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
 
     // 初始化数据对象
     private void initData() {
-        // 获取本地信息  TODO 改动
-       // Application application = (Application) getApplication();
+        // 获取本地信息
         mAudioPlayUtil = AudioPlayUtil.getInstance(getApplication());
         // 获取配置信息操作对象
         mLocalInfo = LocalInfo.getInstance();
@@ -547,9 +551,9 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             getRealPlaySquareInfo();
         }
         if (mDeviceInfo != null && mDeviceInfo.getIsEncrypt() == 1) {
-           mVerifyCode = DataManager.getInstance().getDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial());
+            mVerifyCode = DataManager.getInstance().getDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial());
             // TODO 写死了 verifycode
-           // mVerifyCode = "VPAAAO";
+            // mVerifyCode = "VPAAAO";
         }
     }
 
@@ -1223,7 +1227,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                     @Override
                     public void run() {
                         mRealPlayFullTalkBtn.getLocationInWindow(mStartXy);
-                        mEndXy[0] = Utils.dip2px(EZRealPlayActivity.this, 20);
+                        mEndXy[0] = Utils.dip2px(RealPlayActivity.this, 20);
                         mEndXy[1] = mStartXy[1];
 
                         mRealPlayFullOperateBar.setVisibility(View.GONE);
@@ -1401,7 +1405,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                 @Override
                 public void run() {
                     mRealPlayFullPtzBtn.getLocationInWindow(mStartXy);
-                    mEndXy[0] = Utils.dip2px(EZRealPlayActivity.this, 20);
+                    mEndXy[0] = Utils.dip2px(RealPlayActivity.this, 20);
                     mEndXy[1] = mStartXy[1];
 
                     mRealPlayFullOperateBar.setVisibility(View.GONE);
@@ -1519,7 +1523,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    Utils.showToast(EZRealPlayActivity.this, R.string.realplay_full_talk_start_tip);
+                    Utils.showToast(RealPlayActivity.this, R.string.realplay_full_talk_start_tip);
                     mRealPlayFullTalkAnimBtn.setVisibility(View.VISIBLE);
                     mRealPlayFullAnimBtn.setVisibility(View.GONE);
                     onRealPlaySvClick();
@@ -1682,9 +1686,9 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
      */
     private void setQualityMode(final EZVideoLevel mode) {
         // 检查网络是否可用
-        if (!ConnectionDetector.isNetworkAvailable(EZRealPlayActivity.this)) {
+        if (!ConnectionDetector.isNetworkAvailable(RealPlayActivity.this)) {
             // 提示没有连接网络
-            Utils.showToast(EZRealPlayActivity.this, R.string.realplay_set_fail_network);
+            Utils.showToast(RealPlayActivity.this, R.string.realplay_set_fail_network);
             return;
         }
 
@@ -1783,7 +1787,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             public void run() {
                 if (mTalkRingView != null) {
                     mTalkRingView.setMinRadiusAndDistance(mTalkBackControlBtn.getHeight() / 2f,
-                            Utils.dip2px(EZRealPlayActivity.this, 22));
+                            Utils.dip2px(RealPlayActivity.this, 22));
                 }
             }
         });
@@ -1932,13 +1936,13 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
 
         if (!SDCardUtil.isSDCardUseable()) {
             // 提示SD卡不可用
-            Utils.showToast(EZRealPlayActivity.this, R.string.remoteplayback_SDCard_disable_use);
+            Utils.showToast(RealPlayActivity.this, R.string.remoteplayback_SDCard_disable_use);
             return;
         }
 
         if (SDCardUtil.getSDCardRemainSize() < SDCardUtil.PIC_MIN_MEM_SPACE) {
             // 提示内存不足
-            Utils.showToast(EZRealPlayActivity.this, R.string.remoteplayback_record_fail_for_memory);
+            Utils.showToast(RealPlayActivity.this, R.string.remoteplayback_record_fail_for_memory);
             return;
         }
 
@@ -1973,7 +1977,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         if (mEZPlayer == null || !mIsRecording) {
             return;
         }
-        Toast.makeText(EZRealPlayActivity.this, getResources().getString(R.string.already_saved_to_volume), Toast.LENGTH_SHORT).show();
+        Toast.makeText(RealPlayActivity.this, getResources().getString(R.string.already_saved_to_volume), Toast.LENGTH_SHORT).show();
 
         // 设置录像按钮为check状态
         if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -2028,13 +2032,13 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         mControlDisplaySec = 0;
         if (!SDCardUtil.isSDCardUseable()) {
             // 提示SD卡不可用
-            Utils.showToast(EZRealPlayActivity.this, R.string.remoteplayback_SDCard_disable_use);
+            Utils.showToast(RealPlayActivity.this, R.string.remoteplayback_SDCard_disable_use);
             return;
         }
 
         if (SDCardUtil.getSDCardRemainSize() < SDCardUtil.PIC_MIN_MEM_SPACE) {
             // 提示内存不足
-            Utils.showToast(EZRealPlayActivity.this, R.string.remoteplayback_capture_fail_for_memory);
+            Utils.showToast(RealPlayActivity.this, R.string.remoteplayback_capture_fail_for_memory);
             return;
         }
 
@@ -2064,12 +2068,12 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                             EZUtils.saveCapturePictrue(path, bmp);
 
 
-                            MediaScanner mMediaScanner = new MediaScanner(EZRealPlayActivity.this);
+                            MediaScanner mMediaScanner = new MediaScanner(RealPlayActivity.this);
                             mMediaScanner.scanFile(path, "jpg");
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(EZRealPlayActivity.this, getResources().getString(R.string.already_saved_to_volume)+path, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RealPlayActivity.this, getResources().getString(R.string.already_saved_to_volume)+path, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } catch (InnerException e) {
@@ -2526,42 +2530,42 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         LogUtil.debugLog(TAG, "handlePtzControlFail:" + msg.arg1);
         switch (msg.arg1) {
             case ErrorCode.ERROR_CAS_PTZ_CONTROL_CALLING_PRESET_FAILED:// 正在调用预置点，键控动作无效
-                Utils.showToast(EZRealPlayActivity.this, R.string.camera_lens_too_busy, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.camera_lens_too_busy, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRESET_PRESETING_FAILE:// 当前正在调用预置点
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_is_preseting, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_is_preseting, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_CONTROL_TIMEOUT_SOUND_LACALIZATION_FAILED:// 当前正在声源定位
                 break;
             case ErrorCode.ERROR_CAS_PTZ_CONTROL_TIMEOUT_CRUISE_TRACK_FAILED:// 键控动作超时(当前正在轨迹巡航)
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_control_timeout_cruise_track_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_control_timeout_cruise_track_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRESET_INVALID_POSITION_FAILED:// 当前预置点信息无效
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_preset_invalid_position_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_preset_invalid_position_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRESET_CURRENT_POSITION_FAILED:// 该预置点已是当前位置
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_preset_current_position_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_preset_current_position_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRESET_SOUND_LOCALIZATION_FAILED:// 设备正在响应本次声源定位
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_preset_sound_localization_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_preset_sound_localization_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_OPENING_PRIVACY_FAILED:// 当前正在开启隐私遮蔽
             case ErrorCode.ERROR_CAS_PTZ_CLOSING_PRIVACY_FAILED:// 当前正在关闭隐私遮蔽
             case ErrorCode.ERROR_CAS_PTZ_MIRRORING_FAILED:// 设备正在镜像操作（设备镜像要几秒钟，防止频繁镜像操作）
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_operation_too_frequently, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_operation_too_frequently, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_CONTROLING_FAILED:// 设备正在键控动作（上下左右）(一个客户端在上下左右控制，另外一个在开其它东西)
                 break;
             case ErrorCode.ERROR_CAS_PTZ_FAILED:// 云台当前操作失败
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRESET_EXCEED_MAXNUM_FAILED:// 当前预置点超过最大个数
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_preset_exceed_maxnum_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_preset_exceed_maxnum_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_PRIVACYING_FAILED:// 设备处于隐私遮蔽状态（关闭了镜头，再去操作云台相关）
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_privacying_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_privacying_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_TTSING_FAILED:// 设备处于语音对讲状态(区别以前的语音对讲错误码，云台单独列一个）
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_mirroring_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_mirroring_failed, msg.arg1);
                 break;
             case ErrorCode.ERROR_CAS_PTZ_ROTATION_UP_LIMIT_FAILED:// 设备云台旋转到达上限位
             case ErrorCode.ERROR_CAS_PTZ_ROTATION_DOWN_LIMIT_FAILED:// 设备云台旋转到达下限位
@@ -2570,7 +2574,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                 setPtzDirectionIv(-1, msg.arg1);
                 break;
             default:
-                Utils.showToast(EZRealPlayActivity.this, R.string.ptz_operation_failed, msg.arg1);
+                Utils.showToast(RealPlayActivity.this, R.string.ptz_operation_failed, msg.arg1);
                 break;
         }
     }
@@ -2621,7 +2625,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         setRealPlayTalkUI();
 
         setVideoLevel();
-        
+
 /*
         if (mRealPlayMgr != null && mRealPlayMgr.getSupportPtzPrivacy() == 1) {
             mRealPlayPrivacyBtnLy.setVisibility(View.VISIBLE);
@@ -2689,27 +2693,27 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
 
         switch (errorInfo.errorCode) {
             case ErrorCode.ERROR_TRANSF_DEVICE_TALKING:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_play_talkback_fail_ison);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_play_talkback_fail_ison);
                 break;
             case ErrorCode.ERROR_TRANSF_DEVICE_PRIVACYON:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_play_talkback_fail_privacy);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_play_talkback_fail_privacy);
                 break;
             case ErrorCode.ERROR_TRANSF_DEVICE_OFFLINE:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_fail_device_not_exist);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_fail_device_not_exist);
                 break;
             case ErrorCode.ERROR_TTS_MSG_REQ_TIMEOUT:
             case ErrorCode.ERROR_TTS_MSG_SVR_HANDLE_TIMEOUT:
             case ErrorCode.ERROR_TTS_WAIT_TIMEOUT:
             case ErrorCode.ERROR_TTS_HNADLE_TIMEOUT:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_play_talkback_request_timeout, errorInfo.errorCode);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_play_talkback_request_timeout, errorInfo.errorCode);
                 break;
             case ErrorCode.ERROR_CAS_AUDIO_SOCKET_ERROR:
             case ErrorCode.ERROR_CAS_AUDIO_RECV_ERROR:
             case ErrorCode.ERROR_CAS_AUDIO_SEND_ERROR:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_play_talkback_network_exception, errorInfo.errorCode);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_play_talkback_network_exception, errorInfo.errorCode);
                 break;
             default:
-                Utils.showToast(EZRealPlayActivity.this, R.string.realplay_play_talkback_fail, errorInfo.errorCode);
+                Utils.showToast(RealPlayActivity.this, R.string.realplay_play_talkback_fail, errorInfo.errorCode);
                 break;
         }
     }
@@ -2790,7 +2794,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Utils.showToast(EZRealPlayActivity.this, R.string.realplay_set_vediomode_fail, errorCode);
+        Utils.showToast(RealPlayActivity.this, R.string.realplay_set_vediomode_fail, errorCode);
     }
 
     /**
@@ -2835,7 +2839,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
     }
 
     private void handleRecordFail() {
-        Utils.showToast(EZRealPlayActivity.this, R.string.remoteplayback_record_fail);
+        Utils.showToast(RealPlayActivity.this, R.string.remoteplayback_record_fail);
         if (mIsRecording) {
             stopRealPlayRecord();
         }
@@ -2970,7 +2974,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         setRealPlaySound();
 
         // temp solution for OPENSDK-92
-        // Android 预览3Q10的时候切到流畅之后 视频播放窗口变大了 
+        // Android 预览3Q10的时候切到流畅之后 视频播放窗口变大了
         //        if (msg.arg1 != 0) {
         //            mRealRatio = (float) msg.arg2 / msg.arg1;
         //        } else {
@@ -3064,7 +3068,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         // 判断返回的错误码
         switch (errorCode) {
             case ErrorCode.ERROR_TRANSF_ACCESSTOKEN_ERROR:
-                ActivityUtils.goToLoginAgain(EZRealPlayActivity.this);
+                ActivityUtils.goToLoginAgain(RealPlayActivity.this);
                 return;
             case ErrorCode.ERROR_CAS_MSG_PU_NO_RESOURCE:
                 txt = getString(R.string.remoteplayback_over_link);
@@ -3280,7 +3284,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
      */
     private void showType() {
         if (Config.LOGGING && mEZPlayer != null) {
-            Utils.showLog(EZRealPlayActivity.this, "getType " + ",取流耗时：" + (mStopTime - mStartTime));
+            Utils.showLog(RealPlayActivity.this, "getType " + ",取流耗时：" + (mStopTime - mStartTime));
         }
     }
 

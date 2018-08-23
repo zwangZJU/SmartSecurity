@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -20,14 +22,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.videogo.constant.IntentConsts;
 import com.videogo.errorlayer.ErrorInfo;
+import com.videogo.exception.BaseException;
 import com.videogo.openapi.EZConstants;
 import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.EZPlayer;
+import com.videogo.openapi.bean.EZCameraInfo;
+import com.videogo.openapi.bean.EZDeviceInfo;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity;
+import com.wzlab.smartsecurity.adapter.CameraListAdapter;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
+import com.wzlab.smartsecurity.utils.DataManager;
+import com.wzlab.smartsecurity.utils.EZUtils;
 import com.wzlab.smartsecurity.widget.ColorfulProgressBar;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
 
@@ -37,8 +48,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
     private static final String TAG = "DeviceDetailActivity";
-
+    public final static int REQUEST_CODE = 100;
     private LoadingLayout loadingLayout;
+    private  ArrayList<EZDeviceInfo> mDeviceList = null;
+    private ArrayList<EZCameraInfo> mCameraList = null;
+    private final static int MSG_LOAD_DEVICE_SUCCESS = 30;
+    private EZDeviceInfo deviceInfo;
 
    @SuppressLint("HandlerLeak")
    private Handler handler = new Handler(){
@@ -58,7 +73,15 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                loadingLayout.showContent();
-           }else{
+           }else if(msg.what == MSG_LOAD_DEVICE_SUCCESS) {
+               mDeviceList = new ArrayList<>();
+               mCameraList = new ArrayList<>();
+               mDeviceList.add(deviceInfo);
+               EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo,0);
+               mCameraList.add(cameraInfo);
+               cameraListAdapter.setCameraList(mCameraList);
+
+           }else {
                switch (msg.what) {
                    case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS:
 //开启直播
@@ -117,6 +140,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private RelativeLayout mRvClickToClose;
     private EZPlayer player;
     private SurfaceHolder surfaceHolder;
+    private CameraListAdapter cameraListAdapter;
 
 
     @Override
@@ -129,40 +153,16 @@ public class DeviceDetailActivity extends AppCompatActivity {
         initView();
         initData();
 
-        initSurfaceView();
-    }
-
-    private void initSurfaceView() {
-
-      //  EZOpenSDK.getInstance().setAccessToken("at.6ncya5w48c2gpl2l7dka3ywj5vv32cza-8dudz8w1nl-0rl6e48-21g6hs1in");
-        player = EZOpenSDK.getInstance().createPlayer("C26259491",1);
-        //设置播放器的显示Surface
-        SurfaceView surfaceView = findViewById(R.id.sv_camera);
-        surfaceHolder = surfaceView.getHolder();
-        //设置Handler, 该handler将被用于从播放器向handler传递消息
-        player.setHandler(handler);
-        player.setSurfaceHold(surfaceHolder);
-        /**
-         * 设备加密的需要传入密码
-         * 传入视频加密密码，用于加密视频的解码，该接口可以在收到ERROR_INNER_VERIFYCODE_NEED或ERROR_INNER_VERIFYCODE_ERROR错误回调时调用
-         * @param verifyCode 视频加密密码，默认为设备的6位验证码
-         */
-       // player.setPlayVerifyCode("VPAAAO");
-
-                player.startRealPlay();
-
-
-
-
-        //
 
     }
+
+
 
     @Override
     protected void onStop() {
         super.onStop();
         //停止直播
-        player.stopRealPlay();
+
     }
 
     @Override
@@ -178,18 +178,19 @@ public class DeviceDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         deviceId = bundle.getString("device_id","11");
+
         GetDeviceInfo.getDeviceDetails(deviceId, new GetDeviceInfo.SuccessCallback() {
             @Override
             public void onSuccess(ArrayList list, String msg) {
                 Message handlerMsg = new Message();
                 if(list.size()>0){
-                    Device device = (Device)list.get(0);
+                    final Device device = (Device)list.get(0);
                     deviceId = getData(device.getDevice_id());
                     String productType = getData(device.getProduct_type());
                     String status = getData(device.getArrange_withdraw());
                     String isAlarming = getData(device.getIs_alarming());
                     String productionDate = getData(device.getProduction_date());
-                    String manufacturer = "浙江中创天成科技有限公司";
+                    final String manufacturer = "浙江中创天成科技有限公司";
                     String installDate = getData(device.getInstall_date());
                     String guaranteeTime = getData(device.getGuarantee_time());
                     String userAddr = getData(device.getUser_address().split("#")[0]);
@@ -199,6 +200,26 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String headPhone = getData(device.getHead_phone());
                     String policeStation = getData(device.getPolice_station());
                     String deviceType = getData(device.getProduct_type());
+                    final String cameraSerial = device.getCamera_serial();
+                    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                              deviceInfo = SmartSecurityApplication.getOpenSDK().getDeviceInfo(cameraSerial);
+                              Message message = new Message();
+                              message.what = MSG_LOAD_DEVICE_SUCCESS;
+                              handler.sendMessage(message);
+
+
+                            } catch (BaseException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }.start();
 
                     mTvDeviceId.setText(deviceId);
                    // TODO
@@ -317,6 +338,22 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 mRvShowMore.setVisibility(View.GONE);
             }
         });
+
+
+        RecyclerView mRvCameraInfo = findViewById(R.id.rv_camera_list);
+        mRvCameraInfo.setLayoutManager(new LinearLayoutManager(this));
+        mCameraList = new ArrayList<>();
+        cameraListAdapter = new CameraListAdapter(getApplicationContext(), mCameraList);
+        cameraListAdapter.setOnItemClickListener(new CameraListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(DeviceDetailActivity.this, RealPlayActivity.class);
+                intent.putExtra(IntentConsts.EXTRA_CAMERA_INFO, mCameraList.get(position));
+                intent.putExtra(IntentConsts.EXTRA_DEVICE_INFO, mDeviceList.get(position));
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+        mRvCameraInfo.setAdapter(cameraListAdapter);
 
 
 
