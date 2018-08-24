@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             startActivity(new Intent(this,AutoWifiPrepareStepOneActivity.class));
         }  else if (id == R.id.nav_slideshow) {
-           startActivity(new Intent(this,SeriesNumSearchActivity.class));
+           startActivity(new Intent(this,EZCameraListActivity.class));
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();

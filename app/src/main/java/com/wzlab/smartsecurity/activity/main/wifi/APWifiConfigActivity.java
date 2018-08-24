@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,6 +43,11 @@ public class APWifiConfigActivity extends RootActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = getWindow();
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_apwifi_config);
         Intent intent = getIntent();
         mDeviceSerial = intent.getStringExtra(BUNDE_SERIANO);

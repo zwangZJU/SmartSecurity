@@ -374,9 +374,9 @@
     <string name="auto_wifi_tip_connecting_wifi">连接Wi-Fi网络</string>
     <!-- 下列字符为消除xml警告而定义 -->
     <string name="describtion"/>
-    <string name="auto_wifi_tip_connecting_wifi_ing">萤小石正在努力配置Wi-Fi网络</string>
-    <string name="auto_wifi_tip_connecting_server_ing">快了快了，正在注册到萤石平台</string>
-    <string name="auto_wifi_tip_connecting_server_ok">已注册到萤石平台</string>
+    <string name="auto_wifi_tip_connecting_wifi_ing">正在努力配置Wi-Fi网络</string>
+    <string name="auto_wifi_tip_connecting_server_ing">快了快了，正在注册摄像头</string>
+    <string name="auto_wifi_tip_connecting_server_ok">已注册摄像头</string>
     <string name="auto_wifi_tip_binding_account_ing">绑到你的账号下就大功告成了哦</string>
     <string name="auto_wifi_title_add_device2">第三步，添加设备</string>
     <string name="save_encrypt_password_fail_network_exception">设置失败，请检查您的网络</string>
@@ -384,7 +384,7 @@
     <string name="auto_wifi_line_connect_title">有线连接</string>
     <string name="auto_wifi_network_add_device2">有线连接添加</string>
     <string name="auto_wifi_network_add_device1">有线连接添加</string>
-    <string name="auto_wifi_tip_connecting_server">注册萤石平台</string>
+    <string name="auto_wifi_tip_connecting_server">注册摄像头</string>
     <string name="auto_wifi_tip_binding_account">绑定到你的账号</string>
     <string name="device_error">设备异常</string>
     <string name="auto_wifi_add_device_failed2">添加失败</string>

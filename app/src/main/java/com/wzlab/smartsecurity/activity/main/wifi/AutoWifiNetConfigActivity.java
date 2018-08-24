@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -63,6 +65,11 @@ public class AutoWifiNetConfigActivity extends RootActivity implements OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = getWindow();
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_auto_wifi_net_config);
         init();
         initTitleBar();
@@ -239,6 +246,7 @@ public class AutoWifiNetConfigActivity extends RootActivity implements OnClickLi
                 switch (list_types.get(i)) {
                     case CONFIG_TYPE_WIRED_CONNECTION:
                         // TODO: 2018/6/28 有线连接
+
                         break;
                     case CONFIG_TYPE_SMARTCONFIG:
                         // TODO: 2018/6/26 smart config wifi

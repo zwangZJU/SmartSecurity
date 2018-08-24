@@ -121,9 +121,9 @@ public class AutoWifiPrepareStepOneActivity extends RootActivity implements OnCl
 
                 break;
             case R.id.btnIntroduce:
-//                intent = new Intent(this, AutoWifiResetActivity.class);
-//                intent.putExtras(getIntent());
-//                startActivity(intent);
+                intent = new Intent(this, AutoWifiResetActivity.class);
+                intent.putExtras(getIntent());
+                startActivity(intent);
                 break;
             default:
                 break;

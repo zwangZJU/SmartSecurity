@@ -3,11 +3,18 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/content_background"
+    android:gravity="center"
     android:orientation="vertical" >
+
+    <com.videogo.widget.TitleBar
+        android:id="@+id/title_bar_add_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
+        android:visibility="gone"
         android:background="@drawable/top_bar_bg" >
 
         <Button
@@ -16,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:background="@drawable/common_title_back_selector"
             android:onClick="onClick" />
 
@@ -62,6 +70,7 @@
             <ImageView
                 android:id="@+id/imgAnimation"
                 android:layout_width="wrap_content"
+                android:layout_marginTop="30dp"
                 android:layout_height="185dp"
                 android:src="@drawable/failure_account" />
 
@@ -166,7 +175,7 @@
         <Button
             android:id="@+id/btnFinish"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="38dp"
             android:layout_marginRight="38dp"

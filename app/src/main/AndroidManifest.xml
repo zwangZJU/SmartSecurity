@@ -204,6 +204,9 @@
         <activity
             android:name=".activity.main.wifi.APWifiConfigActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.wifi.AutoWifiResetActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

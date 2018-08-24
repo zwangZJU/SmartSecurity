@@ -31,7 +31,7 @@
     <color name="dark_bg_70p">#bb000000</color>
     <color name="dark_bg_20p">#33000000</color>
     <color name="common_bg">#f0f0f3</color>
-    <color name="title_text">#333333</color>
+    <color name="title_text">#eee</color>
     <color name="title_line">#b2b2b2</color>
     <color name="quality_focused_color">#448cf3</color>
     <color name="gray">#c8c8c8</color>

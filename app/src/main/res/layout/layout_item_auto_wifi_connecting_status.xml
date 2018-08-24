@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:textColor="#eee"
         android:text="@string/auto_wifi_tip_connecting_wifi" />
 
     <ImageView

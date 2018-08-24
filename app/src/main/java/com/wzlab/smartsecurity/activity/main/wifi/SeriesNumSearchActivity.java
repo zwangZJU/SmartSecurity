@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.videogo.constant.Constant;
 import com.videogo.constant.IntentConsts;
 import com.videogo.errorlayer.ErrorInfo;
@@ -34,6 +36,7 @@ import com.videogo.exception.BaseException;
 import com.videogo.exception.ErrorCode;
 import com.videogo.exception.ExtraException;
 import com.videogo.openapi.EZOpenSDK;
+import com.videogo.openapi.bean.EZDeviceInfo;
 import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
 
 import com.videogo.util.ConnectionDetector;
@@ -144,6 +147,7 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
     
     private EZProbeDeviceInfoResult mEZProbeDeviceInfo = null;
     private static int MSG_LOAD_CAMERA_INFO_SUCCESS = 41;
+    private static int MSG_LOAD_CAMERA_DETAIL_SUCCESS = 42;
 
     private EditText mVerifyCodeEt;
 
@@ -160,14 +164,21 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
             if (msg.what == MSG_LOAD_CAMERA_INFO_SUCCESS){
 
                 showWifiConfig();
+                hideKeyBoard();
                 mWaitDlg.dismiss();
             }
         }
     };
+    private EZDeviceInfo deviceInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = getWindow();
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_add_camera_by_series_number_page);
 
 
@@ -232,7 +243,7 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
                 mVerifyCode = mBundle.getString(BUNDE_VERYCODE);
             }
             isActivated = mBundle.getBoolean(BUNDLE_ISACTIVATED, false);
-            mDeviceType = mBundle.getString(AutoWifiNetConfigActivity.DEVICE_TYPE);
+            mDeviceType = mBundle.getString("deviceType");
             mDeviceModel = DeviceModel.getDeviceModel(mDeviceType);
         }
         LogUtil.debugLog(TAG, "mSerialNoStr = " + mSerialNoStr + ",mVerifyCode = " + mVerifyCode + ",deviceType="
@@ -432,7 +443,7 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
                 mVerifyCode = mBundle.getString(BUNDE_VERYCODE);
             }
             isActivated = mBundle.getBoolean(BUNDLE_ISACTIVATED, false);
-            mDeviceType = mBundle.getString(AutoWifiNetConfigActivity.DEVICE_TYPE);
+            mDeviceType = mBundle.getString("deviceType");
             mDeviceModel = DeviceModel.getDeviceModel(mDeviceType);
             //isFromRouterIntroduce = mBundle.getBoolean(RouterIntroduceActivity.IS_FROM_ROUTER_INTRODUCE);
         }
@@ -728,7 +739,7 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
     }
 
     /**
-     * 这里对方法做描述
+     * 查询唱功
      * 
      * @see
      * @since V1.0
@@ -738,7 +749,7 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
             LogUtil.infoLog(TAG, "handleQueryCameraSuccess, msg:" );
             showAddButton();
         }
-
+      //  Glide.with(this).load().into(mDeviceIcon);
         // 更新搜索摄像头的图片
 //        showCameraList();
 //        mDeviceName.setText(mEZProbeDeviceInfo.getSubSerial());
@@ -1069,14 +1080,16 @@ public class SeriesNumSearchActivity extends RootActivity implements OnClickList
 
         // stub, always get the OTHER model
         mDeviceModel = DeviceModel.OTHER;
+        String url = "https://statics.ys7.com/device/image/"+mDeviceType+"/101.jpeg";
+        Glide.with(this).load(url).into(mDeviceIcon);
 
-        if (mDeviceModel != null) {
-            // 更新搜索摄像头的图片
-            mDeviceIcon.setImageResource(mDeviceModel.getDrawable2ResId());
-        } else {
-            // 更新搜索摄像头的图片
-            mDeviceIcon.setImageResource(DeviceModel.OTHER.getDrawable2ResId());
-        }
+//        if (mDeviceModel != null) {
+//            // 更新搜索摄像头的图片
+//            mDeviceIcon.setImageResource(mDeviceModel.getDrawable2ResId());
+//        } else {
+//            // 更新搜索摄像头的图片
+//            mDeviceIcon.setImageResource(DeviceModel.OTHER.getDrawable2ResId());
+//        }
         // 设备名称处理
         mDeviceName.setText(mSeriesNumberEt.getText().toString().trim());
     }

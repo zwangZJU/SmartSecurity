@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.videogo.constant.IntentConsts;
@@ -37,6 +39,11 @@ public class ResetIntroduceActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Window window = getWindow();
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_wifi_reset_introduce);
 

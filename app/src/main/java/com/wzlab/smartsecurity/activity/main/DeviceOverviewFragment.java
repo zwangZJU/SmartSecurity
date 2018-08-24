@@ -62,6 +62,7 @@ public class DeviceOverviewFragment extends Fragment {
     private static final String TAG = "DeviceOverviewFragment";
     private static final int MSG_ADD_CAMERA_SUCCESS = 20;
     private static final int MSG_FAIL_TO_ADD_CAMERA = 21;
+    private static final int MSG_EXCEPTION = 22;
     private static final int KEY_FINISH_REFRESH = 3;
     private RecyclerView mRvDeviceOverview;
     private ArrayList<Device> deviceList;
@@ -126,6 +127,9 @@ public class DeviceOverviewFragment extends Fragment {
                 mWaitDlg.dismiss();
                 Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
 
+            }else if(msg.what == MSG_EXCEPTION){
+                mWaitDlg.dismiss();
+                Toast.makeText(getContext(),"请求异常，请长按摄像头复位按钮进行重置",Toast.LENGTH_LONG).show();
             }
 
 
@@ -420,7 +424,11 @@ public class DeviceOverviewFragment extends Fragment {
             } catch (BaseException e) {
                 e.printStackTrace();
                 Log.e(TAG, "connectCamera: ",e );
+                Message message = new Message();
+                message.what = MSG_EXCEPTION;
+                handler.sendMessage(message);
             }
+
             return;
         }else{
             switch (result.getBaseException().getErrorCode()){

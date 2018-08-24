@@ -1,5 +1,6 @@
 package com.wzlab.smartsecurity.activity.main.wifi;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.videogo.constant.Constant;
 import com.videogo.device.DeviceInfoEx;
@@ -39,9 +42,11 @@ import com.videogo.util.ConnectionDetector;
 import com.videogo.util.LocalInfo;
 import com.videogo.util.LogUtil;
 import com.videogo.util.Utils;
+import com.videogo.widget.TitleBar;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.main.EZCameraListActivity;
+import com.wzlab.smartsecurity.activity.main.MainActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -261,6 +266,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
     // Whether to unzip the error if it is unbundled error is not reported
     private boolean isUnbindDeviceError = false;
     private EZProbeDeviceInfoResult mEZProbeDeviceInfo = null;
+    private TitleBar mTitleBar;
 
     // return 0 means success, camera info be saved in mEZProbeDeviceInfo
     // return other value means fail, result is the error code
@@ -278,9 +284,15 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window window = getWindow();
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_auto_wifi_connecting);
         // 唤醒，常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        initTitleBar();
         init();
         findViews();
         fromPage = getIntent().getIntExtra(FROM_PAGE, 0);
@@ -296,6 +308,21 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         } else {
             connectCamera();
         }
+    }
+
+    /**
+     * 初始化标题栏
+     */
+    private void initTitleBar() {
+        mTitleBar = (TitleBar) findViewById(R.id.title_bar_add_device);
+        mTitleBar.setTitle(R.string.auto_wifi_step_three_title);
+        mTitleBar.addBackButton(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void init() {
@@ -371,6 +398,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         // mWaitDlg.setCancelable(false);
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler timerHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -432,9 +460,9 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         tip.setTextSize(Utils.px2dip(this, getResources().getDimension(R.dimen.button_text_size)));
         tip2.setTextSize(Utils.px2dip(this, getResources().getDimension(R.dimen.button_text_size)));
         tip3.setTextSize(Utils.px2dip(this, getResources().getDimension(R.dimen.button_text_size)));
-        tip.setTextColor(getResources().getColor(R.color.upgrade_gray));
-        tip2.setTextColor(getResources().getColor(R.color.upgrade_gray));
-        tip3.setTextColor(getResources().getColor(R.color.upgrade_gray));
+        tip.setTextColor(getResources().getColor(R.color.white_top));
+        tip2.setTextColor(getResources().getColor(R.color.white_top));
+        tip3.setTextColor(getResources().getColor(R.color.white_top));
         tip3.setVisibility(View.VISIBLE);
         // 连接wifi
         if (STATUS_WIFI_CONNETCTING == status) {
@@ -502,6 +530,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
             // timerHandler.sendMessageDelayed(msg, 1000);
         } else if (STATUS_ADD_CAMERA_SUCCESS == status || ERROR_WIFI_CONNECT == status || ERROR_REGIST == status
                 || ERROR_ADD_CAMERA == status) {
+            mTitleBar.setVisibility(View.GONE);
             connectStateContainer.setVisibility(View.GONE);
 
         } else {
@@ -1594,8 +1623,9 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
      */
     private void closeActivity() {
         // start the EZCameraList here
-        Intent intent = new Intent(this, EZCameraListActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Toast.makeText(this,"摄像头添加成功",Toast.LENGTH_SHORT).show();
         startActivity(intent);
         finish();
     }
@@ -1636,5 +1666,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         cancelOvertimeTimer();
         stopWifiConfigOnThread();
     }
+
+    public void bindingCamera(){}
 
 }
