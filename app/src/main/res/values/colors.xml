@@ -22,7 +22,7 @@
     <color name="transparent">#0000</color>
     <color name="black1">#141414</color>
     <color name="black2">#3b3b3b</color>
-
+    <color name="gray_text">#adadad</color>
     <!--萤石云-->
     <color name="common_sub_text">#888888</color>
     <color name="mode_bg">#88000000</color>
@@ -35,11 +35,16 @@
     <color name="title_line">#b2b2b2</color>
     <color name="quality_focused_color">#448cf3</color>
     <color name="gray">#c8c8c8</color>
+    <color name="add_title_text_color">#666666</color>
     <color name="cameralist_gray">#e3e3e3</color>
     <color name="message_bg">#fff</color>
     <color name="message_button_text">#555</color>
     <color name="common_line">#c8c7cc</color>
     <color name="operate_bar_bg">#222222</color>
-
-
+    <color name="auto_blue_text">#2554bd</color>
+    <color name="auto_tip_text">#888888</color>
+    <color name="common_text">#333333</color>
+    <color name="common_text_sel">#3aa3ee</color>
+    <color name="upgrade_gray">#888888</color>
+    <color name="setting_hint_text">#adadad</color>
 </resources>

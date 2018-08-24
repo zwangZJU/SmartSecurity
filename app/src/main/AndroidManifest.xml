@@ -183,6 +183,27 @@
         <activity android:name=".activity.main.camera.RealPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.main.wifi.AutoWifiPrepareStepOneActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.wifi.AutoWifiNetConfigActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.wifi.SeriesNumSearchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.main.wifi.AutoWifiConnectingActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.wifi.ResetIntroduceActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.wifi.APWifiConfigActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -170,8 +170,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
         super.onDestroy();
 
 
-        //释放资源
-        player.release();
+
     }
 
     private void initData() {
@@ -201,7 +200,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String policeStation = getData(device.getPolice_station());
                     String deviceType = getData(device.getProduct_type());
                     final String cameraSerial = device.getCamera_serial();
-                    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
+                    // TODO 添加验证码
+                //    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
 
                     new Thread(){
                         @Override

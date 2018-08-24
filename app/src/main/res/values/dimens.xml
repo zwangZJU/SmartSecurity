@@ -46,4 +46,30 @@
     <dimen name="source_detection_text_size">23dp</dimen>
     <dimen name="title_text_size">18dp</dimen>
     <dimen name="operate_play_button_size">18dp</dimen>
+
+    <dimen name="tab_text_size_half">14dp</dimen>
+    <dimen name="tab_text_size">16dp</dimen>
+    <dimen name="button_text_size">14dp</dimen>
+    <dimen name="large_text_size">16dp</dimen>
+    <dimen name="title_button_padding">15dp</dimen>
+    <dimen name="device_set_padding">15dp</dimen>
+    <dimen name="device_set_arrow_padding">10dp</dimen>
+    <dimen name="device_set_layout_height">45dp</dimen>
+    <dimen name="device_set_text_size">15sp</dimen>
+    <dimen name="device_set_sub_text_size">15sp</dimen>
+    <dimen name="device_set_layout_padding">20dp</dimen>
+    <!-- 引导和登录 -->
+    <dimen name="guide_text_size">15dp</dimen>
+    <dimen name="guide_large_text_size">28dp</dimen>
+    <dimen name="login_text_size">15dp</dimen>
+
+
+    <dimen name="device_set_text_padding">10dp</dimen>
+
+    <dimen name="device_set_small_text_size">13sp</dimen>
+    <dimen name="fourteen">14dp</dimen>
+
+    <dimen name="loading_text_size">15dp</dimen>
+    <dimen name="content_text_size">14dp</dimen>
+    <dimen name="assistant_text_size">14.5dp</dimen>
 </resources>

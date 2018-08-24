@@ -26,18 +26,23 @@ import android.widget.Toast;
 import com.skateboard.zxinglib.CaptureActivity;
 
 import com.videogo.exception.BaseException;
+import com.videogo.exception.ErrorCode;
 import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
+import com.videogo.util.LogUtil;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.main.wifi.SeriesNumSearchActivity;
 import com.wzlab.smartsecurity.activity.start.StartActivity;
 import com.wzlab.smartsecurity.adapter.DeviceOverviewAdapter;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
+import com.wzlab.smartsecurity.utils.ActivityUtils;
 import com.wzlab.smartsecurity.utils.CheckNetworkStatus;
+import com.wzlab.smartsecurity.utils.DataManager;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
 import com.wzlab.smartsecurity.widget.WaitDialog;
 
@@ -46,11 +51,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.videogo.util.Utils.showToast;
+
 
 public class DeviceOverviewFragment extends Fragment {
 
+
+
+
     private static final String TAG = "DeviceOverviewFragment";
     private static final int MSG_ADD_CAMERA_SUCCESS = 20;
+    private static final int MSG_FAIL_TO_ADD_CAMERA = 21;
     private static final int KEY_FINISH_REFRESH = 3;
     private RecyclerView mRvDeviceOverview;
     private ArrayList<Device> deviceList;
@@ -59,6 +70,11 @@ public class DeviceOverviewFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private String deviceIdForBindingCamera;
     private WaitDialog mWaitDlg;
+    private EZProbeDeviceInfoResult probeResult;
+
+    private String deviceSerial;
+    private String deviceType;
+    private String verifyCode;
 
     public DeviceOverviewFragment() {
         // Required empty public constructor
@@ -82,6 +98,39 @@ public class DeviceOverviewFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            // 添加摄像头
+            if (msg.what == MSG_FAIL_TO_ADD_CAMERA){
+                switch (msg.arg1){
+                    case 120020:
+                        // TODO: 2018/6/25 设备在线，已经被自己添加 (给出提示)
+                         Toast.makeText(getContext(),"设备在线，已经被自己添加",Toast.LENGTH_LONG).show();
+                        break;
+                    case 120022:
+                        // TODO: 2018/6/25  设备在线，已经被别的用户添加 (给出提示)
+                         Toast.makeText(getContext(),"设备在线，已经被别的用户添加",Toast.LENGTH_LONG).show();
+                        break;
+                    case 120024:
+                        // TODO: 2018/6/25  设备不在线，已经被别的用户添加 (给出提示)
+                        Toast.makeText(getContext(),"设备不在线，已经被别的用户添加",Toast.LENGTH_LONG).show();
+                        break;
+                    default:
+                        // TODO: 2018/6/25 请求异常
+
+                         Toast.makeText(getContext(),"请求异常",Toast.LENGTH_LONG).show();
+                        break;
+                }
+                mWaitDlg.dismiss();
+            }else if(msg.what == MSG_ADD_CAMERA_SUCCESS){
+                DataManager.getInstance().setDeviceSerialVerifyCode(deviceSerial,verifyCode);
+                //  String s =  DataManager.getInstance().getDeviceSerialVerifyCode(deviceSerial);
+                mWaitDlg.dismiss();
+                Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
+
+            }
+
+
+
+
             if(msg.what == Config.KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
                 //空白页的添加按钮
@@ -196,8 +245,6 @@ public class DeviceOverviewFragment extends Fragment {
 
                 swipeRefreshLayout.setRefreshing(false);
 
-            }else if(msg.what == MSG_ADD_CAMERA_SUCCESS){
-                mWaitDlg.dismiss();
             }
         }
     };
@@ -276,14 +323,15 @@ public class DeviceOverviewFragment extends Fragment {
             String result=data.getStringExtra(CaptureActivity.KEY_DATA);
             //bindingCamera(deviceIdForBindingCamera, cameraInfo);
             final String[] cameraInfo = result.split("\\s+");
-            final String deviceSerial = cameraInfo[1];
-            final String deviceType = cameraInfo[3];
+            deviceSerial = cameraInfo[1];
+            verifyCode = cameraInfo[2];
+            deviceType = cameraInfo[3];
             mWaitDlg.show();
             new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    EZProbeDeviceInfoResult probeResult = EZOpenSDK.getInstance().probeDeviceInfo(deviceSerial,deviceType);
+                    probeResult = EZOpenSDK.getInstance().probeDeviceInfo(deviceSerial,deviceType);
                     connectCamera(probeResult);
                 }
             }.start();
@@ -291,6 +339,8 @@ public class DeviceOverviewFragment extends Fragment {
         }
     }
 
+
+    // 绑定摄像头
     private void bindingCamera(String deviceId, String CameraInfo) {
         new NetConnection(Config.SERVER_URL + Config.ACTION_BINDING_CAMERA, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
@@ -356,13 +406,14 @@ public class DeviceOverviewFragment extends Fragment {
     }
 
 
+    // 连接设备，看是否需要连接网络
     public void connectCamera(final EZProbeDeviceInfoResult result){
         if (result.getBaseException() == null){
             Log.e(TAG, "connectCamera: 查询成功" );
             //查询成功，添加设备
 
             try {
-                SmartSecurityApplication.getOpenSDK().addDevice("C26259491","VPAAAO");
+                SmartSecurityApplication.getOpenSDK().addDevice(deviceSerial,verifyCode);
                 Message message = new Message();
                 message.what = MSG_ADD_CAMERA_SUCCESS;
                 handler.sendMessage(message);
@@ -379,6 +430,14 @@ public class DeviceOverviewFragment extends Fragment {
                     // TODO: 2018/6/25  设备不存在，未被用户添加 （这里需要网络配置）
                 case 120029:
                     // TODO: 2018/6/25  设备不在线，已经被自己添加 (这里需要网络配置)
+
+
+                    Intent intent = new Intent(getContext(),SeriesNumSearchActivity.class);
+                    intent.putExtra("deviceSerial",deviceSerial);
+                    intent.putExtra("verifyCode",verifyCode);
+                    intent.putExtra("deviceType",deviceType);
+                    startActivity(intent);
+                    mWaitDlg.dismiss();
                     new Thread() {
                         @Override
                         public void run() {
@@ -388,35 +447,55 @@ public class DeviceOverviewFragment extends Fragment {
                                 //若设备指示灯蓝色闪烁，请选择设备热点配网
                             }else{
                                 // 查询到设备信息，根据能力级选择配网方式
-                                if (result.getEZProbeDeviceInfo().getSupportAP() == 2) {
-                                    //选择设备热单配网
-                                    Log.e(TAG, "connectCamera: 选择设备热单配网" );
-                                }
-                                if (result.getEZProbeDeviceInfo().getSupportWifi() == 3) {
-                                    //选择smartconfig配网
-                                    Log.e(TAG, "connectCamera: 选择smartconfig配网" );
-                                }
-                                if (result.getEZProbeDeviceInfo().getSupportSoundWave() == 1) {
-                                    //选择声波配网
-                                    Log.e(TAG, "connectCamera: 选择声波配网" );
-                                }
+//                                if (result.getEZProbeDeviceInfo().getSupportAP() == 2) {
+//                                    //选择设备热单配网
+//                                    Log.e(TAG, "connectCamera: 选择设备热单配网" );
+//                                }
+//                                if (result.getEZProbeDeviceInfo().getSupportWifi() == 3) {
+//                                    //选择smartconfig配网
+//                                    Log.e(TAG, "connectCamera: 选择smartconfig配网" );
+//                                }
+//                                if (result.getEZProbeDeviceInfo().getSupportSoundWave() == 1) {
+//                                    //选择声波配网
+//                                    Log.e(TAG, "connectCamera: 选择声波配网" );
+//                                }
+
+
+
                             }
                         }
                     }.start();
                     break;
                 case 120020:
                     // TODO: 2018/6/25 设备在线，已经被自己添加 (给出提示)
+               //     Toast.makeText(getContext(),"设备在线，已经被自己添加",Toast.LENGTH_SHORT).show();
                 case 120022:
                     // TODO: 2018/6/25  设备在线，已经被别的用户添加 (给出提示)
+                 //   Toast.makeText(getContext(),"设备在线，已经被别的用户添加",Toast.LENGTH_SHORT).show();
                 case 120024:
                     // TODO: 2018/6/25  设备不在线，已经被别的用户添加 (给出提示)
+                 //   Toast.makeText(getContext(),"设备不在线，已经被别的用户添加",Toast.LENGTH_SHORT).show();
                 default:
                     // TODO: 2018/6/25 请求异常
-                    Log.e(TAG, "connectCamera: "+ result.getBaseException().getErrorCode() );
+
+                 //   Toast.makeText(getContext(),"请求异常",Toast.LENGTH_SHORT).show();
+                     new Thread() {
+                        @Override
+                        public void run() {
+                            Message message = new Message();
+                            message.what = MSG_FAIL_TO_ADD_CAMERA;
+                            message.arg1 = probeResult.getBaseException().getErrorCode();
+                            handler.sendMessage(message);
+                        }
+                    }.start();
 
                     break;
             }
         }
     }
+
+
+
+
 
 }

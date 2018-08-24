@@ -38,6 +38,8 @@ import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity;
+import com.wzlab.smartsecurity.activity.main.wifi.AutoWifiPrepareStepOneActivity;
+import com.wzlab.smartsecurity.activity.main.wifi.SeriesNumSearchActivity;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
@@ -297,9 +299,9 @@ public class MainActivity extends AppCompatActivity
        // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            startActivity(new Intent(this,EZCameraListActivity.class));
+            startActivity(new Intent(this,AutoWifiPrepareStepOneActivity.class));
         }  else if (id == R.id.nav_slideshow) {
-           startActivity(new Intent(this,RealPlayActivity.class));
+           startActivity(new Intent(this,SeriesNumSearchActivity.class));
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();

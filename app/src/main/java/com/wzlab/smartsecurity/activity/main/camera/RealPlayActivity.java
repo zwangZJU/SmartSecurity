@@ -551,7 +551,8 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
             getRealPlaySquareInfo();
         }
         if (mDeviceInfo != null && mDeviceInfo.getIsEncrypt() == 1) {
-            mVerifyCode = DataManager.getInstance().getDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial());
+            String s = mCameraInfo.getDeviceSerial();
+            mVerifyCode = DataManager.getInstance().getDeviceSerialVerifyCode(s);
             // TODO 写死了 verifycode
             // mVerifyCode = "VPAAAO";
         }
@@ -3097,7 +3098,9 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
             // 收到这两个错误码，可以弹出对话框，让用户输入密码后，重新取流预览
             case ErrorCode.ERROR_INNER_VERIFYCODE_NEED:
             case ErrorCode.ERROR_INNER_VERIFYCODE_ERROR: {
-                DataManager.getInstance().setDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial(), null);
+
+                // TODO 添加验证码
+              //  DataManager.getInstance().setDeviceSerialVerifyCode(mCameraInfo.getDeviceSerial(), null);
                 VerifyCodeInput.VerifyCodeInputDialog(this, this).show();
             }
             break;

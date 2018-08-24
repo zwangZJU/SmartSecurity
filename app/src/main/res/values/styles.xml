@@ -13,7 +13,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
+    <style name="auto_wifi_status_style_normal">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/common_sub_text</item>
+        <item name="android:textSize">15dp</item>
+    </style>
     <style name="LoginEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/white</item>
         <item name="colorControlActivated">@color/text_account_layout</item>
