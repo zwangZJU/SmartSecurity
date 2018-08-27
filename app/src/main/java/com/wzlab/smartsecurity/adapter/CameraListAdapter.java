@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.videogo.openapi.bean.EZCameraInfo;
 import com.videogo.openapi.bean.EZDeviceInfo;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.po.Camera;
 
 import java.util.ArrayList;
 
@@ -23,9 +25,9 @@ public class CameraListAdapter extends RecyclerView.Adapter{
 
 
 
-    private ArrayList<EZCameraInfo> cameraList;
+    private ArrayList<Camera> cameraList;
 
-    public CameraListAdapter(Context context, ArrayList<EZCameraInfo> cameraList){
+    public CameraListAdapter(Context context, ArrayList<Camera> cameraList){
         this.context = context;
         this.cameraList = cameraList;
 
@@ -50,9 +52,13 @@ public class CameraListAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
         CameraViewHolder holder = (CameraViewHolder) viewHolder;
+        Camera camera = cameraList.get(position);
+
+        String url = "https://statics.ys7.com/device/image/"+camera.getCamera_type().trim()+"/101.jpeg";
         holder.itemView.setTag(position);
-        holder.mIvCameraImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_avatar));
-        EZCameraInfo cameraInfo = cameraList.get(position);
+        Glide.with(context).load(url).into(holder.mIvCameraImg);
+       // holder.mIvCameraImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_avatar));
+
     }
 
     @Override
@@ -79,11 +85,11 @@ public class CameraListAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public ArrayList<EZCameraInfo> getCameraList() {
+    public ArrayList<Camera> getCameraList() {
         return cameraList;
     }
 
-    public void setCameraList(ArrayList<EZCameraInfo> cameraList) {
+    public void setCameraList(ArrayList<Camera> cameraList) {
         this.cameraList = cameraList;
         notifyDataSetChanged();
     }

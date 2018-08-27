@@ -262,7 +262,7 @@ public class SelectLocationActivity extends AppCompatActivity {
 
                                             GetDeviceInfo.deviceBinding(phone, locLabel, Config.TYPE_ROLE, deviceInfo, info, new GetDeviceInfo.SuccessCallback() {
                                                 @Override
-                                                public void onSuccess(ArrayList list, String msg) {
+                                                public void onSuccess(ArrayList list, ArrayList camera, String msg) {
                                                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
                                                     startActivity(new Intent(SelectLocationActivity.this, MainActivity.class));
                                                     finish();

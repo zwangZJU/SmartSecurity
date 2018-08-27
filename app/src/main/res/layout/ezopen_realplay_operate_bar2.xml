@@ -24,8 +24,8 @@
 		    android:orientation="vertical" >	
 		    <ImageButton
 		        android:id="@+id/realplay_ptz_btn2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_ptz_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -48,8 +48,8 @@
 		    android:orientation="vertical" >					
 		    <ImageButton
 		        android:id="@+id/realplay_talk_btn2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_talk_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -77,8 +77,8 @@
 				    android:orientation="vertical" >	            		        
 			   <Button
 			       android:id="@+id/realplay_ssl_btn2"
-			       android:layout_width="wrap_content"
-			       android:layout_height="wrap_content"
+			       android:layout_width="@dimen/real_play_control_button"
+			       android:layout_height="@dimen/real_play_control_button"
 			       android:text="@string/source_detection_off"
 			       android:textColor="@color/colorPrimary"
 			       android:textSize="@dimen/source_detection_text_size"
@@ -114,8 +114,8 @@
 		    android:orientation="vertical" >		
 		    <ImageButton
 		        android:id="@+id/realplay_privacy_btn2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_privacy_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -139,8 +139,8 @@
 		    android:orientation="vertical" >						    			
 		    <ImageButton
 		        android:id="@+id/realplay_previously_btn2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_previously_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -168,15 +168,15 @@
 		
 		        <ImageButton
 		            android:id="@+id/realplay_video_btn2"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
+		            android:layout_width="@dimen/real_play_control_button"
+		            android:layout_height="@dimen/real_play_control_button"
 		            android:background="@drawable/play_video_selector"
 		            android:onClick="onClick" />
 		
 		        <ImageButton
 		            android:id="@+id/realplay_video_start_btn2"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
+		            android:layout_width="@dimen/real_play_control_button"
+		            android:layout_height="@dimen/real_play_control_button"
 		            android:background="@drawable/play_video_sel"
 		            android:onClick="onClick"
 		            android:visibility="gone" />

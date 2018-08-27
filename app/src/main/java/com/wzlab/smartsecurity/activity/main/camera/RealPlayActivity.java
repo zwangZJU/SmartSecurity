@@ -1819,18 +1819,18 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup layoutView = (ViewGroup) layoutInflater.inflate(R.layout.realplay_ptz_wnd, null, true);
 
-        mPtzControlLy = (LinearLayout) layoutView.findViewById(R.id.ptz_control_ly);
-        ImageButton ptzCloseBtn = (ImageButton) layoutView.findViewById(R.id.ptz_close_btn);
+        mPtzControlLy = layoutView.findViewById(R.id.ptz_control_ly);
+        ImageButton ptzCloseBtn = layoutView.findViewById(R.id.ptz_close_btn);
         ptzCloseBtn.setOnClickListener(mOnPopWndClickListener);
-        ImageButton ptzTopBtn = (ImageButton) layoutView.findViewById(R.id.ptz_top_btn);
+        ImageButton ptzTopBtn = layoutView.findViewById(R.id.ptz_top_btn);
         ptzTopBtn.setOnTouchListener(mOnTouchListener);
-        ImageButton ptzBottomBtn = (ImageButton) layoutView.findViewById(R.id.ptz_bottom_btn);
+        ImageButton ptzBottomBtn = layoutView.findViewById(R.id.ptz_bottom_btn);
         ptzBottomBtn.setOnTouchListener(mOnTouchListener);
-        ImageButton ptzLeftBtn = (ImageButton) layoutView.findViewById(R.id.ptz_left_btn);
+        ImageButton ptzLeftBtn = layoutView.findViewById(R.id.ptz_left_btn);
         ptzLeftBtn.setOnTouchListener(mOnTouchListener);
-        ImageButton ptzRightBtn = (ImageButton) layoutView.findViewById(R.id.ptz_right_btn);
+        ImageButton ptzRightBtn = layoutView.findViewById(R.id.ptz_right_btn);
         ptzRightBtn.setOnTouchListener(mOnTouchListener);
-        ImageButton ptzFlipBtn = (ImageButton) layoutView.findViewById(R.id.ptz_flip_btn);
+        ImageButton ptzFlipBtn = layoutView.findViewById(R.id.ptz_flip_btn);
         ptzFlipBtn.setOnClickListener(mOnPopWndClickListener);
 
         int height = mLocalInfo.getScreenHeight() - mPortraitTitleBar.getHeight() - mRealPlayPlayRl.getHeight()
@@ -3287,7 +3287,7 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
      */
     private void showType() {
         if (Config.LOGGING && mEZPlayer != null) {
-            Utils.showLog(RealPlayActivity.this, "getType " + ",取流耗时：" + (mStopTime - mStartTime));
+          //  Utils.showLog(RealPlayActivity.this, "getType " + ",取流耗时：" + (mStopTime - mStartTime));
         }
     }
 

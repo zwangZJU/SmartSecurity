@@ -5,20 +5,17 @@
     android:layout_height="match_parent"
     android:fadingEdge="none"
     android:background="#e0e0e0"
+	android:paddingTop="30dp"
     android:scrollbars="none" >
 
 	<LinearLayout
 	    android:id="@+id/realplay_operate_ly"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_vertical|center_horizontal"
-	    android:orientation="vertical" >
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center"
+	    android:layout_gravity="center_horizontal"
 	    android:orientation="horizontal" >
+
+
 
 		<LinearLayout 
 		    android:id="@+id/realplay_ptz_btn_ly"
@@ -27,8 +24,8 @@
 		    android:orientation="vertical" >
 		    <ImageButton
 		        android:id="@+id/realplay_ptz_btn"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_ptz_selector"
 		        android:onClick="onClick" />
 		    
@@ -46,12 +43,12 @@
 		    android:id="@+id/realplay_talk_btn_ly"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_marginLeft="25dp"
+			android:layout_marginLeft="25dp"
 		    android:orientation="vertical" >				
 		    <ImageButton
 		        android:id="@+id/realplay_talk_btn"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_talk_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -63,13 +60,9 @@
 		       android:textColor="@color/common_sub_text"
 		       android:textSize="@dimen/realplay_text_size" />		    
 		</LinearLayout>
-		</LinearLayout>
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center"
-	    android:orientation="horizontal" >
+
+
 
 		<LinearLayout 
 		    android:id="@+id/realplay_ssl_btn_ly"
@@ -109,7 +102,8 @@
 			   android:layout_gravity="center"
 		       android:textColor="@color/common_sub_text"
 		       android:textSize="@dimen/realplay_text_size" />		    
-		</LinearLayout>		
+		</LinearLayout>
+
 		<LinearLayout 
 		    android:id="@+id/realplay_privacy_btn_ly"
 		    android:layout_width="wrap_content"
@@ -118,8 +112,8 @@
 		    android:orientation="vertical" >		
 		    <ImageButton
 		        android:id="@+id/realplay_privacy_btn"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_privacy_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -137,11 +131,12 @@
 		    android:id="@+id/realplay_previously_btn_ly"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
+			android:layout_marginLeft="25dp"
 		    android:orientation="vertical" >				
 		    <ImageButton
 		        android:id="@+id/realplay_previously_btn"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		        android:layout_width="@dimen/real_play_control_button"
+		        android:layout_height="@dimen/real_play_control_button"
 		        android:background="@drawable/play_previously_selector"
 		        android:onClick="onClick" />
 		   <TextView
@@ -167,15 +162,15 @@
 		
 		        <ImageButton
 		            android:id="@+id/realplay_video_btn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
+		            android:layout_width="@dimen/real_play_control_button"
+		            android:layout_height="@dimen/real_play_control_button"
 		            android:background="@drawable/play_video_selector"
 		            android:onClick="onClick" />
 		
 		        <ImageButton
 		            android:id="@+id/realplay_video_start_btn"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
+		            android:layout_width="@dimen/real_play_control_button"
+		            android:layout_height="@dimen/real_play_control_button"
 		            android:background="@drawable/play_video_sel"
 		            android:onClick="onClick"
 		            android:visibility="gone" />
@@ -190,5 +185,5 @@
 		       android:textSize="@dimen/realplay_text_size" />		    
 		</LinearLayout>
 	</LinearLayout>
-	</LinearLayout>
+
 </HorizontalScrollView>

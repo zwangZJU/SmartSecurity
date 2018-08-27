@@ -29,12 +29,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.donkingliang.labels.LabelsView;
 import com.videogo.constant.Constant;
 import com.videogo.device.DeviceInfoEx;
 import com.videogo.errorlayer.ErrorInfo;
 import com.videogo.exception.BaseException;
 import com.videogo.exception.ErrorCode;
 import com.videogo.openapi.EZConstants;
+
+import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.EZOpenSDKListener;
 import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
 
@@ -48,6 +51,7 @@ import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.main.EZCameraListActivity;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,10 +63,14 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
 
     public static final String SUPPORT_NET_WORK = "support_net_work";
     public static final String FROM_PAGE = "from_page";
-
+    private EZOpenSDK mEZOpenSDK;
     public static final int FROM_PAGE_SERIES_NUM_SEARCH_ACTIVITY = 1;
 
     private static final String TAG = "AutoWifiConnectingActivity";
+
+    private static final int MSG_SET_CAMERA_NAME_SUCCESS = 51;
+    private static final int MSG_SET_CAMERA_NAME_FAIL = 52;
+
 
     private static final int MSG_ADD_CAMERA_SUCCESS = 10;
 
@@ -261,12 +269,16 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
     private String mac;
 
     private int speed;
+    private String cameraName = null;
 
     private int strength;
     // Whether to unzip the error if it is unbundled error is not reported
     private boolean isUnbindDeviceError = false;
     private EZProbeDeviceInfoResult mEZProbeDeviceInfo = null;
     private TitleBar mTitleBar;
+    private LabelsView mLvCameraName;
+    private TextView mTvSetCameraLabel;
+
 
     // return 0 means success, camera info be saved in mEZProbeDeviceInfo
     // return other value means fail, result is the error code
@@ -327,6 +339,8 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
 
     private void init() {
 
+        mEZOpenSDK = EZOpenSDK.getInstance();
+
         serialNo = getIntent().getStringExtra(SeriesNumSearchActivity.BUNDE_SERIANO);
         mVerifyCode = getIntent().getStringExtra(SeriesNumSearchActivity.BUNDE_VERYCODE);
         wifiPassword = getIntent().getStringExtra(AutoWifiNetConfigActivity.WIFI_PASSWORD);
@@ -380,6 +394,9 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         btnLineConnect = (Button) findViewById(R.id.btnLineConnet);
         btnLineConnetOk = findViewById(R.id.btnLineConnetOk);
         imgAnimation = (ImageView) findViewById(R.id.imgAnimation);
+        mLvCameraName = findViewById(R.id.labels_camera_name);
+        mTvSetCameraLabel = findViewById(R.id.tv_set_camera_label);
+
         btnFinish = findViewById(R.id.btnFinish);
         ckbCloundService = (CheckBox) findViewById(R.id.ckbCloundService);
         tvMore = findViewById(R.id.tvMore);
@@ -393,6 +410,26 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         help = findViewById(R.id.help);
         tvDeviceWifiConfigTip = findViewById(R.id.tvDeviceWifiConfigTip);
         tvSuccess = findViewById(R.id.tvSuccess);
+
+
+        ArrayList<String> label = new ArrayList<>();
+        label.add("客厅");
+        label.add("卧室");
+        label.add("书房");
+        label.add("餐厅");
+        label.add("大门");
+        label.add("阳台");
+        label.add("办公室");
+        label.add("其他");
+        mLvCameraName.setLabels(label);
+        //标签的选中监听
+        mLvCameraName.setOnLabelSelectChangeListener(new LabelsView.OnLabelSelectChangeListener() {
+            @Override
+            public void onLabelSelectChange(TextView label, Object data, boolean isSelect, int position) {
+                //label是被选中的标签，data是标签所对应的数据，isSelect是是否选中，position是标签的位置。
+                cameraName = (String)data;
+            }
+        });
         // mWaitDlg = new WaitDialog(this, android.R.style.Theme_Translucent_NoTitleBar);
         // mWaitDlg.setWaitText(getResources().getString(R.string.start_cloud));
         // mWaitDlg.setCancelable(false);
@@ -415,6 +452,19 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                         newMsg.obj = timer;
                         sendMessageDelayed(newMsg, 1000);
                     }
+                    break;
+                case MSG_SET_CAMERA_NAME_SUCCESS:
+                    //TODO
+                    // 云存储开关,设备不在线或是不是最新的设备或是用户没有开启云存储服务是看不到这个控件的
+                    if (llyCloundService.getVisibility() == View.VISIBLE && ckbCloundService.isChecked()) {
+                        enableCloudStoryed();
+                    } else {
+                        closeActivity();
+                    }
+                    break;
+                case MSG_SET_CAMERA_NAME_FAIL:
+                    Toast.makeText(getApplicationContext(),"设置标签失败，请稍后再试",Toast.LENGTH_LONG).show();
+                    closeActivity();
                     break;
 
                 default:
@@ -509,6 +559,9 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
             tip2.setText(R.string.auto_wifi_tip_connecting_server_ok);
             tip3.setText(R.string.auto_wifi_tip_binding_account_ing);
             timer3.setVisibility(View.VISIBLE);
+
+            addCameraToCloudStore();
+
             //
             Message msg = timerHandler.obtainMessage();
             msg.what = 0;
@@ -536,6 +589,11 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
         } else {
 
         }
+
+    }
+
+    private void addCameraToCloudStore() {
+
 
     }
 
@@ -706,6 +764,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                 lineConnectOkClick();
                 break;
             case R.id.btnFinish:
+
                 finishOnClick();
                 break;
             case R.id.tvMore:
@@ -747,12 +806,33 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
      * @since V1.8.2
      */
     private void finishOnClick() {
-        // 云存储开关,设备不在线或是不是最新的设备或是用户没有开启云存储服务是看不到这个控件的
-        if (llyCloundService.getVisibility() == View.VISIBLE && ckbCloundService.isChecked()) {
-            enableCloudStoryed();
-        } else {
-            closeActivity();
+
+        if(cameraName == null){
+            Toast.makeText(getApplicationContext(),"请为摄像头设置标签",Toast.LENGTH_LONG).show();
+        }else{
+
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        mEZOpenSDK.setDeviceName(serialNo,cameraName);
+                        Message message = new Message();
+                        message.what = MSG_SET_CAMERA_NAME_SUCCESS;
+                        timerHandler.sendMessage(message);
+                    } catch (BaseException e) {
+                        e.printStackTrace();
+                        Message message = new Message();
+                        message.what = MSG_SET_CAMERA_NAME_FAIL;
+                        timerHandler.sendMessage(message);
+                    }
+                }
+            }.start();
+
         }
+
+
+
     }
 
     /**
@@ -1024,6 +1104,8 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                 t5 = System.currentTimeMillis();
                 // 记录操作时间
                 recordConfigTimeAndError();
+                mLvCameraName.setVisibility(View.VISIBLE);
+                mTvSetCameraLabel.setVisibility(View.VISIBLE);
                 btnFinish.setVisibility(View.VISIBLE);
                 boolean bX1orX2 = false;//mDeviceInfoEx.getEnumModel() == DeviceModel.X1 || mDeviceInfoEx.getEnumModel() == DeviceModel.X2;
                 if (bX1orX2) {

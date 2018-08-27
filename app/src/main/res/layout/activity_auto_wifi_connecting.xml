@@ -171,6 +171,38 @@
             android:textColor="@color/black"
             android:textSize="@dimen/large_text_size"
             android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_set_camera_label"
+            android:textColor="@color/white"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            android:text="@string/set_label_for_camera"
+            android:visibility="gone"/>
+
+        <com.donkingliang.labels.LabelsView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/labels_camera_name"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="25dp"
+            android:padding="5dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginRight="38dp"
+            app:labelBackground="@drawable/label_bg_selector"
+            app:labelTextColor="@drawable/label_text_color_selector"
+            app:labelTextPaddingBottom="5dp"
+            app:labelTextPaddingLeft="15dp"
+            app:labelTextPaddingRight="15dp"
+            app:labelTextPaddingTop="5dp"
+            app:labelTextSize="14sp"
+            app:lineMargin="10dp"
+            app:maxSelect="1"
+            app:selectType="SINGLE"
+            app:wordMargin="10dp" />
 
         <Button
             android:id="@+id/btnFinish"

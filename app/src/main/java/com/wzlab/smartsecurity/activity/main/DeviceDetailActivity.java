@@ -36,8 +36,10 @@ import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity;
 import com.wzlab.smartsecurity.adapter.CameraListAdapter;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
+import com.wzlab.smartsecurity.po.Camera;
 import com.wzlab.smartsecurity.po.Device;
 import com.wzlab.smartsecurity.utils.DataManager;
+import com.wzlab.smartsecurity.utils.DataParser;
 import com.wzlab.smartsecurity.utils.EZUtils;
 import com.wzlab.smartsecurity.widget.ColorfulProgressBar;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
@@ -54,6 +56,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private ArrayList<EZCameraInfo> mCameraList = null;
     private final static int MSG_LOAD_DEVICE_SUCCESS = 30;
     private EZDeviceInfo deviceInfo;
+    private ArrayList<Camera> cameras = null;
 
    @SuppressLint("HandlerLeak")
    private Handler handler = new Handler(){
@@ -74,12 +77,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
            }else if(msg.what == Config.KEY_LOADING_SUCCESS){
                loadingLayout.showContent();
            }else if(msg.what == MSG_LOAD_DEVICE_SUCCESS) {
-               mDeviceList = new ArrayList<>();
-               mCameraList = new ArrayList<>();
-               mDeviceList.add(deviceInfo);
-               EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo,0);
-               mCameraList.add(cameraInfo);
-               cameraListAdapter.setCameraList(mCameraList);
+
+
+               cameraListAdapter.setCameraList(cameras);
 
            }else {
                switch (msg.what) {
@@ -178,48 +178,72 @@ public class DeviceDetailActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         deviceId = bundle.getString("device_id","11");
 
+        mDeviceList = new ArrayList<>();
+        mCameraList = new ArrayList<>();
+
         GetDeviceInfo.getDeviceDetails(deviceId, new GetDeviceInfo.SuccessCallback() {
             @Override
-            public void onSuccess(ArrayList list, String msg) {
+            public void onSuccess(ArrayList list, final ArrayList camera, String msg) {
                 Message handlerMsg = new Message();
+
+                if(camera.size()>0){
+
+
+                    cameras = camera;
+                    if(cameras.get(0).getCamera_serial().length()<5){
+
+                    }else{
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    for(int i=0;i<camera.size();i++) {
+                                        Camera c = (Camera)camera.get(i);
+                                        deviceInfo = SmartSecurityApplication.getOpenSDK().getDeviceInfo(c.getCamera_serial());
+                                        mDeviceList.add(deviceInfo);
+                                        EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
+                                        mCameraList.add(cameraInfo);
+                                        DataManager.getInstance().setDeviceSerialVerifyCode(c.getCamera_serial(),c.getVerification_code());
+                                        EZOpenSDK.getInstance().setAccessToken(c.getAccess_token());
+                                    }
+
+                                    Message message = new Message();
+                                    message.what = MSG_LOAD_DEVICE_SUCCESS;
+                                    handler.sendMessage(message);
+                                } catch (BaseException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }.start();
+                    }
+
+
+                }
+
                 if(list.size()>0){
                     final Device device = (Device)list.get(0);
-                    deviceId = getData(device.getDevice_id());
-                    String productType = getData(device.getProduct_type());
-                    String status = getData(device.getArrange_withdraw());
-                    String isAlarming = getData(device.getIs_alarming());
-                    String productionDate = getData(device.getProduction_date());
+                    deviceId = device.getDevice_id();
+                    String productType = device.getProduct_type();
+                    String status = device.getArrange_withdraw();
+                    String isAlarming = device.getIs_alarming();
+                    String productionDate = device.getProduction_date();
                     final String manufacturer = "浙江中创天成科技有限公司";
-                    String installDate = getData(device.getInstall_date());
-                    String guaranteeTime = getData(device.getGuarantee_time());
-                    String userAddr = getData(device.getUser_address().split("#")[0]);
-                    String repairRecord = getData(device.getRepair_record());
-                    String repairProgress = getData(device.getRepair_progress());
-                    String head = getData(device.getHead());
-                    String headPhone = getData(device.getHead_phone());
-                    String policeStation = getData(device.getPolice_station());
-                    String deviceType = getData(device.getProduct_type());
-                    final String cameraSerial = device.getCamera_serial();
+                    String installDate = device.getInstall_date();
+                    String guaranteeTime = device.getGuarantee_time();
+                    String userAddr = device.getUser_address().split("#")[0];
+                    String repairRecord = device.getRepair_record();
+                    String repairProgress = device.getRepair_progress();
+                    String head = DataParser.getData(device.getHead(),"暂无数据");
+                    String headPhone = DataParser.getData(device.getHead_phone(),"暂无数据");
+                    String policeStation = DataParser.getData(device.getPolice_station(),"暂无数据");
+                    String deviceType = device.getProduct_type();
+                  //  final String cameraSerial = device.getCamera_serial();
                     // TODO 添加验证码
                 //    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
 
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            super.run();
-                            try {
-                              deviceInfo = SmartSecurityApplication.getOpenSDK().getDeviceInfo(cameraSerial);
-                              Message message = new Message();
-                              message.what = MSG_LOAD_DEVICE_SUCCESS;
-                              handler.sendMessage(message);
 
-
-                            } catch (BaseException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }.start();
 
                     mTvDeviceId.setText(deviceId);
                    // TODO
@@ -343,7 +367,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
         RecyclerView mRvCameraInfo = findViewById(R.id.rv_camera_list);
         mRvCameraInfo.setLayoutManager(new LinearLayoutManager(this));
         mCameraList = new ArrayList<>();
-        cameraListAdapter = new CameraListAdapter(getApplicationContext(), mCameraList);
+        cameras = new ArrayList<>();
+        cameraListAdapter = new CameraListAdapter(getApplicationContext(),cameras);
         cameraListAdapter.setOnItemClickListener(new CameraListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -370,11 +395,5 @@ public class DeviceDetailActivity extends AppCompatActivity {
         }
     }
 
-    public String getData(String s){
-        if(s == null){
-            return "暂无数据";
-        }else {
-            return s;
-        }
-    }
+
 }

@@ -12,6 +12,7 @@ import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.account.GetSmsCode;
+import com.wzlab.smartsecurity.po.Camera;
 import com.wzlab.smartsecurity.po.Device;
 
 import org.json.JSONArray;
@@ -44,8 +45,10 @@ public class GetDeviceInfo {
         this.containerId = containerId;
     }
 
+
+
     public static interface SuccessCallback{
-        void onSuccess(ArrayList list, String msg);
+        void onSuccess(ArrayList list, ArrayList camera, String msg);
     }
     public static interface SuccessCallbackForDeploy{
         void onSuccess(String cmd, String msg);
@@ -112,11 +115,7 @@ public class GetDeviceInfo {
                                 for(int i=0;i<jsonArray.length();i++){
                                     deviceList.add(gson.fromJson(jsonArray.get(i).toString(),Device.class));
                                 }
-
-
-
-                                successCallback.onSuccess(deviceList,jsonObject.getString(Config.RESULT_MESSAGE));
-
+                                successCallback.onSuccess(deviceList,null,jsonObject.getString(Config.RESULT_MESSAGE));
                             }
                             break;
                         default:
@@ -154,7 +153,7 @@ public class GetDeviceInfo {
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
 
-                                successCallback.onSuccess(null,jsonObject.getString(Config.RESULT_MESSAGE));
+                                successCallback.onSuccess(null,null,jsonObject.getString(Config.RESULT_MESSAGE));
 //                            }
                             break;
                         default:
@@ -197,12 +196,19 @@ public class GetDeviceInfo {
                             if(successCallback!=null){
                                 ArrayList<Device> deviceList = new ArrayList<>();
 
+
+                                // 得到报警模块的基本信息
                                 JSONObject jsonArray = jsonObject.getJSONObject("data");
                                 Gson gson = new Gson();
-
                                 deviceList.add(gson.fromJson(jsonArray.toString(),Device.class));
+                                ArrayList<Camera> cameraList = new ArrayList<>();
+                            //   JSONObject jsonCameraObject = jsonObject.getJSONObject("camera");
+                                JSONArray jsonCameraArray = jsonObject.getJSONArray("camera");
 
-                                successCallback.onSuccess(deviceList,jsonObject.getString(Config.RESULT_MESSAGE));
+                                for(int i=0;i<jsonCameraArray.length();i++){
+                                    cameraList.add(gson.fromJson(jsonCameraArray.get(i).toString(),Camera.class));
+                                }
+                                successCallback.onSuccess(deviceList,cameraList,jsonObject.getString(Config.RESULT_MESSAGE));
                             }
                             break;
                         default:

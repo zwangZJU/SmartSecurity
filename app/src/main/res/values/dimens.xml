@@ -72,4 +72,5 @@
     <dimen name="loading_text_size">15dp</dimen>
     <dimen name="content_text_size">14dp</dimen>
     <dimen name="assistant_text_size">14.5dp</dimen>
+    <dimen name="real_play_control_button">45dp</dimen>
 </resources>
