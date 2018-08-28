@@ -171,41 +171,42 @@
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".activity.main.EZCameraListActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.main.EZRealPlayActivity"
+            android:name=".activity.camera.playback.EZRemotePlayBackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.camera.playback.PlayBackListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor"/>
 
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".activity.main.camera.RealPlayActivity"
+        <activity android:name=".activity.camera.realplay.RealPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activity.main.wifi.AutoWifiPrepareStepOneActivity"
+            android:name=".activity.camera.wifi.AutoWifiPrepareStepOneActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.main.wifi.AutoWifiNetConfigActivity"
+            android:name=".activity.camera.wifi.AutoWifiNetConfigActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.main.wifi.SeriesNumSearchActivity"
+            android:name=".activity.camera.wifi.SeriesNumSearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activity.main.wifi.AutoWifiConnectingActivity"
+            android:name=".activity.camera.wifi.AutoWifiConnectingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.main.wifi.ResetIntroduceActivity"
+            android:name=".activity.camera.wifi.ResetIntroduceActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.main.wifi.APWifiConfigActivity"
+            android:name=".activity.camera.wifi.APWifiConfigActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.main.wifi.AutoWifiResetActivity"
+            android:name=".activity.camera.wifi.AutoWifiResetActivity"
             android:screenOrientation="portrait"/>
     </application>
 

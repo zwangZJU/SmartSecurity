@@ -578,5 +578,6 @@
     <string name="string_smart_connection_normal">无线连接 ( 若设备指示灯红蓝闪烁或其它状态，请选择 )</string>
     <string name="set_label_for_camera">设置标签</string>
     <string name="click_to_show_details">查看详情</string>
+    <string name="playback">回放</string>
 
 </resources>

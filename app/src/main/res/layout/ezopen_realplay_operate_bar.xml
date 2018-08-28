@@ -184,6 +184,27 @@
 		       android:textColor="@color/common_sub_text"
 		       android:textSize="@dimen/realplay_text_size" />		    
 		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/ll_playback"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="25dp"
+			android:orientation="vertical" >
+			<ImageButton
+				android:id="@+id/ib_playback"
+				android:layout_width="@dimen/real_play_control_button"
+				android:layout_height="@dimen/real_play_control_button"
+				android:background="@drawable/ic_playback"
+				android:onClick="onClick" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="7dp"
+				android:text="@string/playback"
+				android:layout_gravity="center"
+				android:textColor="@color/common_sub_text"
+				android:textSize="@dimen/realplay_text_size" />
+		</LinearLayout>
 	</LinearLayout>
 
 </HorizontalScrollView>

@@ -3,7 +3,6 @@ package com.wzlab.smartsecurity.activity.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,16 +36,14 @@ import com.videogo.openapi.EZOpenSDK;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
-import com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity;
-import com.wzlab.smartsecurity.activity.main.wifi.AutoWifiPrepareStepOneActivity;
-import com.wzlab.smartsecurity.activity.main.wifi.SeriesNumSearchActivity;
+import com.wzlab.smartsecurity.activity.camera.playback.PlayBackListActivity;
+import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiPrepareStepOneActivity;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.account.Logout;
-import com.wzlab.smartsecurity.service.IntentService;
 import com.wzlab.smartsecurity.utils.AppConfigUtil;
 import com.wzlab.smartsecurity.utils.DataParser;
 import com.wzlab.smartsecurity.utils.GraphProcess;
@@ -113,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         phone = Config.getCachedPhone(getApplicationContext());
         boolean i = pushManager.bindAlias(getApplicationContext(),phone,phone);
         Log.e(TAG, "onCreate: "+ i );
-        EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
+      //  EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
 
         Window window = getWindow();
 
@@ -299,9 +296,9 @@ public class MainActivity extends AppCompatActivity
        // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            startActivity(new Intent(this,AutoWifiPrepareStepOneActivity.class));
+            startActivity(new Intent(this,PlayBackListActivity.class));
         }  else if (id == R.id.nav_slideshow) {
-           startActivity(new Intent(this,EZCameraListActivity.class));
+           startActivity(new Intent(this,MainActivity.class));
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
@@ -406,6 +403,7 @@ public class MainActivity extends AppCompatActivity
                             userInfoAvatarURL = jsonObject.getString("avatar");
                             userInfoName = DataParser.getData(jsonObject.getString("name"),"未实名");
                             userInfoIsCert = DataParser.getData(jsonObject.getString("is_cert"),"未认证").equals("1")?"已认证":"未认证";
+                            EZOpenSDK.getInstance().setAccessToken(jsonObject.getString("access_token"));
                             // 下载头像
                             String avatarPath = getExternalFilesDir(null).getPath()+"/avatar/"+phone+".png";
                             File file = new File(avatarPath);

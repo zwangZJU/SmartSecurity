@@ -47,4 +47,14 @@
     <color name="common_text_sel">#3aa3ee</color>
     <color name="upgrade_gray">#888888</color>
     <color name="setting_hint_text">#adadad</color>
+    <color name="play_translucent_bg">#c0000000</color>
+    <color name="remotefile_timebar_color">#39a3ed</color>
+    <color name="remotefile_timebar_alarm_color">#ff8261</color>
+    <color name="remotefile_line_color">#fe2b2b</color>
+
+    <!-- 回放列表 -->
+    <color name="remotelist_item_select">#249bff</color>
+    <color name="remotelist_item_duration_text_color">#c6c6c6</color>
+    <color name="preview_quality_color">#3eaefa</color>
+    <color name="common_hint_text">#adadad</color>
 </resources>

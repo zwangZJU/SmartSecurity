@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wzlab.smartsecurity.activity.main.camera.RealPlayActivity">
+    tools:context="com.wzlab.smartsecurity.activity.camera.realplay.RealPlayActivity">
 
     <com.ezvizuikit.open.EZUIPlayer
         android:id="@+id/player_ui"
