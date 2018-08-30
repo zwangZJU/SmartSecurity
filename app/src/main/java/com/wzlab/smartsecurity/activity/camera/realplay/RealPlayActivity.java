@@ -2,6 +2,7 @@ package com.wzlab.smartsecurity.activity.camera.realplay;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -107,8 +109,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -148,6 +152,9 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
 
     public static final int MSG_SET_VEDIOMODE_SUCCESS = 105;
 
+    private static final int MSG_INIT_SD_CARD = 208;
+    private static final int MSG_FINISH_INIT_SD_CARD = 209;
+
     /**
      * 设置视频质量成功
      */
@@ -177,7 +184,9 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
     private Rect mRealPlayRect = null;
 
     private LinearLayout mRealPlayPageLy = null;
-    private TitleBar mPortraitTitleBar = null;
+
+    //private Toolbar mPortraitTitleBar = null;
+     private TitleBar mPortraitTitleBar = null;
     private TitleBar mLandscapeTitleBar = null;
     private Button mTiletRightBtn = null;
     private RelativeLayout mRealPlayPlayRl = null;
@@ -612,7 +621,15 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
     }
 
     private void initTitleBar() {
-        mPortraitTitleBar = (TitleBar) findViewById(R.id.title_bar_portrait);
+        mPortraitTitleBar =  findViewById(R.id.title_bar_portrait);
+        mPortraitTitleBar.addRightButton(R.drawable.ic_setting_camera, new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Intent intent = new Intent(RealPlayActivity.this,CameraSettingActivity.class);
+               intent.putExtra("camera_serial",mCameraInfo.getDeviceSerial());
+               startActivity(intent);
+            }
+        });
         mPortraitTitleBar.addBackButton(new OnClickListener() {
 
             @Override
@@ -657,17 +674,25 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
 
     // 查看sd卡状态，初始化sd卡
     private void initSDCard(){
-        EZStorageStatus sdCard = new EZStorageStatus();
-        int s = sdCard.getStatus();
-        switch (sdCard.getStatus()){
-            case 0:
-                sdCard.setStatus(0);
-                break;
-            case 2:
-                sdCard.setStatus(0);
-                break;
-        }
-        Log.e(TAG, "initSDCard: "+ s);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    final List<EZStorageStatus> status = SmartSecurityApplication.getOpenSDK().getStorageStatus(mCameraInfo.getDeviceSerial());
+                    Log.e(TAG, "run: "+status );
+                    if(status.get(0).getStatus() == 2){
+                        Message message = new Message();
+                        message.what = MSG_INIT_SD_CARD;
+                        message.arg1 = status.get(0).getIndex();
+                        mHandler.sendMessage(message);
+                    }
+                } catch (BaseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
     }
     // 初始化界面
     private void initView() {
@@ -2544,10 +2569,64 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
                 mStatus = RealPlayStatus.STATUS_INIT;
                 startRealPlay();
                 break;
+            case MSG_INIT_SD_CARD:
+                alertAndInitSDCard(msg.arg1);
+                break;
+            case MSG_FINISH_INIT_SD_CARD:
+                mWaitDialog.dismiss();
+                Toast.makeText(getApplicationContext(),"SD卡已完成初始化，可以正常存储啦",Toast.LENGTH_LONG).show();
+                break;
             default:
                 break;
         }
         return false;
+    }
+
+    // 弹出警告对话框，初始化sd卡
+    private void alertAndInitSDCard(final int index) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RealPlayActivity.this);
+        builder.setMessage("SD卡未初始化，无法录像，请先初始化")
+                .setPositiveButton("初始化",null)
+                .setNegativeButton("关闭",null)
+                .setCancelable(false);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                    mWaitDialog.show();
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                SmartSecurityApplication.getOpenSDK().formatStorage(mCameraInfo.getDeviceSerial(),index);
+                                boolean isRun = true;
+                                while(isRun){
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    List<EZStorageStatus> finsh =  SmartSecurityApplication.getOpenSDK().getStorageStatus(mCameraInfo.getDeviceSerial());
+                                    if(finsh.get(0).getStatus() == 0){
+                                        isRun = false;
+                                    }
+                                }
+                                Message message = new Message();
+                                message.what = MSG_FINISH_INIT_SD_CARD;
+                                mHandler.sendMessage(message);
+                            } catch (BaseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+
+
+            }
+        });
+
     }
 
     private void handleHidePtzDirection(Message msg) {

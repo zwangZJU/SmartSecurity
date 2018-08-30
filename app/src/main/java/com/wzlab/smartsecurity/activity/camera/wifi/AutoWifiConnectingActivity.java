@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donkingliang.labels.LabelsView;
+
 import com.videogo.constant.Constant;
 import com.videogo.device.DeviceInfoEx;
 import com.videogo.errorlayer.ErrorInfo;
@@ -38,6 +39,8 @@ import com.videogo.openapi.EZConstants;
 
 import com.videogo.openapi.EZOpenSDK;
 import com.videogo.openapi.EZOpenSDKListener;
+import com.videogo.openapi.bean.EZCameraInfo;
+import com.videogo.openapi.bean.EZDeviceInfo;
 import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
 
 import com.videogo.util.ConnectionDetector;
@@ -48,7 +51,11 @@ import com.videogo.widget.TitleBar;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.SmartSecurityApplication;
 
+import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
+import com.wzlab.smartsecurity.net.HttpMethod;
+import com.wzlab.smartsecurity.net.NetConnection;
+import com.wzlab.smartsecurity.utils.EZUtils;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -816,9 +823,26 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                     super.run();
                     try {
                         mEZOpenSDK.setDeviceName(serialNo,cameraName);
-                        Message message = new Message();
-                        message.what = MSG_SET_CAMERA_NAME_SUCCESS;
-                        timerHandler.sendMessage(message);
+                        mEZOpenSDK.setDeviceEncryptStatus(serialNo,mVerifyCode,false);
+                        EZDeviceInfo ezDeviceInfo = mEZOpenSDK.getDeviceInfo(serialNo);
+                        EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(ezDeviceInfo, 0);
+
+                        int cameraNo = cameraInfo.getCameraNo();
+                        new NetConnection(Config.SERVER_URL + Config.ACTION_SUPPLEMENT_CAMERA_INFO, HttpMethod.POST, new NetConnection.SuccessCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                Message message = new Message();
+                                message.what = MSG_SET_CAMERA_NAME_SUCCESS;
+                                timerHandler.sendMessage(message);
+                            }
+                        }, new NetConnection.FailCallback() {
+                            @Override
+                            public void onFail() {
+
+                            }
+                        },"camera_serial",serialNo,"camera_label",cameraName,"camera_no",String.valueOf(cameraNo));
+
+
                     } catch (BaseException e) {
                         e.printStackTrace();
                         Message message = new Message();

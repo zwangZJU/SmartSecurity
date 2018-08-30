@@ -202,6 +202,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                                         mDeviceList.add(deviceInfo);
                                         EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
                                         mCameraList.add(cameraInfo);
+                                        cameras.get(i).setCamera_label(cameraInfo.getCameraName());
                                         DataManager.getInstance().setDeviceSerialVerifyCode(c.getCamera_serial(),c.getVerification_code());
                                         EZOpenSDK.getInstance().setAccessToken(c.getAccess_token());
                                     }

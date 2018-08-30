@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -12,6 +12,15 @@
             android:layout_height="66dp"
             android:id="@+id/iv_camera_img"
             android:layout_marginLeft="8dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_camera_label"
+            android:text="其他"
+            android:textSize="17sp"
+            android:textColor="@color/deep_gray"
+            android:layout_centerInParent="true"
             />
         <TextView
             android:layout_width="wrap_content"

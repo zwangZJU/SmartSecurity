@@ -44,11 +44,11 @@
     <!-- 萤石云 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
-        android:protectionLevel="normal"></permission>
+        android:protectionLevel="normal" />
 
     <application
         android:name=".SmartSecurityApplication"
@@ -68,14 +68,14 @@
             android:enabled="true"
             android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2"/>
+                <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
         <service
             android:name=".service.PushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice"/>
+            android:process=":pushservice" />
         <service android:name=".service.IntentService" />
 
         <activity
@@ -103,7 +103,7 @@
         <activity
             android:name="com.videogo.main.EzvizWebViewActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- 个推SDK配置开始 -->
         <!-- 配置的第三方参数属性 -->
@@ -141,18 +141,16 @@
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-
             </intent-filter>
         </receiver>
-
         <receiver
-            android:name="com.wzlab.smartsecurity.EzvizBroadcastReceiver"
+            android:name=".EzvizBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.videogo.action.ADD_DEVICE_SUCCESS_ACTION"/>
-                <action android:name="com.videogo.action.OAUTH_SUCCESS_ACTION"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="com.videogo.action.ADD_DEVICE_SUCCESS_ACTION" />
+                <action android:name="com.videogo.action.OAUTH_SUCCESS_ACTION" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
@@ -162,7 +160,7 @@
             android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.igexin.sdk.GActivity"
             android:excludeFromRecents="true"
@@ -173,41 +171,42 @@
         <activity
             android:name=".activity.camera.playback.EZRemotePlayBackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.playback.PlayBackListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="nosensor"/>
+            android:screenOrientation="nosensor" />
 
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".activity.camera.realplay.RealPlayActivity"
+        <activity
+            android:name=".activity.camera.realplay.RealPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.AutoWifiPrepareStepOneActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.AutoWifiNetConfigActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.SeriesNumSearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.camera.wifi.AutoWifiConnectingActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.ResetIntroduceActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.APWifiConfigActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.camera.wifi.AutoWifiResetActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.camera.realplay.CameraSettingActivity"></activity>
     </application>
 
 </manifest>

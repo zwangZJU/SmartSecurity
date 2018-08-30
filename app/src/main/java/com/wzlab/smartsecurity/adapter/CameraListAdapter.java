@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.videogo.openapi.bean.EZCameraInfo;
@@ -56,7 +57,11 @@ public class CameraListAdapter extends RecyclerView.Adapter{
 
         String url = "https://statics.ys7.com/device/image/"+camera.getCamera_type().trim()+"/101.jpeg";
         holder.itemView.setTag(position);
-        Glide.with(context).load(url).into(holder.mIvCameraImg);
+        holder.mTvCameraLabel.setText(camera.getCamera_label());
+
+            Glide.with(context).load(url).into(holder.mIvCameraImg);
+
+
        // holder.mIvCameraImg.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_avatar));
 
     }
@@ -69,10 +74,12 @@ public class CameraListAdapter extends RecyclerView.Adapter{
 
     class CameraViewHolder extends RecyclerView.ViewHolder{
         ImageView mIvCameraImg;
+        TextView mTvCameraLabel;
 
         public CameraViewHolder(final View itemView) {
             super(itemView);
             mIvCameraImg = itemView.findViewById(R.id.iv_camera_img);
+            mTvCameraLabel = itemView.findViewById(R.id.tv_camera_label);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -34,6 +34,8 @@ public class Config {
     public static final String ACTION_GET_USER_BASIC_INFO = "getUserBasicInfo";
     public static final String ACTION_UPLOAD_USER_AVATAR = "uploadUserAvatar";
     public static final String ACTION_BINDING_CAMERA = "bindingCamera";
+    public static final String ACTION_SUPPLEMENT_CAMERA_INFO = "supplementCameraInfo";
+    public static final String ACTION_DELETE_CAMERA = "deleteCamera";
     public static final String ACTION_SOS = "sos";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
