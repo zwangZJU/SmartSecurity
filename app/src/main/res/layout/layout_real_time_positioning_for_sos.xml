@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+
+    android:layout_height="400dp"
+    android:orientation="vertical">
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView_sos"
@@ -9,6 +11,47 @@
         android:layout_height="200dp"
         android:clickable="true" />
 
+    <LinearLayout
+        android:id="@+id/al_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
+        <com.wzlab.smartsecurity.widget.FloatLabeledEditText
+            android:id="@+id/flet_relese_alarm_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
+            <com.wzlab.smartsecurity.widget.ClearableEditText
+                android:id="@+id/et_relese_alarm_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="手机号"
+                android:theme="@style/NormalEditText" />
+
+        </com.wzlab.smartsecurity.widget.FloatLabeledEditText>
+
+        <com.wzlab.smartsecurity.widget.FloatLabeledEditText
+            android:id="@+id/flet_relese_alarm_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <com.wzlab.smartsecurity.widget.ClearableEditText
+                android:id="@+id/et_relese_alarm_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="取消报警的原因(20字以内)"
+                android:maxLength="20"
+                android:theme="@style/NormalEditText" />
+        </com.wzlab.smartsecurity.widget.FloatLabeledEditText>
+    </LinearLayout>
 </LinearLayout>

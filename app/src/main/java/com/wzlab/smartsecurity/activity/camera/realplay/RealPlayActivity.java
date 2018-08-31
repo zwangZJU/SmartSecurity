@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -20,7 +21,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -94,7 +94,6 @@ import com.wzlab.smartsecurity.SmartSecurityApplication;
 
 import com.wzlab.smartsecurity.activity.camera.playback.PlayBackListActivity;
 import com.wzlab.smartsecurity.activity.camera.playback.RemoteListContant;
-import com.wzlab.smartsecurity.activity.main.RealPlaySquareInfo;
 import com.wzlab.smartsecurity.utils.ActivityUtils;
 import com.wzlab.smartsecurity.utils.AudioPlayUtil;
 import com.wzlab.smartsecurity.utils.DataManager;
@@ -109,7 +108,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -2583,6 +2581,7 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
     }
 
     // 弹出警告对话框，初始化sd卡
+    @SuppressLint("ResourceAsColor")
     private void alertAndInitSDCard(final int index) {
         AlertDialog.Builder builder = new AlertDialog.Builder(RealPlayActivity.this);
         builder.setMessage("SD卡未初始化，无法录像，请先初始化")
@@ -2591,6 +2590,9 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
                 .setCancelable(false);
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -2719,6 +2721,7 @@ public class RealPlayActivity extends Activity implements OnClickListener, Surfa
             mRealPlayTalkBtnLy.setVisibility(View.VISIBLE);
             if (mCameraInfo != null && mDeviceInfo.getStatus() == 1) {
                 mRealPlayTalkBtn.setEnabled(true);
+
             } else {
                 mRealPlayTalkBtn.setEnabled(false);
             }

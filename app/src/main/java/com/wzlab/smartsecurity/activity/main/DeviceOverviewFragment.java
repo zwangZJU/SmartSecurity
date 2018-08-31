@@ -83,9 +83,6 @@ public class DeviceOverviewFragment extends Fragment {
     }
 
 
-
-
-
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -133,16 +130,15 @@ public class DeviceOverviewFragment extends Fragment {
                     DataManager.getInstance().setDeviceSerialVerifyCode(deviceSerial,verifyCode);
                     //  String s =  DataManager.getInstance().getDeviceSerialVerifyCode(deviceSerial);
                     mWaitDlg.dismiss();
-                    Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
-                }
 
+                    Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
+
+                }
 
             }else if(msg.what == MSG_EXCEPTION){
                 mWaitDlg.dismiss();
                 Toast.makeText(getContext(),"请求异常，请长按摄像头复位按钮进行重置",Toast.LENGTH_LONG).show();
             }
-
-
 
 
             if(msg.what == Config.KEY_LOADING_EMPTY){
@@ -191,6 +187,8 @@ public class DeviceOverviewFragment extends Fragment {
                     @Override
                     public void onSwitchClick(View view, int position) {
                       //  Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
+                        initData(true);
+                        deviceOverviewAdapter.notifyDataSetChanged();
                     }
                 });
                 // 设置Icon的点击事件,跳转到设备详情页
@@ -329,9 +327,14 @@ public class DeviceOverviewFragment extends Fragment {
             String phone = Config.getCachedPhone(getContext());
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(getContext(),SelectLocationActivity.class);
-            intent.putExtra("deviceInfo", deviceInfo);
-            startActivity(intent);
-            getActivity().finish();
+            if(deviceInfo.length()>10 && deviceInfo.substring(8,9).equals("#")){
+                intent.putExtra("deviceInfo", deviceInfo);
+                startActivity(intent);
+                getActivity().finish();
+            }else{
+                Toast.makeText(getContext().getApplicationContext(),"无效二维码",Toast.LENGTH_LONG).show();
+            }
+
 
         }else if(requestCode==Config.SCAN_QR_CODE_TO_ADD_CAMERA && resultCode== Activity.RESULT_OK){
             String result=data.getStringExtra(CaptureActivity.KEY_DATA);
@@ -357,7 +360,7 @@ public class DeviceOverviewFragment extends Fragment {
 
 
     // 绑定摄像头
-    private void bindingCamera(String deviceId, String CameraInfo) {
+    private void bindingCamera(String deviceId, String CameraInfo,final int msg ){
         new NetConnection(Config.SERVER_URL + Config.ACTION_BINDING_CAMERA, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
@@ -365,7 +368,7 @@ public class DeviceOverviewFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(result);
                     Message message = new Message();
                     message.what = MSG_ADD_CAMERA_SUCCESS;
-                    message.arg1 = 1;
+                    message.arg1 = msg;
                     handler.sendMessage(message);
                    // Toast.makeText(getContext(),jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
@@ -439,13 +442,15 @@ public class DeviceOverviewFragment extends Fragment {
         if (result.getBaseException() == null){
             Log.e(TAG, "connectCamera: 查询成功" );
             //查询成功，添加设备
-            bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode);
+          //  bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode);
             try {
                 SmartSecurityApplication.getOpenSDK().addDevice(deviceSerial,verifyCode);
-                Message message = new Message();
-                message.what = MSG_ADD_CAMERA_SUCCESS;
-                message.arg1 = 2;
-                handler.sendMessage(message);
+                //查询成功，添加设备
+                bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,2);
+//                Message message = new Message();
+//                message.what = MSG_ADD_CAMERA_SUCCESS;
+//                message.arg1 = 2;
+//                handler.sendMessage(message);
             } catch (BaseException e) {
                 e.printStackTrace();
                 Log.e(TAG, "connectCamera: ",e );
@@ -464,7 +469,7 @@ public class DeviceOverviewFragment extends Fragment {
                 case 120029:
                     // TODO: 2018/6/25  设备不在线，已经被自己添加 (这里需要网络配置)
                     mWaitDlg.show();
-                    bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode);
+                    bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,1);
 
 
                     break;

@@ -118,7 +118,7 @@ public class CameraSettingActivity extends AppCompatActivity {
                         message.what = MSG_DELETE_CAMERA_FAIL;
                         mHandler.sendMessage(message);
                     }
-                });
+                },"camera_serial",serial);
             }
         }.start();
 

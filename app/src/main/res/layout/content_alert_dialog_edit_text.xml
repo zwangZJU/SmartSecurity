@@ -13,6 +13,7 @@
             android:id="@+id/et_house_num_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/NormalEditText"
             android:hint="门牌号：如 一幢2单元304号" />
 
     </com.wzlab.smartsecurity.widget.FloatLabeledEditText>

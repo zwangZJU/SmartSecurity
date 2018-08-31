@@ -13,7 +13,7 @@
  * 
  * @warning 这里写本文件的相关警告
  */
-package com.wzlab.smartsecurity.activity.main;
+package com.wzlab.smartsecurity.activity.camera.realplay;
 
 /**
  * 在此对类做相应的描述

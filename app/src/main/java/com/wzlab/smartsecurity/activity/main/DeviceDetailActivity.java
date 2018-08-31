@@ -225,8 +225,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     final Device device = (Device)list.get(0);
                     deviceId = device.getDevice_id();
                     String productType = device.getProduct_type();
-                    String status = device.getArrange_withdraw();
-                    String isAlarming = device.getIs_alarming();
+                    String status = DataParser.getData(device.getArrange_withdraw(),"0");
+                    String isAlarming =  DataParser.getData(device.getIs_alarming(),"0");
                     String productionDate = device.getProduction_date();
                     final String manufacturer = "浙江中创天成科技有限公司";
                     String installDate = device.getInstall_date();

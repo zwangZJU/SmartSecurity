@@ -160,6 +160,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                     PoiListAdapter poiListAdapter = new PoiListAdapter(getApplicationContext(), mPoiList );
                     mRvPoiList.setAdapter(poiListAdapter);
                     poiListAdapter.setOnItemClickListener(new PoiListAdapter.OnItemClickListener() {
+                        @SuppressLint("ResourceAsColor")
                         @Override
                         public void onItemClick(View view, int position) {
                             PoiInfo poiInfo = mPoiList.get(position);
@@ -192,7 +193,10 @@ public class SelectLocationActivity extends AppCompatActivity {
                                     .setView(R.layout.content_alert_dialog_edit_text)
                                     .setCancelable(false);
                             final AlertDialog alertDialog = builder.create();
+
                             alertDialog.show();
+                            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+                            alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
                             // TODO 获取不到组件
                             // 设置标签
                             LabelsView labelsView = alertDialog.findViewById(R.id.labels);
@@ -213,6 +217,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
                                 }
                             });
+
 
                             alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @SuppressLint("ClickableViewAccessibility")

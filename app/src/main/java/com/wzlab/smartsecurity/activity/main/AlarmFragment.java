@@ -2,6 +2,7 @@ package com.wzlab.smartsecurity.activity.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,11 +14,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -44,6 +47,7 @@ import com.wzlab.smartsecurity.adapter.AlarmLogAdapter;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.po.AlarmLog;
+import com.wzlab.smartsecurity.widget.ClearableEditText;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
 
 import org.json.JSONArray;
@@ -73,6 +77,7 @@ public class AlarmFragment extends Fragment {
 
     private static final int KEY_FINISH_REFRESH = 3;
     private static final int MSG_SHOW_REAL_TIME_LOCATION = 400;
+    private static final int MSG_UPLOAD_REAL_TIME_LOCATION_FAIL = 401;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -81,7 +86,6 @@ public class AlarmFragment extends Fragment {
             super.handleMessage(msg);
             if(msg.what == Config.KEY_LOADING_EMPTY){
                 loadingLayout.showEmpty();
-
             }else if(msg.what == Config.KEY_LOADING_ERROR){
                 loadingLayout.showError();
                 loadingLayout.setBackgroundColor(getResources().getColor(R.color.background));
@@ -100,6 +104,20 @@ public class AlarmFragment extends Fragment {
 
             }else if(msg.what == MSG_SHOW_REAL_TIME_LOCATION){
                 showRealTimePositioning();
+            }else if(msg.what == MSG_UPLOAD_REAL_TIME_LOCATION_FAIL){
+                if(msg.arg1 == 1){
+                    Toast.makeText(getContext(),"未能连接服务器,请检查网络",Toast.LENGTH_SHORT).show();
+//                    mapView.onPause();
+//                    mapView.onDestroy();
+//                    mBaiduMap.setMyLocationEnabled(false);
+//                    mLocationClient.stop();
+//                    myOrientationListener.stop();
+//                    alertDialog.dismiss();
+
+                }else if(msg.arg1 == 2){
+                    Toast.makeText(getContext(),"服务器异常",Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     };
@@ -109,6 +127,8 @@ public class AlarmFragment extends Fragment {
     private RecyclerView mRvAlarmLog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MapView mapView;
+    private String phone;
+    private AlertDialog alertDialog;
 
 
     public AlarmFragment() {
@@ -198,7 +218,7 @@ public class AlarmFragment extends Fragment {
 
     // 联网报警的
     private void alarm() {
-        String phone = Config.getCachedPhone(getContext());
+        phone = Config.getCachedPhone(getContext());
         // 报警的联网操作
         new NetConnection(Config.SERVER_URL + Config.ACTION_SOS, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
@@ -239,40 +259,132 @@ public class AlarmFragment extends Fragment {
         },Config.KEY_PHONE, phone);
     }
 
+    // 在AlertDialog中展示实时定位信息，并每隔两秒上传一次最新的定位数据，直到报警结束位置
     private void showRealTimePositioning() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialogCustom);
         builder.setTitle("报警通知")
-                .setMessage("你现在慌的一批")
-                .setNegativeButton("知道了",null)
-                .setPositiveButton("解除报警",null)
+                .setMessage("正在向报警中心发送您的定位信息")
+                .setPositiveButton("取消报警",null)
+                .setNegativeButton("停止发送",null)
+                .setNeutralButton("继续报警",null)
                 .setView(R.layout.layout_real_time_positioning_for_sos)
                 .setCancelable(false);
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
         mapView = alertDialog.findViewById(R.id.bmapView_sos);
-        mapView.onResume();
+        final LinearLayout ll = alertDialog.findViewById(R.id.al_ll);
+        final ClearableEditText mEtPhone = alertDialog.findViewById(R.id.et_relese_alarm_phone);
+        final ClearableEditText mEtReason = alertDialog.findViewById(R.id.et_relese_alarm_reason);
         showLocation();
-
+        mapView.onResume();
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                while(alertDialog.isShowing()) {
+                    uploadRealTimeLocation(String.valueOf(mCurrentLatitude), String.valueOf(mCurrentLongitude));
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
 
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mapView.onPause();
-                mapView.onDestroy();
-                alertDialog.dismiss();
+
+                if(mapView.getVisibility() == View.VISIBLE &&ll.getVisibility() == View.GONE){
+                    mapView.setVisibility(View.GONE);
+                    ll.setVisibility(View.VISIBLE);
+                    alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.colorPrimary));
+                    alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(true);
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("提交以取消报警");
+                }else if(ll.getVisibility() == View.VISIBLE){
+                     String verifyPhone = mEtPhone.getText().toString();
+                     String reason = mEtReason.getText().toString();
+                    if(TextUtils.isEmpty(verifyPhone) || TextUtils.isEmpty(reason)){
+                        Toast.makeText(getContext(),"请将信息填写完整",Toast.LENGTH_SHORT).show();
+                    }else if(!verifyPhone.equals(phone)){
+                        Toast.makeText(getContext(),"手机号与登录信息不符，请重新输入",Toast.LENGTH_SHORT).show();
+                    }else {
+
+                        cancelAlarm(reason);
+                      //  Toast.makeText(getContext(),"报警已解除",Toast.LENGTH_SHORT).show();
+
+                    }
+                }else if(mapView.getVisibility() == View.GONE && ll.getVisibility() == View.GONE){
+                    alertDialog.setMessage("正在持续向报警中心发送您的定位信息");
+                    mapView.setVisibility(View.VISIBLE);
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("取消报警");
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(false);
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.white_top));
+                }
+
+
+
             }
         });
+
+        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.white_top));
+        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ll.setVisibility(View.GONE);
+                mapView.setVisibility(View.VISIBLE);
+                alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.white_top));
+                alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("取消报警");
+
+            }
+        });
+
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mapView.onPause();
                 mapView.onDestroy();
+                mBaiduMap.setMyLocationEnabled(false);
+                mLocationClient.stop();
+                myOrientationListener.stop();
                 alertDialog.dismiss();
             }
         });
+
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.white_top));
+        alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.white_top));
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(false);
         getAlarmLogList();
 
 
+
+    }
+
+    // 向服务器发送取消报警的请求
+    private void cancelAlarm(String reason) {
+        new NetConnection(Config.SERVER_URL + Config.ACTION_CANCEL_ALARM, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                Toast.makeText(getContext(),"报警已取消",Toast.LENGTH_SHORT).show();
+                mapView.onPause();
+                mapView.onDestroy();
+                mBaiduMap.setMyLocationEnabled(false);
+                mLocationClient.stop();
+
+                myOrientationListener.stop();
+                alertDialog.dismiss();
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                Toast.makeText(getContext(),"未能连接服务器",Toast.LENGTH_SHORT).show();
+            }
+        },Config.KEY_PHONE,phone,"reason",reason);
 
     }
 
@@ -300,6 +412,7 @@ public class AlarmFragment extends Fragment {
         MyLocationConfiguration config = new MyLocationConfiguration(mode, enableDirection, myLocation);
         mBaiduMap.setMyLocationConfiguration(config);
         mLocationClient.start();
+        myOrientationListener.start();
     }
 
     public void getAlarmLogList(){
@@ -324,7 +437,7 @@ public class AlarmFragment extends Fragment {
 
                             if(alarmLogList.size()>0){
                                     //arrayList逆序
-                                Collections.reverse(alarmLogList);
+                                //Collections.reverse(alarmLogList);
                                 mRvAlarmLog.setLayoutManager(new LinearLayoutManager(getContext()));
                                 AlarmLogAdapter alarmLogAdapter = new AlarmLogAdapter(getContext(), alarmLogList);
                                 mRvAlarmLog.setAdapter(alarmLogAdapter);
@@ -391,11 +504,58 @@ public class AlarmFragment extends Fragment {
                         builder.longitude(mCurrentLongitude);
                         // Log.d(TAG, "onReceiveLocation: "+mXDirection);
 
+
+                       // uploadRealTimeLocation(String.valueOf(mCurrentLatitude),String.valueOf(mCurrentLongitude));
                         MyLocationData locationData = builder.build();
                         mBaiduMap.setMyLocationData(locationData);
                         //   Log.d(TAG, "onOrientationChanged: " + x);
                     }
                 });
+    }
+
+    private void uploadRealTimeLocation(String latitude, String longitude) {
+        new NetConnection(Config.SERVER_URL + Config.ACTION_UPLOAD_REAL_TIME_LOCATION, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    if(jsonObject.getString("status").equals("1")){
+
+                    }else if(jsonObject.getString("status").equals("2")){
+
+                        alertDialog.setMessage("报警中心已接到报警，是否还要持续发送定位信息？");
+                        mapView.setVisibility(View.GONE);
+                        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("持续发送");
+                        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(true);
+                        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+                    } else{
+                        Message message = new Message();
+                        message.what = MSG_UPLOAD_REAL_TIME_LOCATION_FAIL;
+                        message.arg1 = 2;
+                        handler.sendMessage(message);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Message message = new Message();
+                    message.what = MSG_UPLOAD_REAL_TIME_LOCATION_FAIL;
+                    message.arg1 = 2;
+                    handler.sendMessage(message);
+                }
+
+
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                Message message = new Message();
+                message.what = MSG_UPLOAD_REAL_TIME_LOCATION_FAIL;
+                message.arg1 = 1;
+                handler.sendMessage(message);
+
+            }
+        },Config.KEY_PHONE, phone, "latitude", latitude, "longitude", longitude);
     }
 
 
@@ -477,7 +637,7 @@ public class AlarmFragment extends Fragment {
             builder.direction(mCurrentDirection);
             builder.latitude(mCurrentLatitude);
             builder.longitude(mCurrentLongitude);
-            // Log.d(TAG, "onReceiveLocation: "+mXDirection);
+            //Log.e("AlarmFragment", "onReceiveLocation: "+"获取定位");
 
             MyLocationData locationData = builder.build();
             mBaiduMap.setMyLocationData(locationData);

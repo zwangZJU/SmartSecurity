@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
             intent.putExtra("deviceInfo", deviceInfo);
             startActivity(intent);
-            finish();
+          //  finish();
 
         }
     }
@@ -297,8 +297,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
             startActivity(new Intent(this,PlayBackListActivity.class));
-        }  else if (id == R.id.nav_slideshow) {
-           startActivity(new Intent(this,MainActivity.class));
+        }  else if (id == R.id.nav_alarm_log) {
+            mVpMainContainer.setCurrentItem(1);
+            toolbar.setTitle("报警");
+            mBottomNavMenuBar.setSelected(1);
         } else if (id == R.id.nav_repair) {
             Fragment fragment = new DeviceFaultReportFragment();
             getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
@@ -370,7 +372,7 @@ public class MainActivity extends AppCompatActivity
             mBottomNavMenuBar.setSelected(1);
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this,R.style.AlertDialogCustom);
             builder.setTitle("报警通知")
-                    .setMessage("你慌的一批")
+                    .setMessage("有新的报警信息，详情请查看报警记录")
                     .setNegativeButton("知道了",null)
                     .show();
 

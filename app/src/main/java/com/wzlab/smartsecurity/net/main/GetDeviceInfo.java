@@ -14,6 +14,7 @@ import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.account.GetSmsCode;
 import com.wzlab.smartsecurity.po.Camera;
 import com.wzlab.smartsecurity.po.Device;
+import com.wzlab.smartsecurity.utils.DataParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,7 +71,7 @@ public class GetDeviceInfo {
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
                             if(successCallback!=null){
-                                successCallback.onSuccess(jsonObject.getString("deploy_status"),jsonObject.getString(Config.RESULT_MESSAGE));
+                                successCallback.onSuccess(DataParser.getData(jsonObject.getString("deploy_status"),"0"),jsonObject.getString(Config.RESULT_MESSAGE));
                             }
                             break;
                         default:

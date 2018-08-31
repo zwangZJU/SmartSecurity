@@ -30,7 +30,10 @@
     <style name="SwitchTheme" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">#FFF</item>
     </style>
-
+    <style name="NormalEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/deep_gray</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
 
     <style name="LoadingLayout"></style>
 
