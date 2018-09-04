@@ -78,6 +78,7 @@ public class AlarmFragment extends Fragment {
     private static final int KEY_FINISH_REFRESH = 3;
     private static final int MSG_SHOW_REAL_TIME_LOCATION = 400;
     private static final int MSG_UPLOAD_REAL_TIME_LOCATION_FAIL = 401;
+    private static final int MSG_CANCEL_UPLOAD = 402;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -107,17 +108,31 @@ public class AlarmFragment extends Fragment {
             }else if(msg.what == MSG_UPLOAD_REAL_TIME_LOCATION_FAIL){
                 if(msg.arg1 == 1){
                     Toast.makeText(getContext(),"未能连接服务器,请检查网络",Toast.LENGTH_SHORT).show();
-//                    mapView.onPause();
-//                    mapView.onDestroy();
-//                    mBaiduMap.setMyLocationEnabled(false);
-//                    mLocationClient.stop();
-//                    myOrientationListener.stop();
-//                    alertDialog.dismiss();
+                    mapView.onPause();
+                    mapView.onDestroy();
+                    mBaiduMap.setMyLocationEnabled(false);
+                    mLocationClient.stop();
+                    myOrientationListener.stop();
+                    alertDialog.dismiss();
 
                 }else if(msg.arg1 == 2){
                     Toast.makeText(getContext(),"服务器异常",Toast.LENGTH_SHORT).show();
+                    mapView.onPause();
+                    mapView.onDestroy();
+                    mBaiduMap.setMyLocationEnabled(false);
+                    mLocationClient.stop();
+                    myOrientationListener.stop();
+                    alertDialog.dismiss();
                 }
 
+            }else if(MSG_CANCEL_UPLOAD == msg.what){
+                Toast.makeText(getContext(),"报警中心已经接警，请原地等待救援",Toast.LENGTH_LONG).show();
+                mapView.onPause();
+                mapView.onDestroy();
+                mBaiduMap.setMyLocationEnabled(false);
+                mLocationClient.stop();
+                myOrientationListener.stop();
+                alertDialog.dismiss();
             }
         }
     };
@@ -284,7 +299,7 @@ public class AlarmFragment extends Fragment {
                 while(alertDialog.isShowing()) {
                     uploadRealTimeLocation(String.valueOf(mCurrentLatitude), String.valueOf(mCurrentLongitude));
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -528,6 +543,12 @@ public class AlarmFragment extends Fragment {
                         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText("持续发送");
                         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setEnabled(true);
                         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimary));
+
+                        Message message = new Message();
+                        message.what = MSG_CANCEL_UPLOAD;
+
+                        handler.sendMessage(message);
+
                     } else{
                         Message message = new Message();
                         message.what = MSG_UPLOAD_REAL_TIME_LOCATION_FAIL;
@@ -637,7 +658,7 @@ public class AlarmFragment extends Fragment {
             builder.direction(mCurrentDirection);
             builder.latitude(mCurrentLatitude);
             builder.longitude(mCurrentLongitude);
-            //Log.e("AlarmFragment", "onReceiveLocation: "+"获取定位");
+            Log.e("AlarmFragment", "onReceiveLocation: "+mCurrentLatitude);
 
             MyLocationData locationData = builder.build();
             mBaiduMap.setMyLocationData(locationData);

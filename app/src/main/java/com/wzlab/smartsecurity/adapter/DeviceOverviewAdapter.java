@@ -127,6 +127,7 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
 
 
                         Log.e("ssss", "onClick: " + cmd);
+                        final String finalCmd = cmd;
                         GetDeviceInfo.deployDefense(device.getDevice_id(), cmd, new GetDeviceInfo.SuccessCallbackForDeploy() {
                             @Override
                             public void onSuccess(String deployStatus, String msg) {
@@ -141,6 +142,11 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
                             @Override
                             public void onFail(String msg) {
                                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                                if(finalCmd.equals("4")){
+                                    holder.mSwitchDefensiveState.setChecked(true);
+                                }else {
+                                    holder.mSwitchDefensiveState.setChecked(false);
+                                }
                             }
                         });
                         onSwitchClickListener.onSwitchClick(view, position);
@@ -202,6 +208,11 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
         }else {
             return ITEM_VIEW_TYPE_ADD;
         }
+    }
+
+    public void setDeviceList(ArrayList<Device> deviceList) {
+        this.deviceList = deviceList;
+        notifyDataSetChanged();
     }
 
     class DeviceOverviewViewHolder extends RecyclerView.ViewHolder{

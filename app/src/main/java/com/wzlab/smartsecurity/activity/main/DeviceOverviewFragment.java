@@ -27,6 +27,8 @@ import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.account.Config;
+import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiConnectingActivity;
+import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiNetConfigActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.SeriesNumSearchActivity;
 import com.wzlab.smartsecurity.adapter.DeviceOverviewAdapter;
 import com.wzlab.smartsecurity.net.HttpMethod;
@@ -130,8 +132,13 @@ public class DeviceOverviewFragment extends Fragment {
                     DataManager.getInstance().setDeviceSerialVerifyCode(deviceSerial,verifyCode);
                     //  String s =  DataManager.getInstance().getDeviceSerialVerifyCode(deviceSerial);
                     mWaitDlg.dismiss();
-
-                    Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), AutoWifiConnectingActivity.class);
+                    intent.putExtra("success","1");
+                    intent.putExtra(SeriesNumSearchActivity.BUNDE_SERIANO,deviceSerial);
+                    intent.putExtra(SeriesNumSearchActivity.BUNDE_VERYCODE,verifyCode);
+                    intent.putExtra(AutoWifiNetConfigActivity.DEVICE_TYPE,deviceType);
+                    startActivity(intent);
+                 //   Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
 
                 }
 
@@ -187,8 +194,9 @@ public class DeviceOverviewFragment extends Fragment {
                     @Override
                     public void onSwitchClick(View view, int position) {
                       //  Toast.makeText(getContext(),"dd",Toast.LENGTH_SHORT).show();
-                        initData(true);
-                        deviceOverviewAdapter.notifyDataSetChanged();
+
+//                        initData(true);
+//                        deviceOverviewAdapter.setDeviceList(deviceList);
                     }
                 });
                 // 设置Icon的点击事件,跳转到设备详情页

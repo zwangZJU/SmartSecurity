@@ -1,6 +1,10 @@
 package com.wzlab.smartsecurity;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
 
 import android.util.Log;
@@ -21,6 +25,7 @@ public class SmartSecurityApplication extends Application {
     private static final String TAG = "SmartSecurityApplicatio";
     //开发者需要填入自己申请的appkey
     public static String AppKey = "7f139f95ccab4ad0be82630b443edb0b";
+    private String versionName;
 
     public static EZOpenSDK getOpenSDK() {
         return EZOpenSDK.getInstance();
@@ -65,5 +70,17 @@ public class SmartSecurityApplication extends Application {
             Log.e(TAG, "fileWriter: ",e );
         }
 
+    }
+
+    public static String getVersionName(Context context){
+        String versionName = null;
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 }

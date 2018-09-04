@@ -261,6 +261,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
                             Log.e("ssss", "onClick: " + cmd);
+                            final String finalCmd = cmd;
                             GetDeviceInfo.deployDefense(deviceId, cmd, new GetDeviceInfo.SuccessCallbackForDeploy() {
                                 @Override
                                 public void onSuccess(String deployStatus, String msg) {
@@ -271,6 +272,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onFail(String msg) {
                                     Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                                    if(finalCmd.equals("4")){
+                                        mSwitchDeviceStatus.setChecked(true);
+                                    }else {
+                                        mSwitchDeviceStatus.setChecked(false);
+                                    }
                                 }
                             });
                         }

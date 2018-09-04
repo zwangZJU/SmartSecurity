@@ -206,7 +206,9 @@
         <activity
             android:name=".activity.camera.wifi.AutoWifiResetActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.camera.realplay.CameraSettingActivity"></activity>
+        <activity android:name=".activity.camera.realplay.CameraSettingActivity" />
+        <activity android:name=".activity.me.CheckAndUpdateActivity" />
+        <activity android:name=".activity.me.FeedBackActivity"></activity>
     </application>
 
 </manifest>

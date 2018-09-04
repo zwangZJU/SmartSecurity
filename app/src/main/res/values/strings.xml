@@ -580,5 +580,6 @@
     <string name="click_to_show_details">查看详情</string>
     <string name="playback">回放</string>
     <string name="delet_camera">删除摄像头</string>
+    <string name="check_and_update">检查更新</string>
 
 </resources>

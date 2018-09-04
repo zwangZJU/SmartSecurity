@@ -1,7 +1,8 @@
-package com.wzlab.smartsecurity.activity.main;
+package com.wzlab.smartsecurity.activity.me;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +33,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements View.OnClickListener{
 
     private String userInfoName = "";
     private String userInfoAvatarURL = null;
@@ -60,6 +62,10 @@ public class MeFragment extends Fragment {
     private ImageView mIvAvatar;
     private TextView mTvName;
     private TextView mTvDuration;
+    private Button mBtnEditProfile;
+    private Button mBtnWhereof;
+    private Button mBtnFeedback;
+    private Button mBtnUpdateApp;
 
     public MeFragment() {
         // Required empty public constructor
@@ -86,6 +92,15 @@ public class MeFragment extends Fragment {
         mIvAvatar = view.findViewById(R.id.iv_me_avatar);
         mTvName = view.findViewById(R.id.tv_me_name);
         mTvDuration = view.findViewById(R.id.tv_me_duration);
+        mBtnEditProfile = view.findViewById(R.id.btn_edit);
+        mBtnWhereof = view.findViewById(R.id.btn_whereof);
+        mBtnFeedback = view.findViewById(R.id.btn_feedback);
+        mBtnUpdateApp = view.findViewById(R.id.btn_update);
+        mBtnEditProfile.setOnClickListener(this);
+        mBtnWhereof.setOnClickListener(this);
+        mBtnFeedback.setOnClickListener(this);
+        mBtnUpdateApp.setOnClickListener(this);
+
 
         getUserBasicInfo();
 
@@ -133,5 +148,21 @@ public class MeFragment extends Fragment {
                 Toast.makeText(getContext(),"未能链接服务器",Toast.LENGTH_SHORT).show();
             }
         },Config.KEY_PHONE, phone);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent;
+        switch (view.getId()){
+
+            case R.id.btn_update:
+                intent = new Intent(getContext(),CheckAndUpdateActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_feedback:
+                intent = new Intent(getContext(),FeedBackActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -6,7 +6,7 @@
     android:background="@color/background"
     android:orientation="vertical"
     android:elevation="0dp"
-    tools:context="com.wzlab.smartsecurity.activity.main.MeFragment">
+    tools:context="com.wzlab.smartsecurity.activity.me.MeFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -216,7 +216,7 @@
         android:background="@color/margin_gray" />
 
     <Button
-        android:id="@+id/btn_help"
+        android:id="@+id/btn_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFF"

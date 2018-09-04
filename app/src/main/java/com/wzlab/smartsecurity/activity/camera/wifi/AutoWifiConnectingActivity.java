@@ -308,24 +308,43 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
 
         window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_auto_wifi_connecting);
-        // 唤醒，常亮
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        initTitleBar();
-        init();
-        findViews();
-        fromPage = getIntent().getIntExtra(FROM_PAGE, 0);
-        initUI();
-        setListener();
-        if (fromPage == FROM_PAGE_SERIES_NUM_SEARCH_ACTIVITY) {
-//            mDeviceInfoEx = DeviceManager.getInstance().getDeviceInfoExById(serialNo);
+        if(getIntent().getStringExtra("success").equals("1")){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            initTitleBar();
+            init();
+            findViews();
+            setListener();
+            tvTitle.setText("添加成功");
+            tvTitle.setVisibility(View.VISIBLE);
+            mTitleBar.setVisibility(View.GONE);
+            connectStateContainer.setVisibility(View.GONE);
             changeStatuss(STATUS_ADD_CAMERA_SUCCESS);
-        } else if (!isSupportWifi) {
-            lineConnectClick();
-            btnBack.setVisibility(View.VISIBLE);
-            btnCancel.setVisibility(View.GONE);
-        } else {
-            connectCamera();
+        }else{
+            // 唤醒，常亮
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            initTitleBar();
+            init();
+            findViews();
+            fromPage = getIntent().getIntExtra(FROM_PAGE, 0);
+            initUI();
+            setListener();
+
+
+
+
+            if (fromPage == FROM_PAGE_SERIES_NUM_SEARCH_ACTIVITY) {
+//            mDeviceInfoEx = DeviceManager.getInstance().getDeviceInfoExById(serialNo);
+                changeStatuss(STATUS_ADD_CAMERA_SUCCESS);
+            } else if (!isSupportWifi) {
+                lineConnectClick();
+                btnBack.setVisibility(View.VISIBLE);
+                btnCancel.setVisibility(View.GONE);
+            } else {
+                connectCamera();
+            }
         }
+
+
     }
 
     /**
@@ -770,7 +789,6 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                 lineConnectOkClick();
                 break;
             case R.id.btnFinish:
-
                 finishOnClick();
                 break;
             case R.id.tvMore:

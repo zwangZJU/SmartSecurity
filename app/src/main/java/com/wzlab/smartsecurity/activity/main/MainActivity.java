@@ -37,7 +37,7 @@ import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.camera.playback.PlayBackListActivity;
-import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiPrepareStepOneActivity;
+import com.wzlab.smartsecurity.activity.me.MeFragment;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
@@ -113,9 +113,7 @@ public class MainActivity extends AppCompatActivity
       //  EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
 
         Window window = getWindow();
-
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
 
         setContentView(R.layout.activity_main);
