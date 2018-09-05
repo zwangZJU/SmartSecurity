@@ -74,7 +74,7 @@
             android:text="(必选)你想反馈的问题类型" />
 
         <com.mixiaoxiao.smoothcompoundbutton.SmoothCheckBox
-            android:id="@+id/cb_suggest"
+            android:id="@+id/cb_function"
             style="@style/SettingsCellSingleCompoundButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:text="功能异常：功能故障或不可用" />
 
         <com.mixiaoxiao.smoothcompoundbutton.SmoothCheckBox
-            android:id="@+id/cb_function"
+            android:id="@+id/cb_suggest"
             style="@style/SettingsCellSingleCompoundButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

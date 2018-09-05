@@ -144,6 +144,11 @@ public class AlarmFragment extends Fragment {
     private MapView mapView;
     private String phone;
     private AlertDialog alertDialog;
+    private String addr;
+    private String city;
+    private String district;
+    private String street;
+    private String describe;
 
 
     public AlarmFragment() {
@@ -404,6 +409,7 @@ public class AlarmFragment extends Fragment {
     }
 
     private void showLocation() {
+        isFirstLoc=true;
         mBaiduMap = mapView.getMap();
         mBaiduMap.setMyLocationEnabled(true);
 
@@ -576,7 +582,7 @@ public class AlarmFragment extends Fragment {
                 handler.sendMessage(message);
 
             }
-        },Config.KEY_PHONE, phone, "latitude", latitude, "longitude", longitude);
+        },Config.KEY_PHONE, phone, "latitude", latitude, "longitude", longitude, "address", city+district+street+describe);
     }
 
 
@@ -627,15 +633,20 @@ public class AlarmFragment extends Fragment {
             mCurrentLatitude = location.getLatitude();    //获取纬度信息
             mCurrentLongitude = location.getLongitude();    //获取经度信息
             mRadius = location.getRadius();    //获取定位精准度
-            location.getAddrStr();    //获取地址信息
+            //获取地址信息
+            location.getAddrStr();
             location.getCountry();    //获取国家信息
             location.getCountryCode();    //获取国家码
-            location.getCity();    //获取城市信息
+            //获取城市信息
+            city = location.getCity();
             location.getCityCode();    //获取城市码
-            location.getDistrict();    //获取区县信息
-            location.getStreet();    //获取街道信息
+            //获取区县信息
+            district = location.getDistrict();
+            //获取街道信息
+            street = location.getStreet();
             location.getStreetNumber();    //获取街道码
-            location.getLocationDescribe();    //获取当前位置描述信息
+            //获取当前位置描述信息
+            describe = location.getLocationDescribe();
             location.getPoiList();    //获取当前位置周边POI信息
 
             location.getBuildingID();    //室内精准定位下，获取楼宇ID

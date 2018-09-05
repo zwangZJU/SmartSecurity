@@ -35,9 +35,9 @@ public class FeedBackActivity extends AppCompatActivity implements View.OnClickL
     private SmoothCheckBox mScbSuggest;
     private SmoothCheckBox mScbOther;
 
-    private String function = null;
-    private String suggest = null;
-    private String other = null;
+    private String function = "";
+    private String suggest = "";
+    private String other = "";
     private String phone;
 
     @Override
@@ -72,7 +72,7 @@ public class FeedBackActivity extends AppCompatActivity implements View.OnClickL
                 if(b){
                     function = "功能异常：";
                 }else {
-                    function = null;
+                    function = "";
                 }
             }
         });
@@ -83,7 +83,7 @@ public class FeedBackActivity extends AppCompatActivity implements View.OnClickL
                 if(b){
                     suggest = "产品建议：";
                 }else {
-                    suggest = null;
+                    suggest = "";
                 }
             }
         });
@@ -94,7 +94,7 @@ public class FeedBackActivity extends AppCompatActivity implements View.OnClickL
                 if(b){
                     other = "其他问题：";
                 }else {
-                    other = null;
+                    other = "";
                 }
             }
         });
@@ -128,6 +128,7 @@ public class FeedBackActivity extends AppCompatActivity implements View.OnClickL
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         Toast.makeText(getApplicationContext(),jsonObject.getString("msg"),Toast.LENGTH_LONG).show();
+                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

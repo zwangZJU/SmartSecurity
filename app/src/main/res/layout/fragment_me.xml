@@ -55,12 +55,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
+
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:background="#FFF"
-
+android:visibility="gone"
         android:padding="16dp"
         >
 
@@ -175,6 +175,7 @@
         android:id="@+id/btn_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:background="#FFF"
         android:drawableLeft="@drawable/ic_rate_review_black"
         android:drawablePadding="10dp"
@@ -224,7 +225,7 @@
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
-        android:text="帮助"
+        android:text="意见反馈"
         android:textColor="#000000"
         style="?android:attr/borderlessButtonStyle"
         android:textSize="15sp" />
