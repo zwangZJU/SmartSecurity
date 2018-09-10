@@ -83,6 +83,7 @@ public class SelectLocationActivity extends AppCompatActivity {
     private ArrayList<PoiInfo> mPoiList;
     private String deviceInfo;
     private String locLabel = null;
+    private String deviceType;
 
 
     @Override
@@ -106,6 +107,7 @@ public class SelectLocationActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         deviceInfo = intent.getStringExtra("deviceInfo");
+        deviceType = intent.getStringExtra("deviceType");
 
         // 地图显示
         mMapView = findViewById(R.id.mapView);
@@ -265,7 +267,7 @@ public class SelectLocationActivity extends AppCompatActivity {
                                             startActivity(new Intent(SelectLocationActivity.this, AccountActivity.class));
                                         }else{
 
-                                            GetDeviceInfo.deviceBinding(phone, locLabel, Config.TYPE_ROLE, deviceInfo, info, new GetDeviceInfo.SuccessCallback() {
+                                            GetDeviceInfo.deviceBinding(phone, locLabel, Config.TYPE_ROLE, deviceInfo, info, deviceType, new GetDeviceInfo.SuccessCallback() {
                                                 @Override
                                                 public void onSuccess(ArrayList list, ArrayList camera, String msg) {
                                                     Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();

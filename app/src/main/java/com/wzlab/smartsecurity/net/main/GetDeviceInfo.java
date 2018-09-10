@@ -144,7 +144,7 @@ public class GetDeviceInfo {
     }
 
     // 设备绑定
-    public static void deviceBinding(String phone, String locLabel, String role, String deviceInfo, String addrInfo, final SuccessCallback successCallback, final FailCallback failCallback){
+    public static void deviceBinding(String phone, String locLabel, String role, String deviceInfo, String addrInfo, String deviceType, final SuccessCallback successCallback, final FailCallback failCallback){
         String url = Config.SERVER_URL + "deviceBinding";
         new NetConnection(url, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
@@ -178,7 +178,7 @@ public class GetDeviceInfo {
                      failCallback.onFail("请重试");
                  }
             }
-        },Config.KEY_PHONE, phone, Config.KEY_LOCATION_LABEL, locLabel, Config.KEY_ROLE, role, "deviceInfo", deviceInfo, "address", addrInfo);
+        },Config.KEY_PHONE, phone, Config.KEY_LOCATION_LABEL, locLabel, Config.KEY_ROLE, role, "deviceInfo", deviceInfo, "address", addrInfo, "deviceType", deviceType);
     }
 
 

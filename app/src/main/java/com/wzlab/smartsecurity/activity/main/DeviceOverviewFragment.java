@@ -14,9 +14,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.skateboard.zxinglib.CaptureActivity;
@@ -36,6 +38,7 @@ import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
 import com.wzlab.smartsecurity.utils.DataManager;
+import com.wzlab.smartsecurity.widget.CustomPopWindow;
 import com.wzlab.smartsecurity.widget.LoadingLayout;
 import com.wzlab.smartsecurity.widget.WaitDialog;
 
@@ -71,6 +74,10 @@ public class DeviceOverviewFragment extends Fragment {
     private String deviceType;
     private String verifyCode;
 
+    private CustomPopWindow mCustomPopWindow;
+    private String deviceTypeForBind = "0";
+    private String phone;
+
     public DeviceOverviewFragment() {
         // Required empty public constructor
     }
@@ -80,6 +87,7 @@ public class DeviceOverviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        phone = Config.getCachedPhone(getContext());
         mWaitDlg = new WaitDialog(getContext(), android.R.style.Theme_Translucent_NoTitleBar);
 
     }
@@ -248,9 +256,10 @@ public class DeviceOverviewFragment extends Fragment {
                 deviceOverviewAdapter.setOnFloatingActionButtonClickListener(new DeviceOverviewAdapter.OnFloatingActionButtonClickListener() {
                     @Override
                     public void onFloatingActionButtonClick(View view, int position) {
-                        Intent intent=new Intent(getContext(), CaptureActivity.class);
-//                            //跳转到扫描二维码页面
-                            startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
+                        showPopMenu();
+//                        Intent intent=new Intent(getContext(), CaptureActivity.class);
+////                            //跳转到扫描二维码页面
+//                            startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
                     }
                 });
 
@@ -337,6 +346,7 @@ public class DeviceOverviewFragment extends Fragment {
             Intent intent = new Intent(getContext(),SelectLocationActivity.class);
             if(deviceInfo.length()>10 && deviceInfo.substring(8,9).equals("#")){
                 intent.putExtra("deviceInfo", deviceInfo);
+                intent.putExtra("deviceType",deviceTypeForBind);
                 startActivity(intent);
                 getActivity().finish();
             }else{
@@ -454,7 +464,12 @@ public class DeviceOverviewFragment extends Fragment {
             try {
                 SmartSecurityApplication.getOpenSDK().addDevice(deviceSerial,verifyCode);
                 //查询成功，添加设备
-                bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,2);
+                if(deviceTypeForBind.equals("3")){
+                    bindingCamera(phone, cameraInfoFromQRCode,2);
+                }else{
+                    bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,2);
+                }
+
 //                Message message = new Message();
 //                message.what = MSG_ADD_CAMERA_SUCCESS;
 //                message.arg1 = 2;
@@ -477,7 +492,13 @@ public class DeviceOverviewFragment extends Fragment {
                 case 120029:
                     // TODO: 2018/6/25  设备不在线，已经被自己添加 (这里需要网络配置)
                     mWaitDlg.show();
-                    bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,1);
+
+                    if(deviceTypeForBind.equals("3")){
+                        bindingCamera(phone, cameraInfoFromQRCode,1);
+                    }else{
+                        bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode,1);
+                    }
+
 
 
                     break;
@@ -510,6 +531,49 @@ public class DeviceOverviewFragment extends Fragment {
     }
 
 
+
+    private void showPopMenu(){
+        View contentView = LayoutInflater.from(getActivity()).inflate(R.layout.content_pop_menu,null);
+        Button mBtnAddAlarmModel = contentView.findViewById(R.id.btn_add_alarm_model);
+        Button mBtnAddOneButtonDevice = contentView.findViewById(R.id.btn_add_one_button_device);
+        Button mBtnAddCamera = contentView.findViewById(R.id.btn_add_camera);
+        mBtnAddAlarmModel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceTypeForBind = "1";
+                Intent intent=new Intent(getContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
+                mCustomPopWindow.dissmiss();
+            }
+        });
+        mBtnAddOneButtonDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceTypeForBind = "2";
+                Intent intent=new Intent(getContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE);
+                mCustomPopWindow.dissmiss();
+            }
+        });
+        mBtnAddCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceTypeForBind = "3";
+                Intent intent=new Intent(getContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE );
+                mCustomPopWindow.dissmiss();
+            }
+        });
+
+        mCustomPopWindow=new CustomPopWindow.PopupWindowBuilder(getActivity())
+                .setView(contentView)
+                .enableBackgroundDark(true)
+                .create()
+                .showAtLocation(getActivity().findViewById(R.id.fl_main_container), Gravity.BOTTOM,0,0);
+    }
 
 
 

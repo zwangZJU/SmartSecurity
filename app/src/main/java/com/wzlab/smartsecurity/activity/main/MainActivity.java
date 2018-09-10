@@ -18,13 +18,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,6 +53,7 @@ import com.wzlab.smartsecurity.utils.AppConfigUtil;
 import com.wzlab.smartsecurity.utils.DataParser;
 import com.wzlab.smartsecurity.utils.GraphProcess;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
+import com.wzlab.smartsecurity.widget.CustomPopWindow;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
 import org.json.JSONException;
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
     private Menu mMenu;
     private DrawerLayout drawer;
-
+    private String deviceType;
     private String userInfoName = "";
     private String userInfoAvatarURL = null;
     private String userInfoIsCert = "";
@@ -99,6 +105,8 @@ public class MainActivity extends AppCompatActivity
     private ImageView mIvNavAvatar;
     private TextView mTvUserInfoName;
     private TextView mTvUserInfoIsCert;
+
+    private CustomPopWindow mCustomPopWindow;
 
 
 
@@ -258,9 +266,12 @@ public class MainActivity extends AppCompatActivity
             AppConfigUtil.settingAppPermission(getApplicationContext());
             return true;
         }else if(id == R.id.action_add_device){
-            Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
-            //跳转到扫描二维码页面
-            startActivityForResult(intent,1001);
+            // TODO
+            showPopMenu();
+
+//            Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
+//            //跳转到扫描二维码页面
+//            startActivityForResult(intent,1001);
             return true;
         }else if(id == R.id.action_setting_app_details){
             AppConfigUtil.AppDetailsSetting(getApplicationContext());
@@ -280,6 +291,7 @@ public class MainActivity extends AppCompatActivity
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
             intent.putExtra("deviceInfo", deviceInfo);
+            intent.putExtra("deviceType", deviceType);
             startActivity(intent);
           //  finish();
 
@@ -463,6 +475,49 @@ public class MainActivity extends AppCompatActivity
             handler.sendMessage(message);
         }
 
+    }
+
+    private void showPopMenu(){
+        View contentView = LayoutInflater.from(this).inflate(R.layout.content_pop_menu,null);
+        Button mBtnAddAlarmModel = contentView.findViewById(R.id.btn_add_alarm_model);
+        Button mBtnAddOneButtonDevice = contentView.findViewById(R.id.btn_add_one_button_device);
+        Button mBtnAddCamera = contentView.findViewById(R.id.btn_add_camera);
+        mBtnAddAlarmModel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceType = "1";
+                Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,1001);
+                mCustomPopWindow.dissmiss();
+            }
+        });
+        mBtnAddOneButtonDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceType = "2";
+                Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,1001);
+                mCustomPopWindow.dissmiss();
+            }
+        });
+        mBtnAddCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deviceType = "3";
+                Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
+                //跳转到扫描二维码页面
+                startActivityForResult(intent,1001);
+                mCustomPopWindow.dissmiss();
+            }
+        });
+
+        mCustomPopWindow=new CustomPopWindow.PopupWindowBuilder(this)
+                .setView(contentView)
+                .enableBackgroundDark(true)
+                .create()
+                .showAtLocation(findViewById(R.id.fl_main_container), Gravity.BOTTOM,0,0);
     }
 
 }
