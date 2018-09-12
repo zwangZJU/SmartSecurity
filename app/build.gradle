@@ -50,4 +50,5 @@ dependencies {
     implementation files('libs/EZOpenSDK_V4.8.4.20180810.jar')
     compile 'com.allenliu.versionchecklib:library:2.0.5'
     implementation files('libs/smoothcompoundbuttonlibrary.jar')
+    implementation project(':library')
 }

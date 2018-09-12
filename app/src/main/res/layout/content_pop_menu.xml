@@ -33,6 +33,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:id="@+id/view_may_be_gone"
         android:background="#f4f4f4"/>
     <Button
         android:id="@+id/btn_add_camera"

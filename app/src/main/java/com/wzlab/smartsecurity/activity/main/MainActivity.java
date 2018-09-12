@@ -18,8 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -37,11 +35,17 @@ import android.widget.Toast;
 
 import com.igexin.sdk.PushManager;
 import com.skateboard.zxinglib.CaptureActivity;
+import com.videogo.exception.BaseException;
 import com.videogo.openapi.EZOpenSDK;
+import com.videogo.openapi.bean.EZProbeDeviceInfoResult;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.camera.playback.PlayBackListActivity;
+import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiConnectingActivity;
+import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiNetConfigActivity;
+import com.wzlab.smartsecurity.activity.camera.wifi.SeriesNumSearchActivity;
 import com.wzlab.smartsecurity.activity.me.MeFragment;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
@@ -50,11 +54,13 @@ import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.account.Logout;
 import com.wzlab.smartsecurity.utils.AppConfigUtil;
+import com.wzlab.smartsecurity.utils.DataManager;
 import com.wzlab.smartsecurity.utils.DataParser;
 import com.wzlab.smartsecurity.utils.GraphProcess;
 import com.wzlab.smartsecurity.widget.BottomNavMenuBar;
 import com.wzlab.smartsecurity.widget.CustomPopWindow;
 import com.wzlab.smartsecurity.widget.NoScrollViewPager;
+import com.wzlab.smartsecurity.widget.WaitDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +72,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int MSG_ADD_CAMERA_SUCCESS = 20;
+    private static final int MSG_FAIL_TO_ADD_CAMERA = 21;
+    private static final int MSG_EXCEPTION = 22;
+
     private NoScrollViewPager mVpMainContainer;
     private Toolbar toolbar;
     private String phone;
@@ -74,6 +84,11 @@ public class MainActivity extends AppCompatActivity
     private FrameLayout mFlMainContainer;
     //v4包下的FragmentManager
     public static android.support.v4.app.FragmentManager sV4FragManager ;
+    private String cameraInfoFromQRCode;
+    private EZProbeDeviceInfoResult probeResult;
+    private String deviceSerial;
+    private WaitDialog mWaitDlg;
+    private String verifyCode;
 
     private Menu mMenu;
     private DrawerLayout drawer;
@@ -84,6 +99,7 @@ public class MainActivity extends AppCompatActivity
     private Bitmap bmAvatar;
     private static int LOAD_USER_INFO_TEXT_SUCCESS = 5;
     private static int LOAD_USER_INFO_ALL_SUCCESS = 6;
+    private String deviceTypeForBind;
 
 
     @SuppressLint("HandlerLeak")
@@ -99,6 +115,64 @@ public class MainActivity extends AppCompatActivity
                 mTvUserInfoIsCert.setText(userInfoIsCert);
                 mIvNavAvatar.setImageBitmap(bmAvatar);
             }
+
+            // 添加摄像头
+            if (msg.what == MSG_FAIL_TO_ADD_CAMERA){
+                switch (msg.arg1){
+                    case 120020:
+                        // TODO: 2018/6/25 设备在线，已经被自己添加 (给出提示)
+                        Toast.makeText(getApplicationContext(),"设备在线，已经被自己添加",Toast.LENGTH_LONG).show();
+                        break;
+                    case 120022:
+                        // TODO: 2018/6/25  设备在线，已经被别的用户添加 (给出提示)
+                        Toast.makeText(getApplicationContext(),"设备在线，已经被别的用户添加",Toast.LENGTH_LONG).show();
+                        break;
+                    case 120024:
+                        // TODO: 2018/6/25  设备不在线，已经被别的用户添加 (给出提示)
+                        Toast.makeText(getApplicationContext(),"设备不在线，已经被别的用户添加",Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        Toast.makeText(getApplicationContext(),"请等待一分钟后再试",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(),"未能连接服务器",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        // TODO: 2018/6/25 请求异常
+
+                        Toast.makeText(getApplicationContext(),"请求异常",Toast.LENGTH_LONG).show();
+                        break;
+                }
+                mWaitDlg.dismiss();
+            }else if(msg.what == MSG_ADD_CAMERA_SUCCESS){
+
+                if(msg.arg1 == 1){
+                    Intent intent = new Intent(getApplicationContext(),SeriesNumSearchActivity.class);
+                    intent.putExtra("deviceSerial",deviceSerial);
+                    intent.putExtra("verifyCode",verifyCode);
+                    intent.putExtra("deviceType",deviceType);
+                    startActivity(intent);
+                    mWaitDlg.dismiss();
+                }else if(msg.arg1 == 2){
+                    DataManager.getInstance().setDeviceSerialVerifyCode(deviceSerial,verifyCode);
+                    //  String s =  DataManager.getInstance().getDeviceSerialVerifyCode(deviceSerial);
+                    mWaitDlg.dismiss();
+                    Intent intent = new Intent(getApplicationContext(), AutoWifiConnectingActivity.class);
+                    intent.putExtra("success","1");
+                    intent.putExtra(SeriesNumSearchActivity.BUNDE_SERIANO,deviceSerial);
+                    intent.putExtra(SeriesNumSearchActivity.BUNDE_VERYCODE,verifyCode);
+                    intent.putExtra(AutoWifiNetConfigActivity.DEVICE_TYPE,deviceType);
+                    startActivity(intent);
+                    //   Toast.makeText(getContext(),"设备添加成功",Toast.LENGTH_LONG).show();
+
+                }
+
+            }else if(msg.what == MSG_EXCEPTION){
+                mWaitDlg.dismiss();
+                Toast.makeText(getApplicationContext(),"请求异常，请长按摄像头复位按钮进行重置",Toast.LENGTH_LONG).show();
+            }
+
 
         }
     };
@@ -116,6 +190,7 @@ public class MainActivity extends AppCompatActivity
         PushManager pushManager = PushManager.getInstance();
         pushManager.initialize(getApplicationContext(),com.wzlab.smartsecurity.service.PushService.class);
         phone = Config.getCachedPhone(getApplicationContext());
+        mWaitDlg = new WaitDialog(this, android.R.style.Theme_Translucent_NoTitleBar);
         boolean i = pushManager.bindAlias(getApplicationContext(),phone,phone);
         Log.e(TAG, "onCreate: "+ i );
       //  EZOpenSDK.getInstance().setAccessToken("at.352z2nh08pvohywddanm9w8j2bm2qsl2-3d2b80xfa6-0s7s9eu-1e7eqzjvm");
@@ -179,11 +254,12 @@ public class MainActivity extends AppCompatActivity
 
         mVpMainContainer = findViewById(R.id.vp_main_container);
         ArrayList<Fragment> mFragmentList = new ArrayList<>();
-        Fragment deviceOverviewFragment = new DeviceOverviewFragment();
+        Fragment deviceTabContainerFragment = new DeviceTabContainerFragment();
+
         Fragment alarmFragment = new AlarmFragment();
         Fragment meFragment = new MeFragment();
 
-        mFragmentList.add(deviceOverviewFragment);
+        mFragmentList.add(deviceTabContainerFragment);
         mFragmentList.add(alarmFragment);
         mFragmentList.add(meFragment);
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
@@ -273,7 +349,7 @@ public class MainActivity extends AppCompatActivity
 //            //跳转到扫描二维码页面
 //            startActivityForResult(intent,1001);
             return true;
-        }else if(id == R.id.action_setting_app_details){
+        } else if(id == R.id.action_setting_app_details){
             AppConfigUtil.AppDetailsSetting(getApplicationContext());
         }else if(id == R.id.action_setting_notification){
             AppConfigUtil.settingNotification(this);
@@ -291,11 +367,134 @@ public class MainActivity extends AppCompatActivity
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
             intent.putExtra("deviceInfo", deviceInfo);
-            intent.putExtra("deviceType", deviceType);
+            intent.putExtra("deviceType", deviceTypeForBind);
             startActivity(intent);
           //  finish();
 
+        }else if(requestCode==Config.SCAN_QR_CODE_TO_ADD_CAMERA && resultCode== Activity.RESULT_OK){
+            String result=data.getStringExtra(CaptureActivity.KEY_DATA);
+            cameraInfoFromQRCode = result;
+            final String[] cameraInfo = result.split("\\s+");
+            //向自己的服务器添加摄像头信息
+
+            deviceSerial = cameraInfo[1];
+            verifyCode = cameraInfo[2];
+            deviceType = cameraInfo[3];
+            mWaitDlg.show();
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    probeResult = EZOpenSDK.getInstance().probeDeviceInfo(deviceSerial,deviceType);
+                    connectCamera(probeResult);
+                }
+            }.start();
+
         }
+    }
+
+    // 连接设备，看是否需要连接网络
+    public void connectCamera(final EZProbeDeviceInfoResult result){
+        if (result.getBaseException() == null){
+
+            //查询成功，添加设备
+            //  bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode);
+            try {
+                SmartSecurityApplication.getOpenSDK().addDevice(deviceSerial,verifyCode);
+                //查询成功，添加设备
+
+                    bindingCamera(phone, cameraInfoFromQRCode,2);
+
+
+//                Message message = new Message();
+//                message.what = MSG_ADD_CAMERA_SUCCESS;
+//                message.arg1 = 2;
+//                handler.sendMessage(message);
+            } catch (BaseException e) {
+                e.printStackTrace();
+
+                Message message = new Message();
+                message.what = MSG_EXCEPTION;
+                handler.sendMessage(message);
+            }
+
+            return;
+        }else{
+            switch (result.getBaseException().getErrorCode()){
+                case 120023:
+                    // TODO: 2018/6/25  设备不在线，未被用户添加 （这里需要网络配置）
+                case 120002:
+                    // TODO: 2018/6/25  设备不存在，未被用户添加 （这里需要网络配置）
+                case 120029:
+                    // TODO: 2018/6/25  设备不在线，已经被自己添加 (这里需要网络配置)
+                    mWaitDlg.show();
+
+
+                        bindingCamera(phone, cameraInfoFromQRCode,1);
+
+
+
+
+                    break;
+                case 120020:
+                    // TODO: 2018/6/25 设备在线，已经被自己添加 (给出提示)
+                    //     Toast.makeText(getContext(),"设备在线，已经被自己添加",Toast.LENGTH_SHORT).show();
+                case 120022:
+                    // TODO: 2018/6/25  设备在线，已经被别的用户添加 (给出提示)
+                    //   Toast.makeText(getContext(),"设备在线，已经被别的用户添加",Toast.LENGTH_SHORT).show();
+                case 120024:
+                    // TODO: 2018/6/25  设备不在线，已经被别的用户添加 (给出提示)
+                    //   Toast.makeText(getContext(),"设备不在线，已经被别的用户添加",Toast.LENGTH_SHORT).show();
+                default:
+                    // TODO: 2018/6/25 请求异常
+
+                    //   Toast.makeText(getContext(),"请求异常",Toast.LENGTH_SHORT).show();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            Message message = new Message();
+                            message.what = MSG_FAIL_TO_ADD_CAMERA;
+                            message.arg1 = probeResult.getBaseException().getErrorCode();
+                            handler.sendMessage(message);
+                        }
+                    }.start();
+
+                    break;
+            }
+        }
+    }
+
+    // 绑定摄像头
+    private void bindingCamera(String deviceId, String CameraInfo,final int msg ){
+        new NetConnection(Config.SERVER_URL + Config.ACTION_BINDING_CAMERA, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    Message message = new Message();
+                    message.what = MSG_ADD_CAMERA_SUCCESS;
+                    message.arg1 = msg;
+                    handler.sendMessage(message);
+                    // Toast.makeText(getContext(),jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    //
+                    Message message = new Message();
+                    message.what = MSG_FAIL_TO_ADD_CAMERA;
+                    message.arg1 = 1;
+                    handler.sendMessage(message);
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                Message message = new Message();
+                message.what = MSG_FAIL_TO_ADD_CAMERA;
+                message.arg1 = 2;
+                handler.sendMessage(message);
+
+            }
+        },Config.KEY_DEVICE_ID,deviceId, "cameraInfo",CameraInfo);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -304,9 +503,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
        // toolbar.setVisibility(View.GONE);
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_update_user_info) {
             // Handle the camera action
-            startActivity(new Intent(this,PlayBackListActivity.class));
+            startActivity(new Intent(this,UpdateUserInfoActivity.class));
         }  else if (id == R.id.nav_alarm_log) {
             mVpMainContainer.setCurrentItem(1);
             toolbar.setTitle("报警");
@@ -477,15 +676,20 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    /**
+     * 显示popup window,用于选择添加的设备类型
+     */
     private void showPopMenu(){
         View contentView = LayoutInflater.from(this).inflate(R.layout.content_pop_menu,null);
         Button mBtnAddAlarmModel = contentView.findViewById(R.id.btn_add_alarm_model);
         Button mBtnAddOneButtonDevice = contentView.findViewById(R.id.btn_add_one_button_device);
         Button mBtnAddCamera = contentView.findViewById(R.id.btn_add_camera);
+
         mBtnAddAlarmModel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deviceType = "1";
+                deviceTypeForBind = "1";
                 Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
                 //跳转到扫描二维码页面
                 startActivityForResult(intent,1001);
@@ -495,7 +699,7 @@ public class MainActivity extends AppCompatActivity
         mBtnAddOneButtonDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deviceType = "2";
+                deviceTypeForBind = "2";
                 Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
                 //跳转到扫描二维码页面
                 startActivityForResult(intent,1001);
@@ -505,10 +709,10 @@ public class MainActivity extends AppCompatActivity
         mBtnAddCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deviceType = "3";
+                deviceTypeForBind = "3";
                 Intent intent=new Intent(getApplicationContext(), CaptureActivity.class);
                 //跳转到扫描二维码页面
-                startActivityForResult(intent,1001);
+                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_CAMERA);
                 mCustomPopWindow.dissmiss();
             }
         });

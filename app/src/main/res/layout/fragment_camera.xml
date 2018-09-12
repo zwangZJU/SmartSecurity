@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.wzlab.smartsecurity.activity.main.CameraFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/srl_refresh_camera_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.wzlab.smartsecurity.widget.LoadingLayout
+            android:id="@+id/loading_layout_camera_overview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_camera_overview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#309c" />
+        </com.wzlab.smartsecurity.widget.LoadingLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</FrameLayout>

@@ -206,11 +206,18 @@ public class RepairProgressFragment extends Fragment {
         }, new RepairInfo.FailCallback() {
             @Override
             public void onFail(String msg) {
-                Message message = new Message();
-                message.what = Config.KEY_LOADING_ERROR;
-                handler.sendMessage(message);
-                loadingLayout.setErrorText(msg);
-                Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+                if(msg.equals("-1")){
+                    Message message = new Message();
+                    message.what = Config.KEY_LOADING_EMPTY;
+                    handler.sendMessage(message);
+                }else{
+                    Message message = new Message();
+                    message.what = Config.KEY_LOADING_ERROR;
+                    handler.sendMessage(message);
+                    loadingLayout.setErrorText(msg);
+                    Toast.makeText(getContext(),msg,Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         

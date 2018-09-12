@@ -36,6 +36,7 @@ public class Config {
     public static final String ACTION_BINDING_CAMERA = "bindingCamera";
     public static final String ACTION_SUPPLEMENT_CAMERA_INFO = "supplementCameraInfo";
     public static final String ACTION_DELETE_CAMERA = "deleteCamera";
+    public static final String ACTION_GET_CAMERA_LIST = "getCameraList";
     public static final String ACTION_SOS = "sos";
     public static final String ACTION_UPLOAD_REAL_TIME_LOCATION = "uploadRealTimeLocation";
     public static final String ACTION_CANCEL_ALARM = "cancelAlarm";
@@ -64,6 +65,7 @@ public class Config {
     public static final int KEY_LOADING_EMPTY = 0;
     public static final int KEY_LOADING_SUCCESS = 1;
     public static final int KEY_LOADING_LOADING = 2;
+    public static final int KEY_FINISH_REFRESH = 3;
 
 
     public static final String RESULT_STATUS_SUCCESS = "1";

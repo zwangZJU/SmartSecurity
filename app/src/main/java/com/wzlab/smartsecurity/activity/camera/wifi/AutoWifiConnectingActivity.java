@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class AutoWifiConnectingActivity extends RootActivity implements OnClickListener/*, OnAuthListener*/ {
@@ -284,6 +285,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
     private TitleBar mTitleBar;
     private LabelsView mLvCameraName;
     private TextView mTvSetCameraLabel;
+    private SweetAlertDialog mDialog;
 
 
     // return 0 means success, camera info be saved in mEZProbeDeviceInfo
@@ -835,6 +837,11 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
             Toast.makeText(getApplicationContext(),"请为摄像头设置标签",Toast.LENGTH_LONG).show();
         }else{
 
+            mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+            mDialog.setTitleText("正在设置...");
+            mDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+            mDialog.setCancelable(false);
+            mDialog.show();
             new Thread(){
                 @Override
                 public void run() {
@@ -849,6 +856,7 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                         new NetConnection(Config.SERVER_URL + Config.ACTION_SUPPLEMENT_CAMERA_INFO, HttpMethod.POST, new NetConnection.SuccessCallback() {
                             @Override
                             public void onSuccess(String result) {
+                               mDialog.dismiss();
                                 Message message = new Message();
                                 message.what = MSG_SET_CAMERA_NAME_SUCCESS;
                                 timerHandler.sendMessage(message);
@@ -857,12 +865,14 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
                             @Override
                             public void onFail() {
 
+                                mDialog.dismiss();
                             }
                         },"camera_serial",serialNo,"camera_label",cameraName,"camera_no",String.valueOf(cameraNo));
 
 
                     } catch (BaseException e) {
                         e.printStackTrace();
+                        mDialog.dismiss();
                         Message message = new Message();
                         message.what = MSG_SET_CAMERA_NAME_FAIL;
                         timerHandler.sendMessage(message);

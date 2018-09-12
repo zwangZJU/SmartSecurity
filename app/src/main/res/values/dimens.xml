@@ -80,4 +80,6 @@
     <dimen name="remotelist_num_tip_size">12dp</dimen>
     <dimen name="playback_ib">40dp</dimen>
     <dimen name="playback_ib_w">50dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

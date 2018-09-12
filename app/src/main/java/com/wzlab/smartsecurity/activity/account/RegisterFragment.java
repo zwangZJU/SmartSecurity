@@ -1,6 +1,7 @@
 package com.wzlab.smartsecurity.activity.account;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +19,8 @@ import com.wzlab.smartsecurity.net.account.GetSmsCode;
 import com.wzlab.smartsecurity.net.account.Register;
 import com.wzlab.smartsecurity.widget.CountDownButton;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class RegisterFragment extends Fragment {
 
     private EditText mEtPhone;
@@ -27,6 +30,7 @@ public class RegisterFragment extends Fragment {
     private CountDownButton mBtnSendSmsCode;
 
     private String mSmsSessionId;
+    private SweetAlertDialog mDialog;
 
     @Nullable
     @Override
@@ -42,6 +46,12 @@ public class RegisterFragment extends Fragment {
     }
 
     private void initView(final View view) {
+
+        mDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.setTitleText("正在注册...");
+        mDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+        mDialog.setCancelable(false);
+
         mEtPhone = view.findViewById(R.id.et_register_phone);
         mEtPassword = view.findViewById(R.id.et_register_password);
         mEtSmsCode = view.findViewById(R.id.et_register_code);
@@ -95,22 +105,39 @@ public class RegisterFragment extends Fragment {
                     Toast.makeText(view.getContext(),R.string.code_can_not_be_empty,Toast.LENGTH_SHORT).show();
                     return;
                 }
+                mDialog.show();
                // Toast.makeText(view.getContext(),"注册",Toast.LENGTH_SHORT).show();
                 new Register(phone, password, smsCode, mSmsSessionId ,new Register.SuccessCallback() {
                     @Override
                     public void onSuccess(String msg) {
 
-                        Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
                             // 返回登录界面
 
-                            getFragmentManager().popBackStack();
+                        mDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("注册成功!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        getFragmentManager().popBackStack();
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .show();
+
 
 
                     }
                 }, new Register.FailCallback() {
                     @Override
                     public void onFail(String msg) {
-                        Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                        mDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("注册失败！")
+                                .setContentText(msg)
+                                .show();
                     }
                 });
 

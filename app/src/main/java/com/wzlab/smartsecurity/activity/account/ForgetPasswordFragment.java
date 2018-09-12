@@ -19,6 +19,8 @@ import com.wzlab.smartsecurity.net.account.GetSmsCode;
 import com.wzlab.smartsecurity.net.account.RecoverPassword;
 import com.wzlab.smartsecurity.widget.CountDownButton;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ForgetPasswordFragment extends Fragment {
 
     private EditText mEtFpPhone;
@@ -27,6 +29,7 @@ public class ForgetPasswordFragment extends Fragment {
     private CountDownButton mBtnFpSendSmsCode;
     private Button mBtnFpSettingPwd;
     private String mSmsSessionId;
+    private SweetAlertDialog mDialog;
 
     @Nullable
     @Override
@@ -42,6 +45,11 @@ public class ForgetPasswordFragment extends Fragment {
     }
 
     private void initView(final View view) {
+        mDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.setTitleText("正在修改...");
+        mDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+        mDialog.setCancelable(false);
+
         mEtFpPhone = view.findViewById(R.id.et_fp_phone);
         mEtFpPwd = view.findViewById(R.id.et_fp_password);
         mEtFpSmsCode = view.findViewById(R.id.et_fp_sms_code);
@@ -97,16 +105,35 @@ public class ForgetPasswordFragment extends Fragment {
                 new RecoverPassword(phone, pwd, smsCode, mSmsSessionId, new RecoverPassword.SuccessCallback() {
                     @Override
                     public void onSuccess(String result) {
-                        Toast.makeText(view.getContext(), R.string.reset_password_successfully,Toast.LENGTH_SHORT).show();
-                            mEtFpSmsCode.requestFocus();
-                            getFragmentManager().popBackStack();
+                       // Toast.makeText(view.getContext(), R.string.reset_password_successfully,Toast.LENGTH_SHORT).show();
+                        mDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("修改成功，请重新登录!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        mEtFpSmsCode.requestFocus();
+                                        getFragmentManager().popBackStack();
+                                        sweetAlertDialog.dismiss();
+                                    }
+                                })
+                                .show();
+
+
+
+
 
 
                     }
                 }, new RecoverPassword.FailCallback() {
                     @Override
                     public void onFail(String msg) {
-                        Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                        mDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("操作失败！")
+                                .setContentText(msg)
+                                .show();
+                       // Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
                     }
                 });
             }

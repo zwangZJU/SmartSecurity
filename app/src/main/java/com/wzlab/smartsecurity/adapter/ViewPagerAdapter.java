@@ -2,13 +2,9 @@ package com.wzlab.smartsecurity.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.wzlab.smartsecurity.activity.main.DeviceOverviewFragment;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wzlab on 2018/7/10.

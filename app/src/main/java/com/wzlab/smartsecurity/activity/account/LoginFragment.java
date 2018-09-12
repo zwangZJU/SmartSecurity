@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
 import com.wzlab.smartsecurity.net.account.GetSmsCode;
@@ -26,6 +29,9 @@ import com.wzlab.smartsecurity.net.account.Login;
 import com.wzlab.smartsecurity.widget.ClearableEditText;
 import com.wzlab.smartsecurity.widget.CountDownButton;
 import com.wzlab.smartsecurity.widget.FloatLabeledEditText;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class LoginFragment extends Fragment {
 
@@ -48,7 +54,7 @@ public class LoginFragment extends Fragment {
     FloatLabeledEditText f;
     private TextView mTvRegister;
     private TextView mTvForgetPassword;
-
+    private SweetAlertDialog mDialog;
 
 
     @Nullable
@@ -77,6 +83,12 @@ public class LoginFragment extends Fragment {
     }
 
     private void initView(final View view) {
+
+        mDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.setTitleText("正在登录...");
+        mDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+        mDialog.setCancelable(false);
+
 
         progress = view.findViewById(R.id.pb_login);
         mEtLoginPhone = view.findViewById(R.id.et_login_phone);
@@ -210,9 +222,12 @@ public class LoginFragment extends Fragment {
               //  Toast.makeText(view.getContext(),phone+password,Toast.LENGTH_SHORT).show();
                 Config.cachePhone(view.getContext(),phone);
                 Config.cachePassword(view.getContext(),password);
-                progress.setVisibility(View.VISIBLE);
-                progressAnimator(progress);
+//                progress.setVisibility(View.VISIBLE);
+//                progressAnimator(progress);
+                //出现进度框
 
+
+                mDialog.show();
                 new Login(phone, password, "",Config.LOGIN_BY_PASSWORD, new Login.SuccessCallback() {
                     @Override
                     public void onSuccess(String token, String msg) {
@@ -221,6 +236,7 @@ public class LoginFragment extends Fragment {
                         Config.cacheToken(view.getContext(), token);
                         Config.cachePhone(view.getContext(), phone);
 
+                        mDialog.dismissWithAnimation();
                         startActivity(new Intent(getActivity(), MainActivity.class));
                         getActivity().finish();
 
@@ -229,7 +245,23 @@ public class LoginFragment extends Fragment {
                 }, new Login.FailCallback() {
                     @Override
                     public void onFail(String msg) {
-                        Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                     //   Toast.makeText(view.getContext(),msg,Toast.LENGTH_SHORT).show();
+                        mDialog.dismiss();
+
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("糟糕啦！")
+                                .setContentText(msg)
+                                .show();
+
+//                        mDialog.setCancelText(msg);
+//                        mDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                            @Override
+//                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                mDialog.dismiss();
+//
+//
+//                            }
+//                        });
 
                     }
                 });

@@ -50,12 +50,12 @@ import java.util.ArrayList;
 import static com.videogo.util.Utils.showToast;
 
 
-public class DeviceOverviewFragment extends Fragment {
+public class IntelligentTerminalFragment extends Fragment {
 
 
 
 
-    private static final String TAG = "DeviceOverviewFragment";
+    private static final String TAG = "IntelligentTerminalFragment";
     private static final int MSG_ADD_CAMERA_SUCCESS = 20;
     private static final int MSG_FAIL_TO_ADD_CAMERA = 21;
     private static final int MSG_EXCEPTION = 22;
@@ -78,7 +78,7 @@ public class DeviceOverviewFragment extends Fragment {
     private String deviceTypeForBind = "0";
     private String phone;
 
-    public DeviceOverviewFragment() {
+    public IntelligentTerminalFragment() {
         // Required empty public constructor
     }
 
@@ -282,7 +282,7 @@ public class DeviceOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_device_overview, container, false);
+        View view =inflater.inflate(R.layout.fragment_intelligent_terminal, container, false);
 
         return view;
     }
@@ -450,7 +450,7 @@ public class DeviceOverviewFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart: fragmet" );
+
         initData(false);
     }
 
@@ -458,7 +458,7 @@ public class DeviceOverviewFragment extends Fragment {
     // 连接设备，看是否需要连接网络
     public void connectCamera(final EZProbeDeviceInfoResult result){
         if (result.getBaseException() == null){
-            Log.e(TAG, "connectCamera: 查询成功" );
+
             //查询成功，添加设备
           //  bindingCamera(deviceIdForBindingCamera, cameraInfoFromQRCode);
             try {
@@ -476,7 +476,7 @@ public class DeviceOverviewFragment extends Fragment {
 //                handler.sendMessage(message);
             } catch (BaseException e) {
                 e.printStackTrace();
-                Log.e(TAG, "connectCamera: ",e );
+
                 Message message = new Message();
                 message.what = MSG_EXCEPTION;
                 handler.sendMessage(message);
@@ -537,6 +537,8 @@ public class DeviceOverviewFragment extends Fragment {
         Button mBtnAddAlarmModel = contentView.findViewById(R.id.btn_add_alarm_model);
         Button mBtnAddOneButtonDevice = contentView.findViewById(R.id.btn_add_one_button_device);
         Button mBtnAddCamera = contentView.findViewById(R.id.btn_add_camera);
+        contentView.findViewById(R.id.view_may_be_gone).setVisibility(View.GONE);
+        mBtnAddCamera.setVisibility(View.GONE);
         mBtnAddAlarmModel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -563,7 +565,7 @@ public class DeviceOverviewFragment extends Fragment {
                 deviceTypeForBind = "3";
                 Intent intent=new Intent(getContext(), CaptureActivity.class);
                 //跳转到扫描二维码页面
-                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_DEVICE );
+                startActivityForResult(intent,Config.SCAN_QR_CODE_TO_ADD_CAMERA );
                 mCustomPopWindow.dissmiss();
             }
         });
