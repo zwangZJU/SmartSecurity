@@ -82,6 +82,9 @@ public class RepairProgressFragment extends Fragment {
     private List<StepBean> stepHorList;
     private List<String> stepVerList;
     private TextView mTvRepairContent;
+    private String phone;
+    private View rootView;
+    private boolean visibleToUser = false;
 
     public RepairProgressFragment() {
         // Required empty public constructor
@@ -99,7 +102,7 @@ public class RepairProgressFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        phone = Config.getCachedPhone(getContext());
         isCreated = true;
     }
 
@@ -113,13 +116,22 @@ public class RepairProgressFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        rootView = view;
+        initView(view);
+        if (!visibleToUser) {
+
+            initData();
+        }
+
+    }
+
+    private void initView(View view) {
         loadingLayout = view.findViewById(R.id.loading_layout_repair_process);
         loadingLayout.setBackgroundColor(getResources().getColor(R.color.background));
 
 
         // 报修内容
         mTvRepairContent = view.findViewById(R.id.tv_repair_progress_content);
-
 
 
         // 水平
@@ -133,7 +145,7 @@ public class RepairProgressFragment extends Fragment {
                 .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_radio_button_checked))//设置StepsViewIndicator DefaultIcon
                 .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_attention));//设置StepsViewIndicator AttentionIcon
 
-         //竖直
+        //竖直
         stepViewVertical = view.findViewById(R.id.step_view_state_info);
         stepViewVertical.reverseDraw(false)//default is true
                 .setLinePaddingProportion(0.85f)//设置indicator线与线间距的比例系数
@@ -145,7 +157,6 @@ public class RepairProgressFragment extends Fragment {
                 .setStepsViewIndicatorDefaultIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_radio_button_checked_blue))//设置StepsViewIndicator DefaultIcon
                 .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_attention));//设置StepsViewIndicator AttentionIcon
 
-        initData();
     }
 
     @Override
@@ -168,7 +179,9 @@ public class RepairProgressFragment extends Fragment {
         }
 
         if (isVisibleToUser) {
+            visibleToUser = isVisibleToUser;
             initData();
+
         }
     }
 
@@ -190,7 +203,7 @@ public class RepairProgressFragment extends Fragment {
         //竖直
         stepVerList = new ArrayList<>();
 
-        String phone = Config.getCachedPhone(getContext());
+
         RepairInfo.getRepairPreogressInfo(phone, "",new RepairInfo.SuccessCallback() {
             @Override
             public void onSuccess(String content,String processingState, String stateInfo) {
