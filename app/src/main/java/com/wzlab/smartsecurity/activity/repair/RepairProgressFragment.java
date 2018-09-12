@@ -31,6 +31,7 @@ import java.util.List;
 public class RepairProgressFragment extends Fragment {
 
 
+    protected boolean isCreated = false;
 
     private HorizontalStepView stepViewHorizontal;
     private VerticalStepView stepViewVertical;
@@ -99,6 +100,7 @@ public class RepairProgressFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isCreated = true;
     }
 
     @Override
@@ -144,6 +146,30 @@ public class RepairProgressFragment extends Fragment {
                 .setStepsViewIndicatorAttentionIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_attention));//设置StepsViewIndicator AttentionIcon
 
         initData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isCreated) {
+            return;
+        }
+
+        if (isVisibleToUser) {
+            initData();
+        }
     }
 
     public void initData(){

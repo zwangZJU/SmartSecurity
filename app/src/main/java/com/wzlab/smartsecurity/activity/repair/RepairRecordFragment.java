@@ -37,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -154,6 +156,7 @@ public class RepairRecordFragment extends Fragment {
                             for(int i=0;i<jsonArray.length();i++){
                                 repairLogList.add(gson.fromJson(jsonArray.get(i).toString(),RepairLog.class));
                             }
+                            Collections.reverse(repairLogList);
                             RepairLogAdapter adapter = new RepairLogAdapter(getContext(),repairLogList);
                             adapter.setOnItemClickListener(new RepairLogAdapter.OnItemClickListener() {
                                 @Override

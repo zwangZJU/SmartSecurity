@@ -82,7 +82,7 @@ public class DeviceFaultReportFragment extends Fragment {
         mTabLayout.setupWithViewPager(mViewPager);
 
         ArrayList<Fragment> mFragmentList = new ArrayList<>();
-        Fragment newRepairOrderFragment = new NewRepairOrderFragment();
+        Fragment newRepairOrderFragment = new NewRepairOrderFragment(mViewPager);
         Fragment repairProcessFragment = new RepairProgressFragment(mViewPager);
         Fragment repairRecordFragment = new RepairRecordFragment();
 

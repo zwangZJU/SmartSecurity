@@ -58,12 +58,12 @@ public class RepairLog {
     /**
      * 处理者
      */
-    private String handler;
+    private String handler_;
 
     /**
      * 处理者电话
      */
-    private String handlerphone;
+    private String handler_phone;
 
     /**
      * 故障原因
@@ -169,7 +169,7 @@ public class RepairLog {
      * @return handler
      */
     public String getHandler_() {
-        return handler;
+        return handler_;
     }
 
     /**
@@ -178,7 +178,7 @@ public class RepairLog {
      * @return handlerphone
      */
     public String getHandler_phone() {
-        return handlerphone;
+        return handler_phone;
     }
 
     /**
@@ -305,7 +305,7 @@ public class RepairLog {
      * @param handler
      */
     public void setHandler_(String handler) {
-        this.handler = handler;
+        this.handler_ = handler;
     }
 
     /**
@@ -314,7 +314,7 @@ public class RepairLog {
      * @param handlerphone
      */
     public void setHandler_phone(String handlerphone) {
-        this.handlerphone = handlerphone;
+        this.handler_phone = handlerphone;
     }
 
     /**

@@ -1,10 +1,13 @@
 package com.wzlab.smartsecurity.activity.repair;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -24,6 +27,7 @@ import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
+import com.wzlab.smartsecurity.widget.NoScrollViewPager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,10 +49,32 @@ public class NewRepairOrderFragment extends Fragment {
     private String spSelected;
     private String faultDescription;
     private String deviceId;
+    private NoScrollViewPager viewPager;
+    private int MSG_REPORT_SUCCESS = 7;
 
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == MSG_REPORT_SUCCESS){
+                mBtnSubmit.setProgress(0);
+                mEtDeviceId.setText("");
+                mEtRepairContent.setText("");
+                viewPager.setCurrentItem(0);
+            }
+        }
+    };
 
     public NewRepairOrderFragment() {
+
         // Required empty public constructor
+    }
+
+    @SuppressLint("ValidFragment")
+    public NewRepairOrderFragment(NoScrollViewPager viewPager){
+        this.viewPager = viewPager;
     }
 
 
@@ -156,6 +182,24 @@ public class NewRepairOrderFragment extends Fragment {
                     switch (jsonObject.getString(Config.KEY_STATUS)){
                         case Config.RESULT_STATUS_SUCCESS:
                             mBtnSubmit.setProgress(100);
+                            new Thread(){
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    try {
+                                        Thread.sleep(1300);
+                                        Message message = new Message();
+                                        message.what = MSG_REPORT_SUCCESS;
+                                        handler.sendMessage(message);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                }
+                            }.start();
+
+
                             break;
                         default:
 
