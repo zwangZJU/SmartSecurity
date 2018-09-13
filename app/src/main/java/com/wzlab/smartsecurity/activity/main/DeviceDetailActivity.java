@@ -2,8 +2,10 @@ package com.wzlab.smartsecurity.activity.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -34,6 +37,8 @@ import com.wzlab.smartsecurity.SmartSecurityApplication;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.camera.realplay.RealPlayActivity;
 import com.wzlab.smartsecurity.adapter.CameraListAdapter;
+import com.wzlab.smartsecurity.net.HttpMethod;
+import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Camera;
 import com.wzlab.smartsecurity.po.Device;
@@ -44,80 +49,84 @@ import com.wzlab.smartsecurity.widget.LoadingLayout;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class DeviceDetailActivity extends AppCompatActivity {
 
 
     private static final String TAG = "DeviceDetailActivity";
     public final static int REQUEST_CODE = 100;
     private LoadingLayout loadingLayout;
-    private  ArrayList<EZDeviceInfo> mDeviceList = null;
+    private ArrayList<EZDeviceInfo> mDeviceList = null;
     private ArrayList<EZCameraInfo> mCameraList = null;
     private final static int MSG_LOAD_DEVICE_SUCCESS = 30;
     private EZDeviceInfo deviceInfo;
     private ArrayList<Camera> cameras = null;
 
-   @SuppressLint("HandlerLeak")
-   private Handler handler = new Handler(){
-       @Override
-       public void handleMessage(Message msg) {
-           super.handleMessage(msg);
-           if(msg.what == Config.KEY_LOADING_EMPTY){
-               loadingLayout.showEmpty();
-           }else if(msg.what == Config.KEY_LOADING_ERROR){
-               loadingLayout.showError();
-               loadingLayout.setRetryListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View view) {
-                       initData();
-                   }
-               });
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == Config.KEY_LOADING_EMPTY) {
+                loadingLayout.showEmpty();
+            } else if (msg.what == Config.KEY_LOADING_ERROR) {
+                loadingLayout.showError();
+                loadingLayout.setRetryListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        initData();
+                    }
+                });
 
-           }else if(msg.what == Config.KEY_LOADING_SUCCESS){
-               loadingLayout.showContent();
-           }else if(msg.what == MSG_LOAD_DEVICE_SUCCESS) {
+            } else if (msg.what == Config.KEY_LOADING_SUCCESS) {
+                loadingLayout.showContent();
+            } else if (msg.what == MSG_LOAD_DEVICE_SUCCESS) {
 
 
-               cameraListAdapter.setCameraList(cameras);
+                cameraListAdapter.setCameraList(cameras);
 
-           }else {
-               switch (msg.what) {
-                   case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS:
+            }else if(msg.what == MSG_DELETE_DEVICE_SUCCESS){
+                finish();
+            }else {
+                switch (msg.what) {
+                    case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS:
 //开启直播
 
-                       Log.e(TAG, "handleMessage: 播放成功" );
-                       break;
-                   case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_FAIL:
-                       //播放失败,得到失败信息
-                       ErrorInfo errorinfo = (ErrorInfo) msg.obj;
-                       //得到播放失败错误码
-                       int code = errorinfo.errorCode;
-                       //得到播放失败模块错误码
-                       String codeStr = errorinfo.moduleCode;
-                       //得到播放失败描述
-                       String description = errorinfo.description;
-                       //得到播放失败解决方方案
-                       String sulution = errorinfo.sulution;
-                       Log.e(TAG, "出现错误并提出解决方案 "+ errorinfo+code+ codeStr+description+sulution);
-                       break;
-                   case EZConstants.MSG_VIDEO_SIZE_CHANGED:
-                       //解析出视频画面分辨率回调
-                       try {
-                           String temp = (String) msg.obj;
-                           String[] strings = temp.split(":");
-                           int mVideoWidth = Integer.parseInt(strings[0]);
-                           int mVideoHeight = Integer.parseInt(strings[1]);
-                           Log.e(TAG, "handleMessage: "+mVideoWidth+mVideoHeight);
-                           //解析出视频分辨率
-                       } catch (Exception e) {
-                           e.printStackTrace();
-                       }
-                       break;
-                   default:
-                       break;
-               }
-           }
-       }
-   };
+                        Log.e(TAG, "handleMessage: 播放成功");
+                        break;
+                    case EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_FAIL:
+                        //播放失败,得到失败信息
+                        ErrorInfo errorinfo = (ErrorInfo) msg.obj;
+                        //得到播放失败错误码
+                        int code = errorinfo.errorCode;
+                        //得到播放失败模块错误码
+                        String codeStr = errorinfo.moduleCode;
+                        //得到播放失败描述
+                        String description = errorinfo.description;
+                        //得到播放失败解决方方案
+                        String sulution = errorinfo.sulution;
+                        Log.e(TAG, "出现错误并提出解决方案 " + errorinfo + code + codeStr + description + sulution);
+                        break;
+                    case EZConstants.MSG_VIDEO_SIZE_CHANGED:
+                        //解析出视频画面分辨率回调
+                        try {
+                            String temp = (String) msg.obj;
+                            String[] strings = temp.split(":");
+                            int mVideoWidth = Integer.parseInt(strings[0]);
+                            int mVideoHeight = Integer.parseInt(strings[1]);
+                            Log.e(TAG, "handleMessage: " + mVideoWidth + mVideoHeight);
+                            //解析出视频分辨率
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
     private TextView mTvDeviceId;
     private Switch mSwitchDeviceStatus;
     private ImageView mIvIsAlarming;
@@ -139,6 +148,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private EZPlayer player;
     private SurfaceHolder surfaceHolder;
     private CameraListAdapter cameraListAdapter;
+    private SweetAlertDialog deleteConfirm;
+    private SweetAlertDialog deleting;
+    private int MSG_DELETE_DEVICE_SUCCESS = 8;
+
+
+
 
 
     @Override
@@ -155,7 +170,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -168,13 +182,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
         super.onDestroy();
 
 
-
     }
 
     private void initData() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        deviceId = bundle.getString("device_id","11");
+        deviceId = bundle.getString("device_id", "11");
 
         mDeviceList = new ArrayList<>();
         mCameraList = new ArrayList<>();
@@ -184,26 +197,26 @@ public class DeviceDetailActivity extends AppCompatActivity {
             public void onSuccess(ArrayList list, final ArrayList camera, String msg) {
                 Message handlerMsg = new Message();
 
-                if(camera.size()>0){
+                if (camera.size() > 0) {
 
 
                     cameras = camera;
-                    if(cameras.get(0).getCamera_serial().length()<5){
+                    if (cameras.get(0).getCamera_serial().length() < 5) {
 
-                    }else{
-                        new Thread(){
+                    } else {
+                        new Thread() {
                             @Override
                             public void run() {
                                 super.run();
                                 try {
-                                    for(int i=0;i<camera.size();i++) {
-                                        Camera c = (Camera)camera.get(i);
+                                    for (int i = 0; i < camera.size(); i++) {
+                                        Camera c = (Camera) camera.get(i);
                                         deviceInfo = SmartSecurityApplication.getOpenSDK().getDeviceInfo(c.getCamera_serial());
                                         mDeviceList.add(deviceInfo);
                                         EZCameraInfo cameraInfo = EZUtils.getCameraInfoFromDevice(deviceInfo, 0);
                                         mCameraList.add(cameraInfo);
                                         cameras.get(i).setCamera_label(cameraInfo.getCameraName());
-                                        DataManager.getInstance().setDeviceSerialVerifyCode(c.getCamera_serial(),c.getVerification_code());
+                                        DataManager.getInstance().setDeviceSerialVerifyCode(c.getCamera_serial(), c.getVerification_code());
                                         EZOpenSDK.getInstance().setAccessToken(c.getAccess_token());
                                     }
 
@@ -221,12 +234,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                 }
 
-                if(list.size()>0){
-                    final Device device = (Device)list.get(0);
+                if (list.size() > 0) {
+                    final Device device = (Device) list.get(0);
                     deviceId = device.getDevice_id();
                     String productType = device.getProduct_type();
-                    String status = DataParser.getData(device.getArrange_withdraw(),"0");
-                    String isAlarming =  DataParser.getData(device.getIs_alarming(),"0");
+                    String status = DataParser.getData(device.getArrange_withdraw(), "0");
+                    String isAlarming = DataParser.getData(device.getIs_alarming(), "0");
                     String productionDate = device.getProduction_date();
                     final String manufacturer = "浙江中创天成科技有限公司";
                     String installDate = device.getInstall_date();
@@ -234,18 +247,17 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String userAddr = device.getUser_address().split("#")[0];
                     String repairRecord = device.getRepair_record();
                     String repairProgress = device.getRepair_progress();
-                    String head = DataParser.getData(device.getHead(),"暂无数据");
-                    String headPhone = DataParser.getData(device.getHead_phone(),"暂无数据");
-                    String policeStation = DataParser.getData(device.getPolice_station(),"暂无数据");
+                    String head = DataParser.getData(device.getHead(), "暂无数据");
+                    String headPhone = DataParser.getData(device.getHead_phone(), "暂无数据");
+                    String policeStation = DataParser.getData(device.getPolice_station(), "暂无数据");
                     String deviceType = device.getProduct_type();
-                  //  final String cameraSerial = device.getCamera_serial();
+                    //  final String cameraSerial = device.getCamera_serial();
                     // TODO 添加验证码
-                //    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
-
+                    //    DataManager.getInstance().setDeviceSerialVerifyCode(cameraSerial,"");
 
 
                     mTvDeviceId.setText(deviceId);
-                   // TODO
+                    // TODO
                     setSwitchChecked(status);
                     mSwitchDeviceStatus.setEnabled(true);
                     mSwitchDeviceStatus.setOnClickListener(new View.OnClickListener() {
@@ -253,9 +265,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         public void onClick(View view) {
 
                             String cmd = null;
-                            if(mSwitchDeviceStatus.isChecked()){
+                            if (mSwitchDeviceStatus.isChecked()) {
                                 cmd = "5";
-                            }else{
+                            } else {
                                 cmd = "4";
                             }
 
@@ -272,31 +284,31 @@ public class DeviceDetailActivity extends AppCompatActivity {
                                 @Override
                                 public void onFail(String msg) {
                                     Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                                    if(finalCmd.equals("4")){
+                                    if (finalCmd.equals("4")) {
                                         mSwitchDeviceStatus.setChecked(true);
-                                    }else {
+                                    } else {
                                         mSwitchDeviceStatus.setChecked(false);
                                     }
                                 }
                             });
                         }
                     });
-                    if(isAlarming.equals("1")){
+                    if (isAlarming.equals("1")) {
                         mIvIsAlarming.setImageDrawable(getDrawable(R.drawable.ic_bottom_nav_bar_alarm_enable));
-                    }else {
+                    } else {
                         mIvIsAlarming.setImageDrawable(getDrawable(R.drawable.ic_bottom_nav_bar_alarm));
                     }
                     mTvManufacturer.setText("制造商：" + manufacturer);
                     mTvDeviceType.setText("设备型号：" + productType);
-                    mTvProductionDate.setText("出厂日期："+productionDate);
-                    mTvInstallDate.setText("安装日期："+installDate);
-                    mTvGuaranteeTime.setText("保修截止日期："+guaranteeTime);
-                    mTvAddr.setText("地址信息："+userAddr);
+                    mTvProductionDate.setText("出厂日期：" + productionDate);
+                    mTvInstallDate.setText("安装日期：" + installDate);
+                    mTvGuaranteeTime.setText("保修截止日期：" + guaranteeTime);
+                    mTvAddr.setText("地址信息：" + userAddr);
 //                    mTvRepairProgress.setText("报修进度："+repairProgress);
 //                    mTvRepairRecord.setText("报修记录："+repairRecord);
-                    mTvPrincipalName.setText("姓名："+head);
-                    mTvPrincipalPhone.setText("联系电话："+headPhone);
-                    mTvPrincipalPolice.setText("所属派出所："+policeStation);
+                    mTvPrincipalName.setText("姓名：" + head);
+                    mTvPrincipalPhone.setText("联系电话：" + headPhone);
+                    mTvPrincipalPolice.setText("所属派出所：" + policeStation);
 
 
                     handlerMsg.what = Config.KEY_LOADING_SUCCESS;
@@ -308,17 +320,16 @@ public class DeviceDetailActivity extends AppCompatActivity {
             @Override
             public void onFail(String msg) {
                 Message handlerMsg = new Message();
-                handlerMsg.what =  Config.KEY_LOADING_ERROR;
+                handlerMsg.what = Config.KEY_LOADING_ERROR;
                 handler.sendMessage(handlerMsg);
                 loadingLayout.setErrorText(msg);
 
-                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
 
-
-        String deviceStatus = bundle.getString("device_status","1");
+        String deviceStatus = bundle.getString("device_status", "1");
 //        if(deviceStatus.equals("1")){
 //             mSwitchDeviceStatus.setChecked(true);
 //        }else {
@@ -373,7 +384,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mRvCameraInfo.setLayoutManager(new LinearLayoutManager(this));
         mCameraList = new ArrayList<>();
         cameras = new ArrayList<>();
-        cameraListAdapter = new CameraListAdapter(getApplicationContext(),cameras);
+        cameraListAdapter = new CameraListAdapter(getApplicationContext(), cameras);
         cameraListAdapter.setOnItemClickListener(new CameraListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -385,17 +396,102 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
         mRvCameraInfo.setAdapter(cameraListAdapter);
 
+        final Button mBtnDeleteDevice = findViewById(R.id.btn_delete_device);
+        mBtnDeleteDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                deleteConfirm = new SweetAlertDialog(DeviceDetailActivity.this, SweetAlertDialog.WARNING_TYPE);
+                deleteConfirm.setTitleText("确定要删除该设备吗？")
+                        .setContentText("删除后设备将不再向您推送任何报警信息！")
+                        .setConfirmText("删除！")
+                        .setCancelText("算了...")
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                deleteConfirm.dismiss();
+                                if(cameras.get(0).getCamera_serial().length()>4){
+                                    new SweetAlertDialog(DeviceDetailActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                            .setTitleText("操作失败！")
+                                            .setContentText("请先删除绑定在该设备上的摄像头！")
+                                            .setConfirmText("好哒")
+                                            .show();
+                                }else{
+                                    deleting = new SweetAlertDialog(DeviceDetailActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+                                    deleting.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+                                    deleting.setTitleText("正在操作...");
+                                    deleting.setCancelable(false);
+                                    deleting.show();
+                                    deleteDevice();
+                                }
 
 
+                            }
+                        })
+                        .show();
 
+            }
+        });
 
 
     }
 
-    public void setSwitchChecked(String status){
-        if(status.equals("1")){
+    private void deleteDevice() {
+        new NetConnection(Config.SERVER_URL + Config.ACTION_DELETE_DEVICE, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+
+
+                deleting.dismiss();
+                new SweetAlertDialog(DeviceDetailActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("删除成功！")
+                        .setContentText("即将返回设备列表...")
+                        .show();
+
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            try {
+                                Thread.sleep(2000);
+                                Message message = new Message();
+                                message.what = MSG_DELETE_DEVICE_SUCCESS;
+                                handler.sendMessage(message);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }.start();
+
+
+
+
+
+
+
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+
+            }
+        },"device_id",deviceId);
+    }
+
+    public void setSwitchChecked(String status) {
+        if (status.equals("1")) {
             mSwitchDeviceStatus.setChecked(true);
-        }else {
+        } else {
             mSwitchDeviceStatus.setChecked(false);
         }
     }

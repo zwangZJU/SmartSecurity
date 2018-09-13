@@ -41,6 +41,7 @@ public class Config {
     public static final String ACTION_UPLOAD_REAL_TIME_LOCATION = "uploadRealTimeLocation";
     public static final String ACTION_CANCEL_ALARM = "cancelAlarm";
     public static final String ACTION_SUBMIT_SUGGESTION = "submitSuggestion";
+    public static final String ACTION_DELETE_DEVICE = "deleteDevice";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";

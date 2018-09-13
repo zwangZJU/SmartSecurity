@@ -310,7 +310,8 @@ public class AutoWifiConnectingActivity extends RootActivity implements OnClickL
 
         window.setStatusBarColor(getResources().getColor(R.color.black));
         setContentView(R.layout.activity_auto_wifi_connecting);
-        if(getIntent().getStringExtra("success").equals("1")){
+        String success = getIntent().getStringExtra("success");
+        if(success != null && success.equals("1")){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             initTitleBar();
             init();

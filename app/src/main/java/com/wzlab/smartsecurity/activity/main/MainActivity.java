@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,13 +101,20 @@ public class MainActivity extends AppCompatActivity
     private static int LOAD_USER_INFO_TEXT_SUCCESS = 5;
     private static int LOAD_USER_INFO_ALL_SUCCESS = 6;
     private String deviceTypeForBind;
-
+    private boolean isExit = false; //按两次退出
+    private static int ACTION_EXIT = -1;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            //按两次退出
+            if (msg.what == ACTION_EXIT){
+                isExit = false;
+            }
+
+
             if(msg.what == LOAD_USER_INFO_TEXT_SUCCESS){
                 mTvUserInfoName.setText(userInfoName);
                 mTvUserInfoIsCert.setText(userInfoIsCert);
@@ -505,7 +513,15 @@ public class MainActivity extends AppCompatActivity
        // toolbar.setVisibility(View.GONE);
         if (id == R.id.nav_update_user_info) {
             // Handle the camera action
-            startActivity(new Intent(this,UpdateUserInfoActivity.class));
+           // startActivity(new Intent(this,UpdateUserInfoActivity.class));
+            Fragment fragment = new PersonalCenterFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("avatarURL",userInfoAvatarURL);
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
+            drawer.closeDrawer(GravityCompat.START);
+
+
         }  else if (id == R.id.nav_alarm_log) {
             mVpMainContainer.setCurrentItem(1);
             toolbar.setTitle("报警");
@@ -722,6 +738,36 @@ public class MainActivity extends AppCompatActivity
                 .enableBackgroundDark(true)
                 .create()
                 .showAtLocation(findViewById(R.id.fl_main_container), Gravity.BOTTOM,0,0);
+    }
+
+
+    /*
+   点击两次返回才退出程序
+ */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+
+        if (!isExit) {
+
+                isExit = true;
+                Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                        Toast.LENGTH_SHORT).show();
+
+
+            // 利用handler延迟发送更改状态信息
+            handler.sendEmptyMessageDelayed(ACTION_EXIT, 2000);
+        } else {
+            finish();
+            System.exit(0);
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,6 +155,9 @@ public class MeFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
+            case R.id.btn_edit:
+
+                break;
 
             case R.id.btn_update:
                 intent = new Intent(getContext(),CheckAndUpdateActivity.class);
@@ -163,6 +167,7 @@ public class MeFragment extends Fragment implements View.OnClickListener{
                 intent = new Intent(getContext(),FeedBackActivity.class);
                 startActivity(intent);
                 break;
+
         }
     }
 }

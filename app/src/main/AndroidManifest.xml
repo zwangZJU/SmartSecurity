@@ -58,8 +58,7 @@
         android:roundIcon="@drawable/push"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        tools:replace="android:icon,android:theme"
-         >
+        tools:replace="android:icon,android:theme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="ZTBZZKQ32Z6cOn1xO5KFl4ULcE78hnaH" />
@@ -213,7 +212,8 @@
         <activity
             android:name=".activity.main.UpdateUserInfoActivity"
             android:label="@string/title_activity_update_user_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.me.PersonalCenterActivity"></activity>
     </application>
 
 </manifest>
