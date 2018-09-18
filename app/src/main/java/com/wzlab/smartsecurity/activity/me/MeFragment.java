@@ -103,9 +103,16 @@ public class MeFragment extends Fragment implements View.OnClickListener{
         mBtnUpdateApp.setOnClickListener(this);
 
 
+      //  getUserBasicInfo();
+
+
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getUserBasicInfo();
-
-
     }
 
     @Override
@@ -156,7 +163,9 @@ public class MeFragment extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (view.getId()){
             case R.id.btn_edit:
-
+                intent = new Intent(getContext(),PersonalCenterActivity.class);
+                intent.putExtra("avatarURL",userInfoAvatarURL);
+                startActivity(intent);
                 break;
 
             case R.id.btn_update:

@@ -14,7 +14,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.wzlab.smartsecurity.R;
+import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.net.main.GetDeviceInfo;
 import com.wzlab.smartsecurity.po.Device;
 import com.wzlab.smartsecurity.utils.DataParser;
@@ -106,7 +108,9 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
 
             final Device device = deviceList.get(position);
             holder.mTvDeviceId.setText("ID:"+ device.getDevice_id());
+            String deviceType = device.getProduct_type();
 
+            Glide.with(context).load(Config.DEVICE_ICON_URL+deviceType+".png").into(holder.mIvDeviceIcon);
 
             if(device.getArrange_withdraw().equals("1")){
                 holder.mSwitchDefensiveState.setChecked(true);
@@ -193,6 +197,8 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
                 }
             });
         }
+
+
 
     }
 

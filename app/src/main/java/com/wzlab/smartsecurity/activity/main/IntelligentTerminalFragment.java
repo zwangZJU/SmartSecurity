@@ -344,7 +344,7 @@ public class IntelligentTerminalFragment extends Fragment {
             String phone = Config.getCachedPhone(getContext());
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(getContext(),SelectLocationActivity.class);
-            if(deviceInfo.length()>10 && deviceInfo.substring(8,9).equals("#")){
+            if(deviceInfo.length()>10 && (deviceInfo.substring(8,9).equals("#")||deviceInfo.substring(10,11).equals("#"))){
                 intent.putExtra("deviceInfo", deviceInfo);
                 intent.putExtra("deviceType",deviceTypeForBind);
                 startActivity(intent);

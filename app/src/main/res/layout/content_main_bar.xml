@@ -45,6 +45,6 @@
 
         android:paddingBottom="5dp"
         android:layout_gravity="bottom"
-        app:menuCount="3"/>
+        app:menuCount="4"/>
 
 </FrameLayout>

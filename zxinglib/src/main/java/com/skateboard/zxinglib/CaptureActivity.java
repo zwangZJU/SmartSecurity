@@ -125,6 +125,11 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getResources().getColor(R.color.result_view));
+
         setContentView(R.layout.capture);
 
 

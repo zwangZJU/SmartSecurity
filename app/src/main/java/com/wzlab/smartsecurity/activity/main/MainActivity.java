@@ -48,7 +48,9 @@ import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiConnectingActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiNetConfigActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.SeriesNumSearchActivity;
 import com.wzlab.smartsecurity.activity.me.MeFragment;
+import com.wzlab.smartsecurity.activity.me.PersonalCenterActivity;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
+import com.wzlab.smartsecurity.activity.message.AdvertisementFragment;
 import com.wzlab.smartsecurity.activity.repair.DeviceFaultReportFragment;
 import com.wzlab.smartsecurity.adapter.ViewPagerAdapter;
 import com.wzlab.smartsecurity.net.HttpMethod;
@@ -244,11 +246,9 @@ public class MainActivity extends AppCompatActivity
         mIvNavAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new PersonalCenterFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("avatarURL",userInfoAvatarURL);
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
+                Intent intent = new Intent(MainActivity.this,PersonalCenterActivity.class);
+                intent.putExtra("avatarURL",userInfoAvatarURL);
+                startActivity(intent);
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
@@ -265,10 +265,12 @@ public class MainActivity extends AppCompatActivity
         Fragment deviceTabContainerFragment = new DeviceTabContainerFragment();
 
         Fragment alarmFragment = new AlarmFragment();
+        Fragment advertisementFragment = new AdvertisementFragment();
         Fragment meFragment = new MeFragment();
 
         mFragmentList.add(deviceTabContainerFragment);
         mFragmentList.add(alarmFragment);
+        mFragmentList.add(advertisementFragment);
         mFragmentList.add(meFragment);
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
         mVpMainContainer.setAdapter(mViewPagerAdapter);
@@ -279,9 +281,9 @@ public class MainActivity extends AppCompatActivity
 
 
         //设置底部的导航菜单
-        int[] iconNormal = {R.drawable.ic_bottom_nav_bar_home,R.drawable.ic_bottom_nav_bar_alarm,R.drawable.ic_bottom_nav_bar_me};
-        int[] iconFocus = {R.drawable.ic_bottom_nav_bar_home_focus,R.drawable.ic_bottom_nav_bar_alarm_focus,R.drawable.ic_bottom_nav_bar_me_focus};
-        final String[] text = {"首页","报警","我的"};
+        int[] iconNormal = {R.drawable.ic_bottom_nav_bar_home,R.drawable.ic_bottom_nav_bar_alarm,R.drawable.ic_bottom_nav_bar_msg,R.drawable.ic_bottom_nav_bar_me};
+        int[] iconFocus = {R.drawable.ic_bottom_nav_bar_home_focus,R.drawable.ic_bottom_nav_bar_alarm_focus,R.drawable.ic_bottom_nav_bar_msg_focus,R.drawable.ic_bottom_nav_bar_me_focus};
+        final String[] text = {"首页","报警","消息","我的"};
         mBottomNavMenuBar = findViewById(R.id.bottom_nav_menu_bar);
         mBottomNavMenuBar.setIconRes(iconNormal)
                 .setIconResSelected(iconFocus)
@@ -374,9 +376,13 @@ public class MainActivity extends AppCompatActivity
 
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
-            intent.putExtra("deviceInfo", deviceInfo);
-            intent.putExtra("deviceType", deviceTypeForBind);
-            startActivity(intent);
+            if(deviceInfo.length()>10 && (deviceInfo.substring(8,9).equals("#")||deviceInfo.substring(10,11).equals("#"))) {
+                intent.putExtra("deviceInfo", deviceInfo);
+                intent.putExtra("deviceType", deviceTypeForBind);
+                startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(),"无效二维码",Toast.LENGTH_LONG).show();
+            }
           //  finish();
 
         }else if(requestCode==Config.SCAN_QR_CODE_TO_ADD_CAMERA && resultCode== Activity.RESULT_OK){
@@ -514,11 +520,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_update_user_info) {
             // Handle the camera action
            // startActivity(new Intent(this,UpdateUserInfoActivity.class));
-            Fragment fragment = new PersonalCenterFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("avatarURL",userInfoAvatarURL);
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fl_main_container, fragment).commitAllowingStateLoss();
+            Intent intent = new Intent(MainActivity.this,PersonalCenterActivity.class);
+            intent.putExtra("avatarURL",userInfoAvatarURL);
+            startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
 
 

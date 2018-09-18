@@ -17,6 +17,7 @@ public class Config {
     //
     public static final String IP = "118.126.95.215";
     public static final String SERVER_URL = "http://"+IP+":9090/cdz/api/do.jhtml?router=appApiService.";
+    public static final String DEVICE_ICON_URL = "http://"+IP+":9090/cdz/myupload/device/";
     public static final String TYPE_ROLE = "1";//普通用户
 
     public static final String ACTION_REGISTER = "userRegister";
@@ -42,6 +43,7 @@ public class Config {
     public static final String ACTION_CANCEL_ALARM = "cancelAlarm";
     public static final String ACTION_SUBMIT_SUGGESTION = "submitSuggestion";
     public static final String ACTION_DELETE_DEVICE = "deleteDevice";
+    public static final String ACTION_UPDATE_USER_BASIC_INFO = "updateUserBasicInfo";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";
