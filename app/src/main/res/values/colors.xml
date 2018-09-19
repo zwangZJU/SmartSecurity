@@ -26,6 +26,8 @@
     <color name="gray_text">#adadad</color>
     <color name="me_detail_gray">#535353</color>
     <color name="tip">#aaa</color>
+
+
     <!--萤石云-->
     <color name="common_sub_text">#888888</color>
     <color name="mode_bg">#88000000</color>
@@ -61,4 +63,7 @@
     <color name="preview_quality_color">#3eaefa</color>
     <color name="common_hint_text">#adadad</color>
     <color name="edit_dialog_bg">#efefef</color>
+    <color name="advert_date_bg">#d5d5d5</color>
+    <color name="advert_bg">#ebebeb</color>
+    <color name="advert_subtitle">#9a9a9a</color>
 </resources>

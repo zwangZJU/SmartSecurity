@@ -11,13 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.igexin.sdk.PushManager;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
@@ -48,16 +51,16 @@ public class StartActivity extends AppCompatActivity {
         isAlarming = intent.getBooleanExtra("isAlarming",false);
 
         Log.i(TAG, "onCreate: "+ CID);
+        //去除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Window window = getWindow();
-        //透明状态栏
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //透明导航栏
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        // window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //去除状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
+        ImageView imageView = findViewById(R.id.iv_profile);
+        String url = Config.START_IMG_URL;
+        Glide.with(getApplication()).load(url).into(imageView);
+
+
         cl = findViewById(R.id.rl_start);
         //渐变动画
         alp = new AlphaAnimation(1, 1);

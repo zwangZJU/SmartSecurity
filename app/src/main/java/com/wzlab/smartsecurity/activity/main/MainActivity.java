@@ -47,6 +47,7 @@ import com.wzlab.smartsecurity.activity.camera.playback.PlayBackListActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiConnectingActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.AutoWifiNetConfigActivity;
 import com.wzlab.smartsecurity.activity.camera.wifi.SeriesNumSearchActivity;
+import com.wzlab.smartsecurity.activity.me.FeedBackActivity;
 import com.wzlab.smartsecurity.activity.me.MeFragment;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterActivity;
 import com.wzlab.smartsecurity.activity.me.PersonalCenterFragment;
@@ -376,7 +377,8 @@ public class MainActivity extends AppCompatActivity
 
             String deviceInfo=data.getStringExtra(CaptureActivity.KEY_DATA);
             Intent intent = new Intent(MainActivity.this,SelectLocationActivity.class);
-            if(deviceInfo.length()>10 && (deviceInfo.substring(8,9).equals("#")||deviceInfo.substring(10,11).equals("#"))) {
+            if(deviceInfo.length()>10 && ((deviceInfo.substring(8,9).equals("#") && (deviceTypeForBind.equals("1")))||(deviceInfo.substring(10,11).equals("#") && (deviceTypeForBind.equals("2"))))) {
+
                 intent.putExtra("deviceInfo", deviceInfo);
                 intent.putExtra("deviceType", deviceTypeForBind);
                 startActivity(intent);
@@ -538,6 +540,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            startActivity(new Intent(MainActivity.this, FeedBackActivity.class));
 
         } else if (id == R.id.nav_logout){
             String token = Config.getCachedToken(getApplicationContext());

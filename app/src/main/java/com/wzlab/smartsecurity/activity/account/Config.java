@@ -16,8 +16,13 @@ public class Config {
     //192.168.31.7
     //
     public static final String IP = "118.126.95.215";
-    public static final String SERVER_URL = "http://"+IP+":9090/cdz/api/do.jhtml?router=appApiService.";
-    public static final String DEVICE_ICON_URL = "http://"+IP+":9090/cdz/myupload/device/";
+    public static final String PORT = "9090";
+    public static final String DOMAIN_NAME = "http://"+IP+":"+PORT+"/cdz/";
+    public static final String SERVER_URL = DOMAIN_NAME + "api/do.jhtml?router=appApiService.";
+    public static final String DEVICE_ICON_URL = DOMAIN_NAME + "myupload/device/";
+    public static final String ADVERT_IMG_URL = DOMAIN_NAME + "myupload/advert/img";
+    public static final String ADVERT_HTML_URL = DOMAIN_NAME + "myupload/advert/html";
+    public static final String START_IMG_URL = DOMAIN_NAME + "myupload/start/start.jpg";
     public static final String TYPE_ROLE = "1";//普通用户
 
     public static final String ACTION_REGISTER = "userRegister";
@@ -44,6 +49,7 @@ public class Config {
     public static final String ACTION_SUBMIT_SUGGESTION = "submitSuggestion";
     public static final String ACTION_DELETE_DEVICE = "deleteDevice";
     public static final String ACTION_UPDATE_USER_BASIC_INFO = "updateUserBasicInfo";
+    public static final String ACTION_GET_ADVERT_LIST = "getAdvertList";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";

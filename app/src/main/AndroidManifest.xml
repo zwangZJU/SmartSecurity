@@ -82,7 +82,8 @@
             android:name=".activity.account.AccountActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.start.StartActivity">
+        <activity android:name=".activity.start.StartActivity"
+             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -213,7 +214,8 @@
             android:name=".activity.main.UpdateUserInfoActivity"
             android:label="@string/title_activity_update_user_info"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.me.PersonalCenterActivity"></activity>
+        <activity android:name=".activity.me.PersonalCenterActivity" />
+        <activity android:name=".activity.message.MessageWebViewActivity"></activity>
     </application>
 
 </manifest>

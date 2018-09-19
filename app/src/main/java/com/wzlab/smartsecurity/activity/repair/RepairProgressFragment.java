@@ -44,6 +44,8 @@ public class RepairProgressFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == Config.KEY_LOADING_EMPTY){
+                loadingLayout.setEmptyImage(R.drawable.ic_without_order);
+                loadingLayout.setEmptyText("没有正在进行的订单");
                 loadingLayout.showEmpty();
                 loadingLayout.setOnEmptyButtonClickListener(new LoadingLayout.OnEmptyButtonClickListener() {
                     @Override

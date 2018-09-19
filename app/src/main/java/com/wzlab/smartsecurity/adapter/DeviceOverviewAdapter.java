@@ -23,6 +23,8 @@ import com.wzlab.smartsecurity.utils.DataParser;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Created by wzlab on 2018/7/10.
  */
@@ -141,6 +143,11 @@ public class DeviceOverviewAdapter extends RecyclerView.Adapter{
                                 }else {
                                     holder.mSwitchDefensiveState.setChecked(false);
                                 }
+
+                                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText("命令下发成功！")
+                                        .setContentText("设备响应需要一分钟左右，请等待后刷新页面查看操作结果！")
+                                        .show();
                             }
                         }, new GetDeviceInfo.FailCallback() {
                             @Override

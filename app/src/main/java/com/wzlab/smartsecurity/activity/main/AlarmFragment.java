@@ -44,6 +44,7 @@ import com.wzlab.smartsecurity.Listener.MyOrientationListener;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.adapter.AlarmLogAdapter;
+import com.wzlab.smartsecurity.adapter.RecyclerViewNoBugLinearLayoutManager;
 import com.wzlab.smartsecurity.net.HttpMethod;
 import com.wzlab.smartsecurity.net.NetConnection;
 import com.wzlab.smartsecurity.po.AlarmLog;
@@ -86,6 +87,8 @@ public class AlarmFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if(msg.what == Config.KEY_LOADING_EMPTY){
+                loadingLayout.setEmptyText("很安全，没有报警记录");
+                loadingLayout.setEmptyImage(R.drawable.ic_without_alarm);
                 loadingLayout.showEmpty();
             }else if(msg.what == Config.KEY_LOADING_ERROR){
                 loadingLayout.showError();
@@ -98,7 +101,7 @@ public class AlarmFragment extends Fragment {
                 });
 
             }else if(msg.what == Config.KEY_LOADING_SUCCESS){
-
+                alarmLogAdapter.setStatusList(alarmLogList);
                 loadingLayout.showContent();
             }else if(msg.what == KEY_FINISH_REFRESH){
                 swipeRefreshLayout.setRefreshing(false);
@@ -149,6 +152,7 @@ public class AlarmFragment extends Fragment {
     private String district;
     private String street;
     private String describe;
+    private AlarmLogAdapter alarmLogAdapter;
 
 
     public AlarmFragment() {
@@ -183,6 +187,11 @@ public class AlarmFragment extends Fragment {
         loadingLayout.setEmptyFloatButtonVisible(false);
         alarmLogList = new ArrayList<>();
         getAlarmLogList();
+        //arrayList逆序
+        //Collections.reverse(alarmLogList);
+        mRvAlarmLog.setLayoutManager(new RecyclerViewNoBugLinearLayoutManager(getContext()));
+        alarmLogAdapter = new AlarmLogAdapter(getContext(), alarmLogList);
+        mRvAlarmLog.setAdapter(alarmLogAdapter);
 
         swipeRefreshLayout = view.findViewById(R.id.srl_refresh_alarm_log);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -193,12 +202,13 @@ public class AlarmFragment extends Fragment {
                 new Thread(){
                     @Override
                     public void run() {
-                        try {
-                            getAlarmLogList();
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        getAlarmLogList();
+//                        try {
+//
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
                         Message message = new Message();
                         message.what = KEY_FINISH_REFRESH;
                         handler.sendMessage(message);
@@ -383,6 +393,7 @@ public class AlarmFragment extends Fragment {
 
 
 
+
     }
 
     // 向服务器发送取消报警的请求
@@ -438,7 +449,7 @@ public class AlarmFragment extends Fragment {
 
     public void getAlarmLogList(){
         String phone = Config.getCachedPhone(getContext());
-        alarmLogList.clear();
+
         new NetConnection(Config.SERVER_URL + Config.ACTION_GET_ALARM_LOG_LIST, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
@@ -452,16 +463,13 @@ public class AlarmFragment extends Fragment {
 
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 Gson gson = new Gson();
+                                 alarmLogList.clear();
                                 for(int i=0;i<jsonArray.length();i++){
                                     alarmLogList.add(gson.fromJson(jsonArray.get(i).toString(),AlarmLog.class));
                                 }
 
                             if(alarmLogList.size()>0){
-                                    //arrayList逆序
-                                //Collections.reverse(alarmLogList);
-                                mRvAlarmLog.setLayoutManager(new LinearLayoutManager(getContext()));
-                                AlarmLogAdapter alarmLogAdapter = new AlarmLogAdapter(getContext(), alarmLogList);
-                                mRvAlarmLog.setAdapter(alarmLogAdapter);
+                                 //TODO
                                 Message message = new Message();
                                 message.what = Config.KEY_LOADING_SUCCESS;
                                 handler.sendMessage(message);

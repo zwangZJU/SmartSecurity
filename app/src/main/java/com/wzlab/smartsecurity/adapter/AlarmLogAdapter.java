@@ -23,6 +23,9 @@ import java.util.ArrayList;
 
 public class AlarmLogAdapter extends RecyclerView.Adapter{
     private Context context;
+
+
+
     private ArrayList<AlarmLog> alarmLogList;
     private OnItemClickListener onItemClickListener;
 
