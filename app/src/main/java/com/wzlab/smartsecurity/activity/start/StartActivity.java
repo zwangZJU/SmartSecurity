@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideContext;
 import com.igexin.sdk.PushManager;
 import com.wzlab.smartsecurity.R;
 import com.wzlab.smartsecurity.activity.account.AccountActivity;
@@ -28,6 +29,7 @@ import com.wzlab.smartsecurity.activity.account.Config;
 import com.wzlab.smartsecurity.activity.main.MainActivity;
 import com.wzlab.smartsecurity.net.account.Login;
 import com.wzlab.smartsecurity.service.IntentService;
+import com.wzlab.smartsecurity.utils.GlideCacheUtil;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -59,6 +61,7 @@ public class StartActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.iv_profile);
         String url = Config.START_IMG_URL;
         Glide.with(getApplication()).load(url).into(imageView);
+        GlideCacheUtil.clearImageAllCache(getApplication());
 
 
         cl = findViewById(R.id.rl_start);

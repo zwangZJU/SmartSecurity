@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bumptech.glide.Glide;
 import com.videogo.openapi.EZOpenSDK;
 import com.wzlab.smartsecurity.R;
@@ -52,8 +53,9 @@ public class MeFragment extends Fragment implements View.OnClickListener{
             super.handleMessage(msg);
 
             if(msg.what == LOAD_USER_INFO_ALL_SUCCESS){
-                if(userInfoAvatarURL != null){
+                if(userInfoAvatarURL != null && userInfoAvatarURL.length()>10){
                     Glide.with(getContext()).load(userInfoAvatarURL).into(mIvAvatar);
+
                 }
                 mTvName.setText(userInfoName);
                 mTvDuration.setText(userInfoIsCert);

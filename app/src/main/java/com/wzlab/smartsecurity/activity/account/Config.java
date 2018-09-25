@@ -15,7 +15,8 @@ public class Config {
    // 云118.126.95.215
     //192.168.31.7
     //
-    public static final String IP = "118.126.95.215";
+   // public static final String IP = "118.126.95.215";
+    public static final String IP = "60.190.23.22";
     public static final String PORT = "9090";
     public static final String DOMAIN_NAME = "http://"+IP+":"+PORT+"/zhaf/";
     public static final String SERVER_URL = DOMAIN_NAME + "api/do.jhtml?router=appApiService.";

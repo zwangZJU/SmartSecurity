@@ -111,6 +111,8 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         avatarURL = intent.getStringExtra("avatarURL");
 
 
+
+
         mIvBackground = findViewById(R.id.iv_back);
         mIvAvatar = findViewById(R.id.iv_avatar);
         mIvAvatar.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +188,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         if (file.exists()) {//如果有缓存，直接显示
             scaledBitmap = BitmapFactory.decodeFile(avatarPath);
         } else {//没有缓存
-            if (avatarURL != null && !avatarURL.equals("")) {
+            if (avatarURL != null && !avatarURL.equals(" ") && avatarURL.length()>5) {
                 //但有链接，下载图片并存储
                 new Thread() {
                     @Override
@@ -199,6 +201,11 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                     }
                 }.start();
 
+            }else{
+                GraphProcess.savaImage(scaledBitmap, getExternalFilesDir(null).getPath() + "/avatar", phone);
+                Message message = new Message();
+                message.what = KEY_IMAGE_DOWNLOAD_SUCCESS;
+                handler.sendMessage(message);
             }
 
 

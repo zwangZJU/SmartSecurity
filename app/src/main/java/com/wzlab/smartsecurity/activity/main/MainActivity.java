@@ -645,9 +645,16 @@ public class MainActivity extends AppCompatActivity
 
                             if(file.exists()){//如果有缓存，直接显示
                                 bmAvatar = BitmapFactory.decodeFile(avatarPath);
-                                Message message = new Message();
-                                message.what = LOAD_USER_INFO_ALL_SUCCESS;
-                                handler.sendMessage(message);
+                                if(bmAvatar != null){
+                                    Message message = new Message();
+                                    message.what = LOAD_USER_INFO_ALL_SUCCESS;
+                                    handler.sendMessage(message);
+                                }else{
+                                    Message message = new Message();
+                                    message.what = LOAD_USER_INFO_TEXT_SUCCESS;
+                                    handler.sendMessage(message);
+                                }
+
 
                             }else if(userInfoAvatarURL!=null && userInfoAvatarURL.length()>10 ){
                                 new DownloadImageTask().execute(userInfoAvatarURL,getExternalFilesDir(null).getPath()+"/avatar",phone);
@@ -691,10 +698,11 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-
-            Message message = new Message();
-            message.what = LOAD_USER_INFO_ALL_SUCCESS;
-            handler.sendMessage(message);
+            if(bmAvatar != null){
+                Message message = new Message();
+                message.what = LOAD_USER_INFO_ALL_SUCCESS;
+                handler.sendMessage(message);
+            }
         }
 
     }
