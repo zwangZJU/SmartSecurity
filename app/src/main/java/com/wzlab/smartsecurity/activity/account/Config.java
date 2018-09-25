@@ -17,7 +17,7 @@ public class Config {
     //
     public static final String IP = "118.126.95.215";
     public static final String PORT = "9090";
-    public static final String DOMAIN_NAME = "http://"+IP+":"+PORT+"/cdz/";
+    public static final String DOMAIN_NAME = "http://"+IP+":"+PORT+"/zhaf/";
     public static final String SERVER_URL = DOMAIN_NAME + "api/do.jhtml?router=appApiService.";
     public static final String DEVICE_ICON_URL = DOMAIN_NAME + "myupload/device/";
     public static final String ADVERT_IMG_URL = DOMAIN_NAME + "myupload/advert/img";
@@ -50,6 +50,7 @@ public class Config {
     public static final String ACTION_DELETE_DEVICE = "deleteDevice";
     public static final String ACTION_UPDATE_USER_BASIC_INFO = "updateUserBasicInfo";
     public static final String ACTION_GET_ADVERT_LIST = "getAdvertList";
+    public static final String ACTION_CHECK_AND_UPDATE = "checkAndUpdate";
     public static final String TYPE_SMS_CODE_LOGIN = "2";
     public static final String TYPE_SMS_CODE_FORGET_PASSWORD = "1";
     public static final String TYPE_SMS_CODE_REGISTER = "0";

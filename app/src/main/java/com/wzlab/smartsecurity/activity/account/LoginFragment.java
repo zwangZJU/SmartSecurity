@@ -195,8 +195,8 @@ public class LoginFragment extends Fragment {
         mTvShowServiceTerms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),MainActivity.class));
-                getActivity().finish();
+//                startActivity(new Intent(getActivity(),MainActivity.class));
+//                getActivity().finish();
             }
         });
 

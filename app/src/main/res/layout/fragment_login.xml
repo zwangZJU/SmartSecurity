@@ -230,9 +230,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="《服务条款》"
+
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="35dp"
-            android:textColor="@color/text_account_layout"
+            android:textColor="@color/colorPrimary"
             android:layout_toRightOf="@+id/tv_some_word"
             android:id="@+id/tv_terms_of_service"
             android:textSize="14sp"
