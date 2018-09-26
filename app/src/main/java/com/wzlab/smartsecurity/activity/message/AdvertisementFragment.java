@@ -42,6 +42,7 @@ public class AdvertisementFragment extends Fragment {
 
     private LoadingLayout loadingLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean move;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
@@ -65,14 +66,14 @@ public class AdvertisementFragment extends Fragment {
                 });
 
             }else if(msg.what == Config.KEY_LOADING_SUCCESS){
-                Collections.reverse(advertList);
+                //Collections.reverse(advertList);
                 messageListAdapter.setAdvertList(advertList);
                 mRvMessageList.smoothScrollToPosition(0);
 
 //                if( mRvMessageList.canScrollVertically(1)){
 //                    mRvMessageList.smoothScrollToPosition(messageListAdapter.getItemCount()-1);
 //                }
-
+                moveToPosition(messageListAdapter.getItemCount()-1);
                 loadingLayout.showContent();
               //
 
@@ -85,6 +86,7 @@ public class AdvertisementFragment extends Fragment {
     private ArrayList<Advert> advertList;
     private MessageListAdapter messageListAdapter;
     private String phone;
+    private RecyclerViewNoBugLinearLayoutManager mRvLayoutManager;
 
 
     public AdvertisementFragment() {
@@ -107,7 +109,8 @@ public class AdvertisementFragment extends Fragment {
 
 
         mRvMessageList = view.findViewById(R.id.rv_msg_list);
-        mRvMessageList.setLayoutManager(new RecyclerViewNoBugLinearLayoutManager(getContext()));
+        mRvLayoutManager = new RecyclerViewNoBugLinearLayoutManager(getContext());
+        mRvMessageList.setLayoutManager(mRvLayoutManager);
         advertList = new ArrayList<>();
         messageListAdapter = new MessageListAdapter(getContext(),advertList);
         messageListAdapter.setOnItemClickListener(new MessageListAdapter.OnItemClickListener() {
@@ -195,4 +198,48 @@ public class AdvertisementFragment extends Fragment {
             }
         },Config.KEY_PHONE, phone);
     }
+
+    private void moveToPosition(int n) {
+        //先从RecyclerView的LayoutManager中获取第一项和最后一项的Position
+        int firstItem = mRvLayoutManager.findFirstVisibleItemPosition();
+        int lastItem = mRvLayoutManager.findLastVisibleItemPosition();
+        //然后区分情况
+        if (n <= firstItem ){
+            //当要置顶的项在当前显示的第一个项的前面时
+            mRvMessageList.scrollToPosition(n);
+        }else if ( n <= lastItem ){
+            //当要置顶的项已经在屏幕上显示时
+            int top = mRvMessageList.getChildAt(n - firstItem).getTop();
+            mRvMessageList.scrollBy(0, top);
+        }else{
+            //当要置顶的项在当前显示的最后一项的后面时
+            mRvMessageList.scrollToPosition(n);
+            //这里这个变量是用在RecyclerView滚动监听里面的
+            move = true;
+        }
+
+    }
+
+
+
+//    class RecyclerViewListener extends RecyclerView.OnScrollListener{
+//        @Override
+//        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//            super.onScrolled(recyclerView, dx, dy);
+//            //在这里进行第二次滚动（最后的100米！）
+//            if (move ){
+//                move = false;
+//                //获取要置顶的项在当前屏幕的位置，mIndex是记录的要置顶项在RecyclerView中的位置
+//                int n = mIndex - mRvLayoutManager.findFirstVisibleItemPosition();
+//                if ( 0 <= n && n < mRecyclerView.getChildCount()){
+//                    //获取要置顶的项顶部离RecyclerView顶部的距离
+//                    int top = mRecyclerView.getChildAt(n).getTop();
+//                    //最后的移动
+//                    mRecyclerView.scrollBy(0, top);
+//                }
+//            }
+//        }
+//    }
+
+
 }
